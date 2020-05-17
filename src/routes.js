@@ -22,6 +22,8 @@ import WebIcon from '@material-ui/icons/Web';
 import FourKIcon from '@material-ui/icons/FourK';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import Person from "@material-ui/icons/Person";
+import Today from "@material-ui/icons/Today";
+import Notes from "@material-ui/icons/Notes";
 
 
 
@@ -31,6 +33,7 @@ import ItemsMenu from "views/ItemsMenu/ItemsMenu.js";
 import Files from "views/Files/Files.js";
 import TiposUsuarios from "views/Users/TiposUsuarios.js";
 import Users from "views/Users/Users.js";
+import Noticias from "views/Noticias/Noticias.js";
 
 
 const dashboardRoutes = [
@@ -53,6 +56,25 @@ const dashboardRoutes = [
     layout: "/admin"
   }, 
   
+  {
+    accesos: [],
+    path: "/noticias",
+    name: "Noticias",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    layout: "/admin"
+  }, 
+
+  {
+    accesos: [],
+    path: "/eventos",
+    name: "Eventos",
+    rtlName: "DS",
+    icon: Today,
+    component: ItemsMenu,
+    layout: "/admin"
+  }, 
 
   {
     show:false,
