@@ -24,6 +24,7 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import Person from "@material-ui/icons/Person";
 import Today from "@material-ui/icons/Today";
 import Notes from "@material-ui/icons/Notes";
+import DirectionsBike from "@material-ui/icons/DirectionsBike";
 
 
 
@@ -63,18 +64,36 @@ const dashboardRoutes = [
     rtlName: "DS",
     icon: Notes,
     component: Noticias,
+    parametros:{
+      idTipoNoticia:1
+    },
     layout: "/admin"
   }, 
 
   {
     accesos: [],
-    path: "/eventos",
-    name: "Eventos",
+    path: "/actividades",
+    name: "Actividades",
+    rtlName: "DS",
+    icon: DirectionsBike,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:2
+    },
+    layout: "/admin"
+  },
+  {
+    accesos: [],
+    path: "/campanas",
+    name: "Campañas",
     rtlName: "DS",
     icon: Today,
-    component: ItemsMenu,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:3
+    },
     layout: "/admin"
-  }, 
+  },  
 
   {
     show:false,

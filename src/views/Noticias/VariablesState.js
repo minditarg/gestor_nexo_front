@@ -8,7 +8,7 @@ export const StateListPages = {
 
 }
 
-export const StateNewEditPage = {
+export const StateNewEditNoticia = {
 
     orderForm: {
         nombre: {
@@ -39,12 +39,54 @@ export const StateNewEditPage = {
             valid: false,
             touched: false
         },
+    
+        estado: {
+            elementType: 'select',
+            elementConfig: {
+              label: 'Estado',
+              options: [
+                { value: 1, displayValue: 'Publicado' },
+                { value: 2, displayValue: 'Despublicado' }
+    
+              ],
+              fullWidth: true
+            },
+            value: '1',
+            validation: {
+              required: true
+            },
+    
+            valid: false,
+            touched: false
+          }
+
 
         
     },
+    orderFormItems: {
+        descripcion: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'text',
+            label: 'Descripción',
+            fullWidth: true
+          },
+          value: '',
+          validation: {
+            required: false
+          },
+          valid: true,
+          touched: false
+        },
+      },
+    tags:[],
     orderFormIsValid: false,
     successSubmit: null,
-    disableAllButtons:false
+    disableAllButtons:false,
+    openImagePortada:false,
+    items: [],
+    rowItem:null,
+    openImgInterior:false
 
 }
 

@@ -19,6 +19,7 @@ import Button from "components/CustomButtons/Button.js";
 import AddIcon from '@material-ui/icons/Add';
 
 import ModType3 from './components/ModType3';
+import ModType4 from './components/ModType4';
 
 import { localization } from "variables/general.js";
 
@@ -297,7 +298,7 @@ class EditModule extends Component {
               }
 
               {
-                this.state.module && this.state.module.id_type_module == 3  &&
+                this.state.module && this.state.module.id_type_module == 3 &&
                 < ModType3
                   module={this.state.module}
                   orderFormPrincipal={this.state.orderForm}
@@ -326,8 +327,8 @@ class EditModule extends Component {
 
               }
 
-{
-                this.state.module &&  this.state.module.id_type_module == 4 &&
+              {
+                this.state.module && this.state.module.id_type_module == 4 &&
                 < ModType3
                   module={this.state.module}
                   orderFormPrincipal={this.state.orderForm}
@@ -398,13 +399,13 @@ class EditModule extends Component {
 
               }
 
-{
+              {
                 this.state.module && this.state.module.id_type_module == 5 &&
                 < ModType3
                   module={this.state.module}
                   orderFormPrincipal={this.state.orderForm}
                   formIsValidPrincipal={this.state.formIsValid}
-                  archivo= {true}
+                  archivo={true}
                   orderForm={{
                     archivo: {
                       elementType: 'input',
@@ -439,7 +440,7 @@ class EditModule extends Component {
                   }}
                   items={{
                     orderForm: {
-                     
+
                       titulo: {
                         elementType: 'input',
                         elementConfig: {
@@ -470,10 +471,22 @@ class EditModule extends Component {
                       },
 
                     },
-                    
+
 
 
                   }}
+
+                />
+
+              }
+
+              {this.state.module && this.state.module.id_type_module == 6 &&
+                < ModType4
+                  module={this.state.module}
+                  orderFormPrincipal={this.state.orderForm}
+                  formIsValidPrincipal={this.state.formIsValid}
+                  htmlText={true}
+                 
 
                 />
 

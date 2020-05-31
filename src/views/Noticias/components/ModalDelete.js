@@ -16,10 +16,10 @@ onClose={props.handleClose}
 aria-labelledby="alert-dialog-title"
 aria-describedby="alert-dialog-description"
 >
-<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar la pagina "${props.deleteRowData.nombre}"?` )}</DialogTitle>
+<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar la noticia "${props.deleteRowData.nombre}"?` )}</DialogTitle>
 <DialogContent>
  <DialogContentText id="alert-dialog-description">
- Se eliminará la pagina seleccionada.Realmente desea eliminarla?
+ Se eliminará la noticia seleccionada.Realmente desea eliminarla?
   </DialogContentText>
 </DialogContent>
 <DialogActions>

@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 function renderInputComponent(inputProps) {
-  const { classes, inputRef = () => {}, ref, ...other } = inputProps;
+  const { classes, inputRef = () => { }, ref, ...other } = inputProps;
 
   return (
     <TextField
@@ -53,7 +53,7 @@ function renderSuggestion(suggestion, { query, isHighlighted }) {
 }
 
 
-function getSuggestions(value,suggestions) {
+function getSuggestions(value, suggestions) {
 
   const inputValue = deburr(value.trim()).toLowerCase();
   const inputLength = inputValue.length;
@@ -62,15 +62,15 @@ function getSuggestions(value,suggestions) {
   return inputLength === 0
     ? []
     : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+      const keep =
+        count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
-        if (keep) {
-          count += 1;
-        }
+      if (keep) {
+        count += 1;
+      }
 
-        return keep;
-      });
+      return keep;
+    });
 }
 
 function getSuggestionValue(suggestion) {
@@ -78,7 +78,7 @@ function getSuggestionValue(suggestion) {
 }
 
 const useStyles = makeStyles(theme => ({
-   root: {
+  root: {
     height: 250,
     flexGrow: 1,
   },
@@ -107,137 +107,140 @@ const useStyles = makeStyles(theme => ({
 
 
 const Input = (props) => {
-    const classes = useStyles();
-    let inputElement = null;
-    let textValidation = null;
-    if (props.invalid && props.shouldValidate && props.touched) {
-        textValidation = props.textValid
+  const classes = useStyles();
+  let inputElement = null;
+  let textValidation = null;
+  if (props.invalid && props.shouldValidate && props.touched) {
+    textValidation = props.textValid
 
 
 
-    }
+  }
 
-    const [stateSuggestions, setSuggestions] = React.useState([]);
+  const [stateSuggestions, setSuggestions] = React.useState([]);
 
-    const handleSuggestionsFetchRequested = ({ value }) => {
+  const handleSuggestionsFetchRequested = ({ value }) => {
 
-        setSuggestions(getSuggestions(value,props.elementConfig.suggestions));
-    };
+    setSuggestions(getSuggestions(value, props.elementConfig.suggestions));
+  };
 
-    const handleSuggestionsClearRequested = () => {
-        setSuggestions([]);
-    };
+  const handleSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
 
-    const handleChange = (event,{ newValue } ) => {
-     props.changed(event,newValue);
+  const handleChange = (event, { newValue }) => {
+    props.changed(event, newValue);
 
   };
 
   const handleChangeSelect = (event) => {
-   props.changed(event);
+    props.changed(event);
 
-};
+  };
 
-    const autosuggestProps = {
-        renderInputComponent,
-        suggestions: stateSuggestions,
-        onSuggestionsFetchRequested: handleSuggestionsFetchRequested,
-        onSuggestionsClearRequested: handleSuggestionsClearRequested,
-        getSuggestionValue,
-        renderSuggestion,
-    };
+  const autosuggestProps = {
+    renderInputComponent,
+    suggestions: stateSuggestions,
+    onSuggestionsFetchRequested: handleSuggestionsFetchRequested,
+    onSuggestionsClearRequested: handleSuggestionsClearRequested,
+    getSuggestionValue,
+    renderSuggestion,
+  };
 
-    switch (props.elementType) {
-        case ('input'):
-            inputElement = <TextField style={{ marginTop: '15px' }}
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed} />;
-            break;
-        case ('textarea'):
+  switch (props.elementType) {
+    case ('input'):
+      inputElement = <TextField style={{ marginTop: '15px' }}
+        {...props.elementConfig}
+        value={props.value}
+        onChange={props.changed} />;
+      break;
+    case ('textarea'):
 
-            inputElement =
-                <TextField style={{ marginTop: '20px' }}
-                    {...props.elementConfig}
-                    value={props.value}
-                    onChange={props.changed}
-                    multiline={true}
-                    />;
+      inputElement =
+        <TextField style={{ marginTop: '20px' }}
+          {...props.elementConfig}
+          value={props.value}
+          onChange={props.changed}
+          multiline={true}
+        />;
 
-            break;
-            case ('checkbox'):
+      break;
+    case ('checkbox'):
+      let checked = false;
+      if (parseInt(props.value) == 1)
+        checked = true;
+      inputElement =
+        <FormControlLabel style={{ marginTop: '20px' }} control={<Checkbox
+          value={props.value}
+          {...props.elementConfig}
+          onChange={props.changed}
+          checked={ checked }
+        />} label={props.elementConfig.label} />
+      break;
+    case ('select'):
+      inputElement = (
+        <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>
+          <InputLabel >{props.elementConfig.label}</InputLabel>
+          <Select
+            {...props.elementConfig}
+            value={props.value}
+            onChange={handleChangeSelect}
 
-            inputElement =
-            <FormControlLabel style={{ marginTop: '20px' }} control={<Checkbox
-                value={props.value}
-                {...props.elementConfig}
-                onChange={props.changed}
-                checked={props.value}
-              />} label={props.elementConfig.label}/>
-              break;
-        case ('select'):
-            inputElement = (
-                <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>
-                    <InputLabel >{props.elementConfig.label}</InputLabel>
-                    <Select
-                        {...props.elementConfig}
-                        value={props.value}
-                        onChange={handleChangeSelect}
+          >
+            {props.elementConfig.options.map(option => (
+              <MenuItem key={option.value} value={option.value}>{option.displayValue}</MenuItem>
 
-                        >
-                        {props.elementConfig.options.map(option => (
-                            <MenuItem key={option.value} value={option.value}>{option.displayValue}</MenuItem>
-
-                        ))}
+            ))}
 
 
-                    </Select>
-                </FormControl>
-            );
-            break;
-        case ('autosuggest'):
-            inputElement = (
-              <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>
-                <Autosuggest
-                    {...autosuggestProps}
-                    inputProps={{
-                        classes,
-                        value: props.value,
-                        onChange: handleChange,
-                        ...props.elementConfig
-                    }}
-                    theme={{
-                        container: classes.container,
-                        suggestionsContainerOpen: classes.suggestionsContainerOpen,
-                        suggestionsList: classes.suggestionsList,
-                        suggestion: classes.suggestion,
-                    }}
-                    renderSuggestionsContainer={options =>{
-                        return(
-                        <Paper {...options.containerProps} square>
-                            {options.children}
-                        </Paper>
-                    )}}
-                    />
-                    </FormControl>
+          </Select>
+        </FormControl>
+      );
+      break;
+    case ('autosuggest'):
+      inputElement = (
+        <FormControl style={{ minWidth: '180px', marginTop: '15px' }}>
+          <Autosuggest
+            {...autosuggestProps}
+            inputProps={{
+              classes,
+              value: props.value,
+              onChange: handleChange,
+              ...props.elementConfig
+            }}
+            theme={{
+              container: classes.container,
+              suggestionsContainerOpen: classes.suggestionsContainerOpen,
+              suggestionsList: classes.suggestionsList,
+              suggestion: classes.suggestion,
+            }}
+            renderSuggestionsContainer={options => {
+              return (
+                <Paper {...options.containerProps} square>
+                  {options.children}
+                </Paper>
+              )
+            }}
+          />
+        </FormControl>
 
-            );
-            break;
-        default:
-            inputElement = <input
+      );
+      break;
+    default:
+      inputElement = <input
 
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed} />;
-    }
+        {...props.elementConfig}
+        value={props.value}
+        onChange={props.changed} />;
+  }
 
-    return (
-        <div>
-            <label>{props.label}</label>
-            {inputElement}
-            <span style={{ fontSize: '80%', color: 'red' }}>{textValidation}</span>
-        </div>
-    );
+  return (
+    <div>
+      <label>{props.label}</label>
+      {inputElement}
+      <span style={{ fontSize: '80%', color: 'red' }}>{textValidation}</span>
+    </div>
+  );
 
 };
 

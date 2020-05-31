@@ -6,7 +6,14 @@ export const inputChangedHandler = function (event, inputIdentifier, orderForm) 
     const updatedFormElement = {
         ...updatedOrderForm[inputIdentifier]
     };
-    updatedFormElement.value = event.target.value;
+    if (updatedFormElement.elementType == 'checkbox') {
+        if (event.target.checked)
+            updatedFormElement.value = '1'
+        else
+            updatedFormElement.value = '0';
+    } else {
+        updatedFormElement.value = event.target.value;
+    }
     checkValid = checkValidity(updatedFormElement.value, updatedFormElement.validation);
     updatedFormElement.valid = checkValid.isValid;
     updatedFormElement.textValid = checkValid.textValid;

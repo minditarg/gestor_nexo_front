@@ -55,8 +55,8 @@ class NewItem extends Component {
   handleSubmitNewItem = (event) => {
     event.preventDefault();
     let id_page = null;
-    if (this.state.orderForm.pagina.value > 0 && this.state.orderForm.pagina.value != '')
-      id_page = this.state.orderForm.pagina.value;
+    if (this.state.orderForm.id_page.value > 0 && this.state.orderForm.id_page.value != '')
+      id_page = this.state.orderForm.id_page.value;
     Database.post(`/insert-item`, { texto: this.state.orderForm.texto.value, enlace: this.state.orderForm.enlace.value, id_page: id_page, estado: this.state.orderForm.estado.value }, this)
       .then(res => {
 
@@ -157,12 +157,12 @@ class NewItem extends Component {
         let resultado = res.result;
 
         let orderForm = { ...this.state.orderForm };
-        orderForm.pagina.elementConfig.options.push({ value: 0, displayValue: 'Ninguna' });
+        orderForm.id_page.elementConfig.options.push({ value: 0, displayValue: 'Ninguna' });
         res.result.forEach(elem => {
-          orderForm.pagina.elementConfig.options.push({ value: elem.id, displayValue: elem.nombre });
+          orderForm.id_page.elementConfig.options.push({ value: elem.id, displayValue: elem.nombre });
 
         })
-        if (orderForm.pagina.value && orderForm.pagina.value != '')
+        if (orderForm.id_page.value && orderForm.id_page.value != '')
           orderForm.pagina.valid = true;
 
         this.setState({

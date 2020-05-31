@@ -138,7 +138,7 @@ export default function Admin({ ...rest }) {
           return (
             <Route
               path={prop.layout + prop.path}
-              component={prop.component}
+              render={(props) => <prop.component {...props} {...prop.parametros } />}
               key={key}
               />
           );

@@ -112,7 +112,7 @@ class EditItem extends Component {
           orderForm.estado.value = resultado.result[0].estado;
 
           if (resultado.result[0].id_page)
-            orderForm.pagina.value = resultado.result[0].id_page;
+            orderForm.id_page.value = resultado.result[0].id_page;
 
           for (let key in orderForm) {
             orderForm[key].touched = true;
@@ -137,8 +137,8 @@ class EditItem extends Component {
 
     event.preventDefault();
     let id_page = null;
-    if (this.state.orderForm.pagina.value > 0 && this.state.orderForm.pagina.value != '')
-      id_page = this.state.orderForm.pagina.value;
+    if (this.state.orderForm.id_page.value > 0 && this.state.orderForm.id_page.value != '')
+      id_page = this.state.orderForm.id_page.value;
     Database.post(`/update-item`, { id: this.props.match.params.iditem, texto: this.state.orderForm.texto.value, enlace: this.state.orderForm.enlace.value, id_page: id_page, estado: this.state.orderForm.estado.value })
       .then(res => {
 
@@ -214,13 +214,13 @@ class EditItem extends Component {
         let resultado = res.result;
 
         let orderForm = { ...this.state.orderForm };
-        orderForm.pagina.elementConfig.options.push({ value: 0, displayValue: 'Ninguna' });
+        orderForm.id_page.elementConfig.options.push({ value: 0, displayValue: 'Ninguna' });
         res.result.forEach(elem => {
-          orderForm.pagina.elementConfig.options.push({ value: elem.id, displayValue: elem.nombre });
+          orderForm.id_page.elementConfig.options.push({ value: elem.id, displayValue: elem.nombre });
 
         })
-        if (orderForm.pagina.value && orderForm.pagina.value != '')
-          orderForm.pagina.valid = true;
+        if (orderForm.id_page.value && orderForm.id_page.value != '')
+          orderForm.id_page.valid = true;
 
         this.setState({
           orderForm: orderForm
