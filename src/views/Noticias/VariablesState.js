@@ -1,4 +1,4 @@
-export const StateListPages = {
+export const StateListNoticias = {
     noticias: [],
     modalOpen: false,
     openDeleteDialog:false,
@@ -39,6 +39,31 @@ export const StateNewEditNoticia = {
             valid: false,
             touched: false
         },
+        destacado: {
+          elementType: 'checkbox',
+          elementConfig: {
+              label: 'Destacado'
+          },
+          value: "0",
+          validation: {
+              required: false
+          },
+          valid: true,
+          touched: true
+      },
+      principal: {
+        elementType: 'checkbox',
+        elementConfig: {
+            label: 'Principal'
+        },
+        value: "0",
+        validation: {
+            required: false
+        },
+        valid: true,
+        touched: true
+    },
+
     
         estado: {
             elementType: 'select',
@@ -78,15 +103,23 @@ export const StateNewEditNoticia = {
           valid: true,
           touched: false
         },
+      
       },
     tags:[],
+    tiposCategorias: [],
+    idCategoria:null,
     orderFormIsValid: false,
     successSubmit: null,
     disableAllButtons:false,
     openImagePortada:false,
+    fechaInicio:null,
+    fechaFinalizacion:null,
     items: [],
     rowItem:null,
-    openImgInterior:false
+    openImgInterior:false,
+    openAgregarTexto:false,
+    thumbs:[],
+    thumbsInterno:[]
 
 }
 

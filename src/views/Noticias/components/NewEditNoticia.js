@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/styles';
 
 import Database from "variables/Database.js";
 import { toast, ToastContainer } from 'react-toastify';
+import { Editor } from '@tinymce/tinymce-react';
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -24,6 +25,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 
 import ModalSelectImage from './ModalSelectImage';
+import ModalAgregarTexto from './ModalAgregarTexto';
 import StepAgregarImagen from './StepAgregarImagen';
 
 import Table from '@material-ui/core/Table';
@@ -31,6 +33,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+
+import moment from 'moment';
+
 
 import Grid from '@material-ui/core/Grid';
 
@@ -50,6 +55,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { StateNewEditNoticia } from "../VariablesState";
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
+
+import textIcon from 'assets/img/textIcon.png';
 
 
 const top100Films = [
@@ -106,6 +113,8 @@ const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }
   let array = [];
   if (value.imageURL && (value.imageURL.endsWith('.jpg') || value.imageURL.endsWith('.png') || value.imageURL.endsWith('.jpeg') || value.imageURL.endsWith('.gif')))
     imagen = (<img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + value.imageURL} style={{ width: '75px' }} />);
+  else if (value.htmlText)
+    imagen = (<img src={textIcon} style={{ width: '75px' }} />)
   if (orderForm) {
     for (let key in orderForm) {
       array.push(value[key]);
@@ -175,6 +184,7 @@ const SortableContainer = sortableContainer(({ children, orderForm }) => {
 
 
 class NewEditNoticia extends Component {
+  fecha = "matias";
   state = JSON.parse(JSON.stringify(StateNewEditNoticia));
 
   handleOpenImgPortada = () => {
@@ -183,9 +193,16 @@ class NewEditNoticia extends Component {
     })
   };
 
+  handleOpenAgregarTexto = () => {
+    this.setState({
+      rowItem: null,
+      openAgregarTexto: true
+    })
+  };
+
   handleOpenImgInterior = () => {
     this.setState({
-      rowItem:null,
+      rowItem: null,
       openImgInterior: true
     })
   };
@@ -194,7 +211,8 @@ class NewEditNoticia extends Component {
   handleClose = () => {
     this.setState({
       openImgPortada: false,
-      openImgInterior: false
+      openImgInterior: false,
+      openAgregarTexto: false
     })
   };
 
@@ -216,8 +234,18 @@ class NewEditNoticia extends Component {
   }
 
   editItem = (rowData) => {
+    let openImgInterior = false;
+    let openAgregarTexto = false;
+
+    if (rowData.imageURL) {
+      openImgInterior = true;
+    } else if (rowData.htmlText) {
+      openAgregarTexto = true;
+    }
+
     this.setState({
-      openImgInterior: true,
+      openImgInterior: openImgInterior,
+      openAgregarTexto: openAgregarTexto,
       rowItem: rowData
 
     })
@@ -241,16 +269,17 @@ class NewEditNoticia extends Component {
   getNoticiaEdit = (id) => {
     Database.get('/list-noticias/' + id, this)
       .then(resultado => {
+        console.log(resultado);
         if (resultado.noticia.length > 0) {
           let contenido = null;
           let imgPortada = null;
           let items = [];
-          if(resultado.noticia[0].contenido){
-           contenido = JSON.parse(resultado.noticia[0].contenido);
+          if (resultado.noticia[0].contenido) {
+            contenido = JSON.parse(resultado.noticia[0].contenido);
             imgPortada = contenido.imgPortada || null;
             items = contenido.items || [];
           }
-          
+
           let orderFormCopy = { ...this.state.orderForm };
           for (let key in orderFormCopy) {
             if (resultado.noticia[0][key])
@@ -266,12 +295,31 @@ class NewEditNoticia extends Component {
 
           })
 
+          let categoria = null;
+          if (resultado.noticia[0].id_tipo_categoria) {
+            categoria = { id: resultado.noticia[0].id_tipo_categoria, descripcion: resultado.noticia[0].descripcion_tipo_categoria }
+          }
+
+          let fechaInicio = null;
+          if (resultado.noticia[0].fecha_inicio) {
+            fechaInicio = moment(resultado.noticia[0].fecha_inicio).format("YYYY-MM-DD HH:mm");
+          }
+
+          let fechaFinalizacion = null;
+          if (resultado.noticia[0].fecha_finalizacion) {
+            fechaFinalizacion = moment(resultado.noticia[0].fecha_finalizacion).format("YYYY-MM-DD HH:mm");
+          }
+
+
           this.setState({
             orderForm: orderForm,
             formIsValid: formIsValid,
             tags: tags,
-            imgPortada:imgPortada,
-            items: items
+            idCategoria: categoria,
+            imgPortada: imgPortada,
+            items: items,
+            fechaInicio: fechaInicio,
+            fechaFinalizacion: fechaFinalizacion
           })
 
         }
@@ -280,7 +328,19 @@ class NewEditNoticia extends Component {
       })
   }
 
+  getTiposCategorias = () => {
+    Database.get('/list-types-categorias', this)
+      .then(res => {
 
+        this.setState({
+          tiposCategorias: res.result
+        })
+
+
+
+
+      })
+  }
 
   handleSubmitNewEditNoticia = (event) => {
     let url;
@@ -289,7 +349,7 @@ class NewEditNoticia extends Component {
     event.preventDefault();
 
     contenido.imgPortada = this.state.imgPortada;
-    contenido.items = this.state.items;    
+    contenido.items = this.state.items;
 
     contenido = JSON.stringify(contenido);
 
@@ -300,9 +360,14 @@ class NewEditNoticia extends Component {
         nombre: this.state.orderForm.nombre.value,
         descripcion: this.state.orderForm.descripcion.value,
         estado: this.state.orderForm.estado.value,
-        idTipoNoticia: 1,
+        destacado: this.state.orderForm.destacado.value,
+        principal: this.state.orderForm.principal.value,
+        idTipoNoticia: this.props.idTipoNoticia,
+        idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
         tags: this.state.tags,
-        contenido:contenido
+        contenido: contenido,
+        fechaInicio: this.state.fechaInicio,
+        fechaFinalizacion: this.state.fechaFinalizacion
 
       }
 
@@ -312,9 +377,14 @@ class NewEditNoticia extends Component {
         nombre: this.state.orderForm.nombre.value,
         descripcion: this.state.orderForm.descripcion.value,
         estado: this.state.orderForm.estado.value,
+        destacado: this.state.orderForm.destacado.value,
+        principal: this.state.orderForm.principal.value,
         idTipoNoticia: this.props.idTipoNoticia,
+        idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
         tags: this.state.tags,
-        contenido:contenido
+        contenido: contenido,
+        fechaInicio: this.state.fechaInicio,
+        fechaFinalizacion: this.state.fechaFinalizacion
 
       }
 
@@ -348,7 +418,7 @@ class NewEditNoticia extends Component {
   }
 
 
-  
+
 
   handleTags = (e, value) => {
     e.preventDefault();
@@ -357,57 +427,113 @@ class NewEditNoticia extends Component {
     })
   }
 
-  handleSelectImage = (filename) => {
-    this.handleClose();
-    
-      this.setState({
-        imgPortada:  filename
-      })
-
-   
+  handleCategoria = (e, value) => {
+    e.preventDefault();
+    this.setState({
+      idCategoria: value
+    })
   }
 
-  handleSelectImageInterior = (rowData,objeto) => {
+  handleSelectImage = (filename) => {
     this.handleClose();
-    
-      let objetoCopy = { ...objeto };
-      let items = [...this.state.items];
-     
-     if (rowData) {
-        let indexFind = items.findIndex(elem => {
-            return elem == rowData
-        })
 
-        if (indexFind > -1) {
-            items[indexFind] = objetoCopy;
-        }
+    this.setState({
+      imgPortada: filename
+    })
+
+
+  }
+
+  handleFechaInicio = (event, soloDate) => {
+    let fecha;
+    if (soloDate) {
+      fecha = moment(event.target.value, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm");
+    } else {
+      fecha = event.target.value
+    }
+
+
+    this.setState({
+      fechaInicio: fecha
+    })
+
+  }
+
+  handleFechaFinalizacion = (event, soloDate) => {
+    let fecha;
+    if (soloDate) {
+      fecha = moment(event.target.value, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm");
+    } else {
+      fecha = event.target.value
+    }
+
+
+    this.setState({
+      fechaFinalizacion: fecha
+    })
+
+  }
+
+  handleSelectTexto = (orderForm, htmlText) => {
+    this.handleClose();
+    let objetoCopy = { descripcion: orderForm.descripcion.value, htmlText: htmlText }
+    let items = [...this.state.items];
+    items.push(objetoCopy);
+    this.setState({
+      items: items
+
+    })
+
+  }
+
+  handleSelectImageInterior = (rowData, objeto) => {
+    this.handleClose();
+
+    let objetoCopy = { ...objeto };
+    let items = [...this.state.items];
+
+    if (rowData) {
+      let indexFind = items.findIndex(elem => {
+        return elem == rowData
+      })
+
+      if (indexFind > -1) {
+        items[indexFind] = objetoCopy;
+      }
 
 
     } else {
 
-        items.push(objetoCopy)
+      items.push(objetoCopy)
     }
-    
-
-      this.setState({
-        items: items
-
-      })
 
 
+    this.setState({
+      items: items
 
-   
+    })
+
+
+
+
   }
 
 
 
   componentDidMount() {
+    let thumbs =[];
+
     if (this.props.match.params.idnoticia)
       this.getNoticiaEdit(this.props.match.params.idnoticia);
+
+    this.getTiposCategorias();
+
+   
+
   }
 
   render() {
-
+   
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
       formElementsArray.push({
@@ -426,14 +552,27 @@ class NewEditNoticia extends Component {
       img = '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.imgPortada;
 
     let titulo = null;
+    let thumbs = [];
+    let aspectRadio = null;
+    let width = null;
+
     if (this.props.idTipoNoticia == 1) {
       titulo = 'Noticia';
+      thumbs = [{width:900,height:400},{width:500,height:650},{width:600,height:350},{width:230,height:230},{width:768,height:600}];
+      aspectRadio = 1.5;
+      width = 900;
     }
     else if (this.props.idTipoNoticia == 2) {
       titulo = 'Actividad';
+      thumbs = [{width:400,height:500},{width:230,height:230}];
+      aspectRadio = 1.5;
+      width = 900;
     }
     else if (this.props.idTipoNoticia == 3) {
       titulo = 'Campaña';
+      thumbs = [{width:400,height:270},{width:200,height:200},{width:230,height:230}];
+      aspectRadio = 1.5;
+      width = 900;
     }
 
     return ([
@@ -447,10 +586,10 @@ class NewEditNoticia extends Component {
 
             <Card>
               <CardHeader color="primary">
-                <h4 className={this.props.classes.cardTitleWhite}>{ (this.props.match.params.idnoticia ? 'Editar' : 'Nueva') + ' ' + titulo }</h4>
+                <h4 className={this.props.classes.cardTitleWhite}>{(this.props.match.params.idnoticia ? 'Editar' : 'Nueva') + ' ' + titulo}</h4>
                 <p className={this.props.classes.cardCategoryWhite}>
-                  Formulario para modificar los datos de la { titulo }
-      </p>
+                  Formulario para modificar los datos de la {titulo}
+                </p>
               </CardHeader>
               <CardBody>
 
@@ -477,11 +616,67 @@ class NewEditNoticia extends Component {
                       }}
                     />
                   ))}
+                  {this.props.idTipoNoticia == 3 &&
+
+                    <div style={{ marginTop:'20px',marginBottom:'20px' }}>
+                      <TextField
+                        id="date"
+                        label="Fecha de Inicio"
+                        type="date"
+                        value={moment(this.state.fechaInicio).format("YYYY-MM-DD")}
+                        onChange={(event) => this.handleFechaInicio(event, true)}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+
+                      <TextField
+                        id="date"
+                        style={{ marginLeft: "25px" }}
+                        label="Fecha de Finalizacion"
+                        type="date"
+                        value={moment(this.state.fechaFinalizacion).format("YYYY-MM-DD")}
+                        onChange={(event) => this.handleFechaFinalizacion(event, true)}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </div>
+
+
+                  }
+                  { this.props.idTipoNoticia == 2 &&
+                    <div style={{ marginTop:'20px',marginBottom:'20px' }}>
+                      <TextField
+                        id="date"
+                        label="Fecha y Hora de Inicio"
+                        type="datetime-local"
+
+                        value={moment(this.state.fechaInicio).format("YYYY-MM-DDTHH:mm")}
+                        onChange={(event) => this.handleFechaInicio(event)}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+
+                      <TextField
+                        style={{ marginLeft: "25px" }}
+                        id="datetime"
+                        label="Fecha y Hora de Finalizacion"
+                        type="datetime-local"
+                        value={moment(this.state.fechaFinalizacion).format("YYYY-MM-DDTHH:mm")}
+                        onChange={(event) => this.handleFechaFinalizacion(event)}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </div>
+                  }
 
                   <Autocomplete
                     multiple
                     id="tags-filled"
-                    options={top100Films.map((option) => option.title)}
+                    options={[]}
                     value={this.state.tags}
                     onChange={this.handleTags}
                     freeSolo
@@ -494,17 +689,41 @@ class NewEditNoticia extends Component {
                       <TextField {...params} label="Tags" />
                     )}
                   />
+                  <Autocomplete
+                    id="categorias-filled"
+                    options={this.state.tiposCategorias}
+                    value={this.state.idCategoria}
+                    onChange={this.handleCategoria}
+                    getOptionLabel={
+                      (option) => {
+                        return option.descripcion
+                      }
+                    }
+
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="filterSelectedOptions"
+                        placeholder="Favorites"
+                      />
+                    )}
+                    renderInput={(params) => (
+                      <TextField {...params} label="categoria" />
+                    )}
+                  />
 
                   <h5>Imagen Portada</h5>
 
                   <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada} >Imagen Portada +</Button>
 
                   <div style={{ marginTop: 25 }}>
-                    <img style={{ height: 150 }} src={  img} />
+                    <img style={{ height: 150 }} src={img} />
                   </div>
 
                 </div>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
+                <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
 
                 <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
                   {this.state.items.map((elem, index) => (
@@ -533,9 +752,20 @@ class NewEditNoticia extends Component {
                 openSelectImage={this.state.openImgPortada}
                 handleSelectImage={this.handleSelectImage}
                 handleClose={this.handleClose}
-                width={900}
-                aspectradio={1.28}
-                thumbs={[ {width:400,height:270 },{width:600,height:350},{width:100,height:100} ]}
+                width={ width }
+                aspectradio={ aspectRadio }
+                thumbs={thumbs}
+              />
+            }
+
+            {this.state.openAgregarTexto &&
+              <ModalAgregarTexto
+                rowItem={this.state.rowItem}
+                openAgregarTexto={this.state.openAgregarTexto}
+                orderForm={this.state.orderFormItems}
+                handleSelect={this.handleSelectTexto}
+                handleClose={this.handleClose}
+               
               />
             }
 
@@ -547,10 +777,12 @@ class NewEditNoticia extends Component {
                 handleSelectImage={this.handleSelectImageInterior}
                 handleClose={this.handleClose}
                 width={900}
-                aspectradio={1.5}
-               
+                aspectradio={1.8}
+
               />
             }
+
+        
 
           </ form>
         }

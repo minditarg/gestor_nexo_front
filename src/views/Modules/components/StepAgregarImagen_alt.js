@@ -1,5 +1,5 @@
 //COMPONENTES GENERALES
-import React, { useRef } from 'react';
+import React from 'react';
 import Database from "variables/Database.js";
 
 //COMPONENTES LOCALES
@@ -16,9 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import $ from 'jquery';
 
 import { Editor } from '@tinymce/tinymce-react';
-import Files from 'react-files'
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+
 //BOTONES Y VARIOS
 import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
@@ -28,8 +26,6 @@ import Typography from '@material-ui/core/Typography';
 
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
 
-
-var aceptarBoolean = false;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -57,16 +53,8 @@ const columns = [
 ];
 
 function getSteps() {
-    return ['Seleccione una Imagen', 'Confirme la selección'];
+    return ['Seleccione un Insumo', 'Modificar cantidad'];
 }
-
-function urltoFile(url, filename, mimeType) {
-    return (fetch(url)
-        .then(function (res) { return res.arrayBuffer(); })
-        .then(function (buf) { return new File([buf], filename, { type: mimeType }); })
-    );
-}
-
 
 
 
@@ -81,107 +69,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [htmlText, setHtmlText] = React.useState(null);
 
-    const [urlImg, setUrlImg] = React.useState(null);
-    const [img, setImg] = React.useState(null);
-    const [sizeMsj, setSizeMsj] = React.useState(false);
-
     const steps = getSteps();
-    const cropper = useRef();
-
-    const onFilesChange = function (files) {
-        setImg(URL.createObjectURL(files[0]));
-
-    }
-
-    const onFilesError = function (error, file) {
-        console.log('error code ' + error.code + ': ' + error.message)
-    }
-
-    const _crop = function () {
-
-        aceptarBoolean = false;
-
-    }
-
-
-    const handleFile = (UrlFile, callback) => {
-        setIsLoading(true);
-        Database.post('/insert-noticia-image', { extension: 'jpg' }, this)
-            .then(res => {
-                let file_name = res.result[0].file_name;
-                let file = urltoFile(UrlFile, file_name, 'image/png');
-                setIsLoading(false);
-                file.then(file => {
-
-                    const formData = new FormData();
-                    formData.append('userPhoto', file);
-                    if (props.thumbs)
-                        formData.append('thumbs', JSON.stringify(props.thumbs));
-
-                    Database.post('/insert-only-file', formData, this, false, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-
-                        .then(res => {
-                            setIsLoading(false);
-                            toast.success("El archivo" + file.name + "se ha subido con exito!");
-                            callback.bind(this)(file_name);
-
-
-                        }, err => {
-                            setIsLoading(false);
-                            toast.error(err.message)
-
-                        })
-
-
-
-
-                }, err => {
-                    setIsLoading(false);
-                    this.setState({ isLoading: false })
-                })
-
-            }, err => {
-
-                setIsLoading(false);
-                toast.error(err.message);
-
-            })
-
-
-
-    }
-
-    const handleSeleccionar = () => {
-        if(cropper.current.getData().width >= props.width || aceptarBoolean) { 
-        let imageB64 = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
-        handleFile(imageB64, function (filename) {
-            let orderForm_Alt = { ...orderForm };
-            if (orderForm_Alt && orderForm_Alt.archivo)
-                orderForm_Alt.archivo.value = filename;
-
-            var objeto = inputAllChangedHandler(orderForm_Alt);
-            setOrderForm(objeto.orderForm);
-            setFormIsValid(objeto.formIsValid);
-            setUrlImg(filename);
-            handleNext();
-
-        });
-    } else {
-        setSizeMsj(true);
-        aceptarBoolean = true;
-    }
-
-    }
-
 
 
     React.useEffect(() => {
 
-
+        getFiles();
         if (props.orderForm) {
             let orderFormCopy = JSON.parse(JSON.stringify(props.orderForm));
             for (let key in orderFormCopy) {
@@ -204,6 +97,21 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     }, []);
 
+    const getFiles = () => {
+        setIsLoading(true);
+        Database.get('/list-files', this)
+            .then(res => {
+                setIsLoading(false);
+
+                let resultado = [...res.result];
+
+                setFiles(resultado);
+
+            }, err => {
+                setIsLoading(false);
+                toast.error(err.message);
+            })
+    }
 
 
 
@@ -249,36 +157,31 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const getStepContent = (stepIndex) => {
         switch (stepIndex) {
             case 0:
-                console.log(props);
-                return (
-                    <div>
-                        <Files
-                            className='files-dropzone'
-                            onChange={onFilesChange}
-                            onError={onFilesError}
-                            multiple={false}
-                            accepts={['image/*', '.pdf', 'audio/*']}
-                            maxFileSize={10000000}
-                            minFileSize={0}
-                            clickable
-                        >
-                            Arrastre una foto aquí o haga click
-        </Files>
+                return <MaterialTable
+                    isLoading={isLoading}
+                    columns={columns}
+                    data={files}
+                    title="Imagenes"
+                    localization={localization}
+                    onRowClick={(event, rowData) => {
+                        let orderForm_Alt = { ...orderForm };
+                        if (orderForm_Alt && orderForm_Alt.archivo)
+                            orderForm_Alt.archivo.value = rowData.nombre;
 
-                        <Cropper
-                            ref={cropper}
-                            src={img}
-                            style={{ height: 300, width: '100%' }}
-                            // Cropper.js options
-                            aspectRatio={ props.aspectRadio }
-                            guides={false}
-                            crop={_crop} />
+                        var objeto = inputAllChangedHandler(orderForm_Alt);
+                        console.log(objeto);
+                        setOrderForm(objeto.orderForm);
+                        setFormIsValid(objeto.formIsValid);
+                        handleNext();
+                    }}
+                    components={{
+                        Container: props => (
+                            <Paper elevation={0} {...props} />
+                        )
+                    }}
 
-                        {sizeMsj && <p style={{ color: 'red' }}>El tamaño del recuadro es inferior a la resolución necesaria. Agrande el recuadro o vulva a presionar "Seleccionar" para continuar igualmente"  </p>}
-                    </div>
 
-                )
-
+                />;
 
             case 1:
 
@@ -364,11 +267,6 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 >
                     Atras
               </Button>
-                {activeStep === 0 ? (
-                    <Button disabled={!img} variant="contained" color="primary" onClick={handleSeleccionar}>
-                        Seleccionar
-                    </Button>
-                ) : null}
 
 
                 {activeStep === steps.length - 1 ? (

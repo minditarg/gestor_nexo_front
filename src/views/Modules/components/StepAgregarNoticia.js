@@ -79,7 +79,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     const getNoticias = () => {
         setIsLoading(true);
-        Database.get('/list-noticias', this)
+        Database.get('/list-noticias-bytipo/' + props.idTipoNoticia, this)
             .then(res => {
                 setIsLoading(false);
 
@@ -143,6 +143,21 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         });
     }
 
+    let textoNoticia = null;
+    let textoSingular = null;
+    if(props.idTipoNoticia == 1){
+        textoNoticia = 'Noticias';
+        textoSingular = 'Noticia';
+    } else if (props.idTipoNoticia == 2) {
+        textoNoticia = 'Actividades';
+        textoSingular = 'Actividad';
+    } else if(props.idTipoNoticia == 3) {
+        textoNoticia = 'Campañas'
+        textoSingular = 'Campaña';
+    }
+
+
+
     return (
         <div className={classes.root}>
            
@@ -154,18 +169,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                     isLoading={isLoading}
                     columns={columns}
                     data={noticias}
-                    title="Noticias"
+                    title={ textoSingular }
                     localization={localization}
                     onRowClick={(event, rowData) => {
-                        let orderForm_Alt = { ...orderForm };
-                        if (orderForm_Alt && orderForm_Alt.archivo)
-                            orderForm_Alt.archivo.value = rowData.nombre;
-
-                        var objeto = inputAllChangedHandler(orderForm_Alt);
-                        console.log(objeto);
-                        setOrderForm(objeto.orderForm);
-                        setFormIsValid(objeto.formIsValid);
-                        handleNext();
+                       props.onClickItem(rowData);
+                        
                     }}
                     components={{
                         Container: props => (

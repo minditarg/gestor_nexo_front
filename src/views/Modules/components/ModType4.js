@@ -60,16 +60,8 @@ const styles = {
 };
 
 
-const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }) => {
-    let imagen = null;
-    let array = [];
-    if (value.archivo && (value.archivo.endsWith('.jpg') || value.archivo.endsWith('.png') || value.archivo.endsWith('.jpeg') || value.archivo.endsWith('.gif')))
-        imagen = (<img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/thumb_' + value.archivo} style={{ width: '75px' }} />);
-    if (orderForm) {
-        for (let key in orderForm) {
-            array.push(value[key]);
-        }
-    }
+const SortableItem = sortableElement(({ value, deleteItem  }) => {
+   
 
     return (
         <TableRow>
@@ -80,21 +72,15 @@ const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }
                 <IconButton onClick={() => deleteItem(value)}>
                     <DeleteIcon />
                 </IconButton>
-                <IconButton onClick={() => editItem(value)}>
-                    <EditIcon />
-                </IconButton>
+            
             </TableCell>
             <TableCell>
-                {imagen}
+                {value.nombre}
             </TableCell>
-            {array.map(elem =>
-                <TableCell>
-                    {elem}
-                </TableCell>
-
-            )}
-
-
+            <TableCell>
+                {value.descripcion}
+            </TableCell>
+        
 
         </TableRow>
     )
@@ -104,26 +90,16 @@ const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }
 const DragHandle = sortableHandle(() => <span><ControlCamera /></span>);
 
 const SortableContainer = sortableContainer(({ children, orderForm }) => {
-    let array = [];
-    if (orderForm) {
-        for (let key in orderForm) {
-            array.push(key);
-        }
-    }
+   
 
     return <Table style={{ backgroundColor: '#F9F9F9' }} size="small">
         <TableHead>
             <TableRow>
                 <TableCell>Ordenar</TableCell>
                 <TableCell>Acciones</TableCell>
-                <TableCell>Imagen</TableCell>
-                {array.map(elem =>
-                    <TableCell>
-                        {elem}
-                    </TableCell>
-
-                )}
-
+                <TableCell>Nombre</TableCell>
+                <TableCell>Decripción</TableCell>
+                
             </TableRow>
         </TableHead>
         <TableBody>
@@ -136,75 +112,79 @@ const SortableContainer = sortableContainer(({ children, orderForm }) => {
 class ModType4 extends Component {
     state = {
         items: [],
+        itemsShow: [],
         rowItem: null,
-        tipo:1,
+        tipo: 1,
         orderFormEst: {
             cantidad_noticias: {
-              elementType: 'input',
-              elementConfig: {
-                type: 'number',
-                label: 'Cantidad de Noticias',
-                fullWidth: true
-              },
-              value: '',
-              validation: {
-                required: true
-              },
-              valid: false,
-              touched: false
+                elementType: 'input',
+                elementConfig: {
+                    type: 'number',
+                    label: 'Cantidad a Mostrar ' ,
+                    fullWidth: true
+                },
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             orden: {
                 elementType: 'select',
                 elementConfig: {
-                  label: 'Orden',
-                  options: [
-                    { value: 1, displayValue: 'Facha de Publicación ASC' },
-                    { value: 2, displayValue: 'Fecha de publicación DESC' }
-        
-                  ],
-                  fullWidth: true
+                    label: 'Orden',
+                    options: [
+                        { value: 1, displayValue: 'Facha de Publicación ASC' },
+                        { value: 2, displayValue: 'Fecha de publicación DESC' }
+
+                    ],
+                    fullWidth: true
                 },
                 value: 2,
                 validation: {
-                  required: true
+                    required: true
                 },
-        
-                valid: false,
-                touched: false
-              },
 
-              solo_destacados: {
+                valid: true,
+                touched: true
+            },
+
+            solo_destacados: {
                 elementType: 'checkbox',
                 elementConfig: {
-                  label: 'Solo destacados'
+                    label: 'Solo destacados'
                 },
                 value: "0",
                 validation: {
-                  required: true
+                    required: false
                 },
-                valid: false,
-                touched: false
-              },
+                valid: true,
+                touched: true
+            },
 
 
-         
 
 
-          }
+
+        }
 
     }
 
     deleteItem = (rowData) => {
-        let indexItem = this.state.items.findIndex(elem => {
+        let indexItem = this.state.itemsShow.findIndex(elem => {
             return elem == rowData
 
         })
 
         if (indexItem > -1) {
             let items = [... this.state.items]
+            let itemsShow = [... this.state.itemsShow]
             items.splice(indexItem, 1)
+            itemsShow.splice(indexItem, 1)
             this.setState({
-                items: items
+                items: items,
+                itemsShow:itemsShow
             })
         }
 
@@ -226,25 +206,26 @@ class ModType4 extends Component {
         })
     }
 
-   
+
 
     handleSubmit = (e) => {
         e.preventDefault();
         let contenido = {};
-        for (let key in this.state.orderForm) {
-            contenido[key] = this.state.orderForm[key].value;
-        }
+        if (this.state.tipo == 2) {
+            for (let key in this.state.orderFormEst) {
+                contenido[key] = this.state.orderFormEst[key].value;
+            }
 
-
-        if (this.props.items) {
-            contenido.items = [...this.state.items];
-
-        }
-
-        if (this.props.htmlText) {
-            contenido.htmlText = this.state.htmlText;
+        } else {
+            if (this.state.items) {
+                contenido.items = [...this.state.items];
+            }
 
         }
+
+        contenido.tipo_modulo = this.state.tipo;
+
+
 
 
         contenido = JSON.stringify(contenido);
@@ -271,52 +252,74 @@ class ModType4 extends Component {
 
     }
 
+    listNoticiasEstaticas = (items) => {
+        console.log(items);
+        Database.post(`/list-noticias-in`, { queryIn: items }, this)
+            .then(res => {
+                let itemsShow = res.result;
+                let arrayResultante = items.map(elem => {
+                    let indexArray = itemsShow.findIndex(elem2 => {
+                        return elem2.id == elem
+                    })
+
+                    if (indexArray > -1)
+                        return itemsShow[indexArray]
+
+                })
+
+                this.setState({
+                    itemsShow: arrayResultante
+                })
+
+            })
+
+
+    }
+
 
     initializeMod = () => {
         let orderFormCopy;
         let contenido;
-        if (this.state.orderFormEst)
-            orderFormCopy = JSON.parse(JSON.stringify(this.state.orderFormEst));
-
         if (this.props.module && this.props.module.contenido)
             contenido = JSON.parse(this.props.module.contenido);
 
-        let module = { ...this.props.module }
-        if (orderFormCopy) {
-            for (let key in orderFormCopy) {
-                if (module && module.contenido)
-                    orderFormCopy[key].value = contenido[key];
-                orderFormCopy[key].touched = true;
+        if (contenido && contenido.tipo_modulo == 1) {
+
+            if (this.props.module && contenido) {
+                let items = [];
+                if (contenido.items) {
+                    items = contenido.items;
+                    this.listNoticiasEstaticas(items);
+                }
+                this.setState({
+                    items: items,
+                    tipo: contenido.tipo_modulo
+                })
+
             }
 
+        } else if(contenido && contenido.tipo_modulo == 2) {
+            if (this.state.orderFormEst)
+                orderFormCopy = JSON.parse(JSON.stringify(this.state.orderFormEst));
 
+            if (orderFormCopy) {
+                for (let key in orderFormCopy) {
+                    if (this.props.module && contenido && contenido[key])
+                        orderFormCopy[key].value = contenido[key];
+                    orderFormCopy[key].touched = true;
+                }
+             
+                let { orderForm, formIsValid } = inputAllChangedHandler(orderFormCopy);
 
-        }
+                this.setState({
+                    orderFormEst: orderForm,
+                    formIsValidEst: formIsValid,
+                    tipo: contenido.tipo_modulo
+                })
 
-        let { orderForm, formIsValid } = inputAllChangedHandler(orderFormCopy);
-
-        let htmlText = '';
-        if (this.props.htmlText && contenido && contenido.htmlText)
-            htmlText = contenido.htmlText
-
-        this.setState({
-            orderFormEst: orderForm,
-            formIsValidEst: formIsValid,
-            htmlText: htmlText
-        })
-
-        if (this.props.items && module && module.contenido) {
-            let items = [];
-            if (contenido.items)
-                items = contenido.items;
-
-            this.setState({
-                items: items
-            })
+            }
 
         }
-
-
 
 
 
@@ -331,8 +334,9 @@ class ModType4 extends Component {
 
     onSortEnd = ({ oldIndex, newIndex }) => {
 
-        this.setState(({ items }) => ({
+        this.setState(({ items, itemsShow }) => ({
             items: arrayMove(items, oldIndex, newIndex),
+            itemsShow: arrayMove(itemsShow, oldIndex, newIndex),
         }))
 
 
@@ -349,25 +353,22 @@ class ModType4 extends Component {
         this.setState({ open: false, openItems: false });
     }
 
-   
 
-    onClickItems = (rowData, newRowData) => {
-        console.log(rowData);
+
+    onClickItems = (rowData) => {
         let items = [... this.state.items];
-        if (rowData) {
-            let indexFind = items.findIndex(elem => {
-                return elem == rowData
-            })
 
-            if (indexFind > -1) {
-                items[indexFind] = newRowData;
-            }
+        let indexFind = items.findIndex(elem => {
+            return elem == rowData.id
+        })
 
+        if (indexFind > -1) {
 
         } else {
-
-            items.push(newRowData)
+            items.push(rowData.id);
         }
+
+        this.listNoticiasEstaticas(items);
 
         this.setState({
             items: items,
@@ -376,7 +377,7 @@ class ModType4 extends Component {
         })
 
     }
-    
+
 
 
     render() {
@@ -389,76 +390,89 @@ class ModType4 extends Component {
             });
         }
 
+        let textoNoticia = null;
+        let textoSingular = null;
+        if(this.props.idTipoNoticia == 1){
+            textoNoticia = 'Noticias';
+            textoSingular = 'Noticia';
+        } else if (this.props.idTipoNoticia == 2) {
+            textoNoticia = 'Actividades';
+            textoSingular = 'Actividad';
+        } else if(this.props.idTipoNoticia == 3) {
+            textoNoticia = 'Campañas'
+            textoSingular = 'Campaña';
+        }
+
 
 
         return ([
             <div key={"moduletype1-orderform"} >
                 <form onSubmit={this.handleSubmit} >
-                    
-                        <Grid style={{ marginTop: 25, marginBottom: 50 }} container>
-                            <Grid item md={7}>
-                                <h4>Campos del Componente</h4>
+
+                    <Grid style={{ marginTop: 25, marginBottom: 50 }} container>
+                        <Grid item md={7}>
+                            <h4>Campos del Componente</h4>
+                            <Input
+                                key={"edititem-select"}
+                                elementType={'select'}
+                                elementConfig={{
+                                    label: 'Tipo de Modulo',
+                                    options: [
+                                        { value: 1, displayValue: 'Estatico' },
+                                        { value: 2, displayValue: 'Dinamico' }
+
+                                    ],
+                                    fullWidth: true
+                                }}
+                                value={this.state.tipo}
+                                textValid={null}
+                                invalid={false}
+                                shouldValidate={{
+                                    required: true
+                                }}
+                                touched={true}
+                                changed={(event) => {
+                                    this.setState({ tipo: event.target.value })
+                                }}
+                            />
+
+
+                            {this.state.tipo == 2 && formElementsArray.map(formElement => (
                                 <Input
-                                        key={"edititem-select" }
-                                        elementType={'select'}
-                                        elementConfig={{
-                                            label: 'Tipo de Modulo',
-                                            options: [
-                                              { value: 1, displayValue: 'Estatico' },
-                                              { value: 2, displayValue: 'Dinamico' }
-                                  
-                                            ],
-                                            fullWidth: true
-                                          }}
-                                        value={ this.state.tipo }
-                                        textValid={null}
-                                        invalid={ false }
-                                        shouldValidate={{
-                                            required: true
-                                          }}
-                                        touched={ true }
-                                        changed={(event) => {
-                                            this.setState({ tipo: event.target.value})
-                                        }}
-                                    />
+                                    key={"edititem-" + formElement.id}
+                                    elementType={formElement.config.elementType}
+                                    elementConfig={formElement.config.elementConfig}
+                                    value={formElement.config.value}
+                                    textValid={formElement.config.textValid}
+                                    invalid={!formElement.config.valid}
+                                    shouldValidate={formElement.config.validation}
+                                    touched={formElement.config.touched}
+                                    changed={(event) => {
 
+                                        let { orderForm, formIsValid } = inputChangedHandler(event, formElement.id, this.state.orderFormEst);
+                                        console.log(orderForm);
+                                        this.setState({
+                                            orderFormEst: orderForm,
+                                            formIsValidEst: formIsValid
 
-                                { this.state.tipo == 2 && formElementsArray.map(formElement => (
-                                    <Input
-                                        key={"edititem-" + formElement.id}
-                                        elementType={formElement.config.elementType}
-                                        elementConfig={formElement.config.elementConfig}
-                                        value={formElement.config.value}
-                                        textValid={formElement.config.textValid}
-                                        invalid={!formElement.config.valid}
-                                        shouldValidate={formElement.config.validation}
-                                        touched={formElement.config.touched}
-                                        changed={(event) => {
-                                            
-                                            let { orderForm, formIsValid } = inputChangedHandler(event, formElement.id, this.state.orderFormEst);
-                                            console.log(orderForm);
-                                            this.setState({
-                                                orderFormEst: orderForm,
-                                                formIsValidEst: formIsValid
+                                        })
+                                    }}
+                                />
+                            ))}
 
-                                            })
-                                        }}
-                                    />
-                                ))}
-
-                            </Grid>
-
-                         
                         </Grid>
-                    
-                  
-                    { this.state.tipo == 1 &&
+
+
+                    </Grid>
+
+
+                    {this.state.tipo == 1 &&
                         <div>
 
-                            <h4>Listado de Noticias</h4>
-                            <Button style={{}} color="primary" variant="contained" type="button" onClick={this.openDialogItems.bind(this)}  ><Save /> Agregar Noticia</Button>
+                    <h4>Listado de { textoNoticia }</h4>
+                    <Button style={{}} color="primary" variant="contained" type="button" onClick={this.openDialogItems.bind(this)}  ><Save /> Agregar { textoSingular }</Button>
                             <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.props.items && this.props.items.orderForm} useDragHandle>
-                                {this.state.items.map((elem, index) => (
+                                {this.state.itemsShow.map((elem, index) => (
                                     <SortableItem key={`item-${index}`} index={index} value={elem} deleteItem={this.deleteItem.bind(this)} editItem={this.editItem.bind(this)} orderForm={this.props.items && this.props.items.orderForm} />
                                 ))}
 
@@ -474,19 +488,19 @@ class ModType4 extends Component {
                         </div>
                     }
 
-                    <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValidEst || this.state.disableAllButtons || !this.props.formIsValidPrincipal} type="submit" ><Save /> Guardar</Button>
+                    <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={(this.state.tipo ==2 ? !this.state.formIsValidEst : false) || this.state.disableAllButtons || !this.props.formIsValidPrincipal} type="submit" ><Save /> Guardar</Button>
 
                 </form>
 
             </div>,
-           
+
             <Dialog
                 open={this.state.openItems}
                 onClose={this.closeDialog.bind(this)}
                 fullWidth={true}
                 maxWidth={"md"}
             >
-                <DialogTitle>Agregar Noticia
+                <DialogTitle>Agregar { textoSingular }
                       <IconButton aria-label="close" className={this.props.classes.closeButton} onClick={this.closeDialog.bind(this)}>
                         <CloseIcon />
                     </IconButton>
@@ -496,6 +510,7 @@ class ModType4 extends Component {
                 <DialogContent>
                     {this.state.openItems &&
                         <StepAgregarNoticia
+                            idTipoNoticia = {this.props.idTipoNoticia}
                             onClickItem={this.onClickItems.bind(this)}
                         />
                     }

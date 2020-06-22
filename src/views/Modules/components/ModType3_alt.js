@@ -65,7 +65,7 @@ const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }
     let imagen = null;
     let array = [];
     if (value.archivo && (value.archivo.endsWith('.jpg') || value.archivo.endsWith('.png') || value.archivo.endsWith('.jpeg') || value.archivo.endsWith('.gif')))
-        imagen = (<img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + value.archivo} style={{ width: '75px' }} />);
+        imagen = (<img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/thumb_' + value.archivo} style={{ width: '75px' }} />);
     if (orderForm) {
         for (let key in orderForm) {
             array.push(value[key]);
@@ -405,7 +405,7 @@ class ModType3 extends Component {
 
 
                                 {this.state.orderForm && this.state.orderForm.archivo && (this.state.orderForm.archivo.value.endsWith('.jpg') || this.state.orderForm.archivo.value.endsWith('.jpeg') || this.state.orderForm.archivo.value.endsWith('.gif') || this.state.orderForm.archivo.value.endsWith('.png')) &&
-                                    <img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.orderForm.archivo.value} />
+                                    <img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/thumb_' + this.state.orderForm.archivo.value} />
 
                                 }
 
@@ -499,8 +499,6 @@ class ModType3 extends Component {
                                 },
                             }}
                             archivo={this.props.archivo}
-                            aspectRadio={ this.props.aspectRadio }
-                            width = { this.props.width }
                             onClickItem={this.onClick.bind(this)}
                         />
                     }
@@ -525,8 +523,6 @@ class ModType3 extends Component {
                             rowItem={this.state.rowItem}
                             orderForm={this.props.items && this.props.items.orderForm}
                             archivo={this.props.items && this.props.items.archivo}
-                            aspectRadio={ this.props.aspectRadio }
-                            width = { this.props.width }
                             onClickItem={this.onClickItems.bind(this)}
                             htmlText={this.props.items && this.props.items.htmlText}
                         />

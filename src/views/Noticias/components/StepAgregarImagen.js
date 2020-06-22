@@ -65,7 +65,7 @@ const columns = [
 ];
 
 function getSteps() {
-    return ['Seleccione un Insumo', 'Modificar cantidad'];
+    return ['Seleccione una Imagen', 'Confirme la selección'];
 }
 
 function urltoFile(url, filename, mimeType) {

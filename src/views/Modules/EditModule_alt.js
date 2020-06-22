@@ -211,8 +211,22 @@ class EditModule extends Component {
                   orderFormPrincipal={this.state.orderForm}
                   formIsValidPrincipal={this.state.formIsValid}
                   orderForm={{
-                    titulo: {
+                    archivo: {
                       elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Archivo',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    titulo: {
+                      elementType: 'textarea',
                       elementConfig: {
                         type: 'text',
                         label: 'Titulo',
@@ -224,25 +238,11 @@ class EditModule extends Component {
                       },
                       valid: true,
                       touched: false
-                    },
-                    texto: {
-                      elementType: 'textarea',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
                     }
 
                   }}
-                  archivo={false}
-                  htmlText={false}
+                  archivo={true}
+                  htmlText={true}
 
 
                 />
@@ -254,26 +254,62 @@ class EditModule extends Component {
                   module={this.state.module}
                   orderFormPrincipal={this.state.orderForm}
                   formIsValidPrincipal={this.state.formIsValid}
+
+                  items={{
+                    orderForm: {
+                      archivo: {
+                        elementType: 'input',
+                        elementConfig: {
+                          type: 'text',
+                          label: 'Archivo',
+                          fullWidth: true
+                        },
+                        value: '',
+                        validation: {
+                          required: false
+                        },
+                        valid: true,
+                        touched: false
+                      },
+                      titulo: {
+                        elementType: 'input',
+                        elementConfig: {
+                          type: 'text',
+                          label: 'Titulo',
+                          fullWidth: true
+                        },
+                        value: '',
+                        validation: {
+                          required: false
+                        },
+                        valid: true,
+                        touched: false
+                      }
+
+                    },
+                    archivo: true,
+                    htmlText: true
+
+
+                  }}
+
+                />
+
+              }
+
+              {
+                this.state.module && this.state.module.id_type_module == 3 &&
+                < ModType3
+                  module={this.state.module}
+                  orderFormPrincipal={this.state.orderForm}
+                  formIsValidPrincipal={this.state.formIsValid}
+                  htmlText={true}
                   orderForm={{
                     titulo: {
                       elementType: 'input',
                       elementConfig: {
                         type: 'text',
                         label: 'Titulo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL  ',
                         fullWidth: true
                       },
                       value: '',
@@ -284,125 +320,8 @@ class EditModule extends Component {
                       touched: false
                     }
 
-                  }}
-                  archivo={false}
-                  htmlText={false}
-
-
-                />
-
-              }
-              {
-                this.state.module && this.state.module.id_type_module == 3 &&
-                < ModType3
-                  module={this.state.module}
-                  orderFormPrincipal={this.state.orderForm}
-                  formIsValidPrincipal={this.state.formIsValid}
-                  orderForm={{
-                    titulo: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Titulo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-
-                    texto_linkedIn: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto LinkedIn',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url_linkedIn: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL LinkedIn',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    texto_instagram: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto Instagram',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url_instagram: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL Instagram',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    texto_facebook: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto Facebook',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url_facebook: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL Facebook',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
 
                   }}
-                  archivo={false}
-                  htmlText={false}
-
 
                 />
 
@@ -414,6 +333,7 @@ class EditModule extends Component {
                   module={this.state.module}
                   orderFormPrincipal={this.state.orderForm}
                   formIsValidPrincipal={this.state.formIsValid}
+                  htmlText={true}
                   orderForm={{
                     titulo: {
                       elementType: 'input',
@@ -429,11 +349,39 @@ class EditModule extends Component {
                       valid: true,
                       touched: false
                     },
-                    mail: {
+                    ubicacion: {
                       elementType: 'input',
                       elementConfig: {
                         type: 'text',
-                        label: 'Email Contacto ',
+                        label: 'Ubicacion',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    telefono: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Telefono',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    email: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Email',
                         fullWidth: true
                       },
                       value: '',
@@ -444,17 +392,93 @@ class EditModule extends Component {
                       touched: false
                     }
 
-                  }}
-                  archivo={false}
-                  htmlText={false}
 
+                  }}
 
                 />
 
               }
 
+              {
+                this.state.module && this.state.module.id_type_module == 5 &&
+                < ModType3
+                  module={this.state.module}
+                  orderFormPrincipal={this.state.orderForm}
+                  formIsValidPrincipal={this.state.formIsValid}
+                  archivo={true}
+                  orderForm={{
+                    archivo: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Archivo',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    titulo: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Titulo',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    }
 
 
+                  }}
+                  items={{
+                    orderForm: {
+
+                      titulo: {
+                        elementType: 'input',
+                        elementConfig: {
+                          type: 'text',
+                          label: 'Titulo',
+                          fullWidth: true
+                        },
+                        value: '',
+                        validation: {
+                          required: false
+                        },
+                        valid: true,
+                        touched: false
+                      },
+                      texto: {
+                        elementType: 'textarea',
+                        elementConfig: {
+                          type: 'text',
+                          label: 'Texto',
+                          fullWidth: true
+                        },
+                        value: '',
+                        validation: {
+                          required: false
+                        },
+                        valid: true,
+                        touched: false
+                      },
+
+                    },
+
+
+
+                  }}
+
+                />
+
+              }
 
               {this.state.module && this.state.module.id_type_module == 6 &&
                 < ModType4
@@ -493,63 +517,13 @@ class EditModule extends Component {
 
               }
 
-              {
+{
                 this.state.module && this.state.module.id_type_module == 9 &&
                 < ModType3
                   module={this.state.module}
                   orderFormPrincipal={this.state.orderForm}
                   formIsValidPrincipal={this.state.formIsValid}
-                  items={{
-                    orderForm: {
-                      titulo: {
-                        elementType: 'input',
-                        elementConfig: {
-                          type: 'text',
-                          label: 'Titulo',
-                          fullWidth: true
-                        },
-                        value: '',
-                        validation: {
-                          required: false
-                        },
-                        valid: true,
-                        touched: false
-                      },
-                      cantidad: {
-                        elementType: 'input',
-                        elementConfig: {
-                          type: 'text',
-                          label: 'Cantidad',
-                          fullWidth: true
-                        },
-                        value: '',
-                        validation: {
-                          required: false
-                        },
-                        valid: true,
-                        touched: false
-                      }
-
-                    },
-                    archivo: false,
-                    htmlText: false
-
-
-                  }}
-                  archivo={false}
-                  htmlText={false}
-
-
-                />
-
-              }
-
-              {
-                this.state.module && this.state.module.id_type_module == 10 &&
-                < ModType3
-                  module={this.state.module}
-                  orderFormPrincipal={this.state.orderForm}
-                  formIsValidPrincipal={this.state.formIsValid}
+                  htmlText={true}
                   orderForm={{
                     titulo: {
                       elementType: 'input',
@@ -568,232 +542,10 @@ class EditModule extends Component {
 
 
                   }}
-                  archivo={false}
-                  htmlText={true}
-
 
                 />
 
               }
-
-              {
-                this.state.module && this.state.module.id_type_module == 11 &&
-                < ModType3
-                  module={this.state.module}
-                  orderFormPrincipal={this.state.orderForm}
-                  formIsValidPrincipal={this.state.formIsValid}
-                  orderForm={{
-                    titulo: {
-                      elementType: 'textarea',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Titulo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    texto_boton: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto del Botón',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url_boton: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL del Botón',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    archivo: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Archivo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    }
-
-
-                  }}
-                  archivo={true}
-                  aspectRadio={1.5}
-                  width={900}
-                  htmlText={true}
-
-
-                />
-
-              }
-
-
-              {
-                this.state.module && this.state.module.id_type_module == 12 &&
-                < ModType3
-                  module={this.state.module}
-                  orderFormPrincipal={this.state.orderForm}
-                  formIsValidPrincipal={this.state.formIsValid}
-                  orderForm={{
-                    titulo: {
-                      elementType: 'textarea',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Titulo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    texto_boton: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto del Botón',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url_boton: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL del Botón',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    archivo: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Archivo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    }
-
-
-                  }}
-                  archivo={true}
-                  aspectRadio={1.33}
-                  width={600}
-                  htmlText={true}
-
-
-                />
-
-              }
-
-{
-                this.state.module && this.state.module.id_type_module == 13 &&
-                < ModType3
-                  module={this.state.module}
-                  orderFormPrincipal={this.state.orderForm}
-                  formIsValidPrincipal={this.state.formIsValid}
-                  orderForm={{
-                    titulo: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Titulo',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    texto_boton: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'Texto del Botón',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                    url_boton: {
-                      elementType: 'input',
-                      elementConfig: {
-                        type: 'text',
-                        label: 'URL del Botón',
-                        fullWidth: true
-                      },
-                      value: '',
-                      validation: {
-                        required: false
-                      },
-                      valid: true,
-                      touched: false
-                    },
-                  
-
-
-                  }}
-                  archivo={false}
-                  htmlText={true}
-
-
-                />
-
-              }
-
-
-
-
-
 
 
             </CardBody>

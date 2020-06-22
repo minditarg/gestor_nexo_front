@@ -24,7 +24,7 @@ import { localization } from "variables/general.js";
 import { toast } from 'react-toastify';
 
 
-import { StateListPages, ColumnsListado } from "./VariablesState";
+import { StateListNoticias, ColumnsListado } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
@@ -62,7 +62,7 @@ const styles = {
 
 
 class Noticias extends Component {
-  state = { ...StateListPages };
+  state = { ...StateListNoticias };
 
 
   componentDidMount() {
