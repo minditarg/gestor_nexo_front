@@ -68,6 +68,8 @@ export default function ModalSelectImage(props) {
 
     return (
         <Dialog
+            maxWidth={"lg"}
+            fullWidth={true}
             open={props.openAgregarTexto}
             onClose={props.handleClose}
             aria-labelledby="alert-dialog-title"
@@ -130,7 +132,7 @@ export default function ModalSelectImage(props) {
                 <Button onClick={() => props.handleClose()} color="primary">
                     Cancelar
  </Button>
-                <Button onClick={() => props.handleSelect(orderForm,htmlText)} color="primary">
+                <Button onClick={() => props.handleSelect(orderForm, htmlText)} color="primary">
                     Aceptar
  </Button>
             </DialogActions>

@@ -107,7 +107,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     const _crop = function () {
 
-        aceptarBoolean= false;
+        aceptarBoolean = false;
         /*
         cropper.current.getCroppedCanvas().toBlob((blob) => {
 
@@ -251,17 +251,17 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }
 
     const handleSeleccionar = () => {
-        if(cropper.current.getData().width >= props.width || aceptarBoolean) { 
-        let imageB64 = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
-        handleFile(imageB64, function (filename) {
-            setUrlImg(filename);
-            handleNext();
+        if (cropper.current.getData().width >= props.width || aceptarBoolean) {
+            let imageB64 = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
+            handleFile(imageB64, function (filename) {
+                setUrlImg(filename);
+                handleNext();
 
-        });
-    } else {
-        setSizeMsj(true);
-        aceptarBoolean = true;
-    }
+            });
+        } else {
+            setSizeMsj(true);
+            aceptarBoolean = true;
+        }
 
     }
 
@@ -369,6 +369,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     return (
         <Dialog
+            maxWidth={"md"}
+            fullWidth={true}
             open={props.openSelectImage}
             onClose={props.handleClose}
             aria-labelledby="alert-dialog-title"

@@ -348,73 +348,92 @@ class NewEditNoticia extends Component {
     let contenido = {}
     event.preventDefault();
 
-    contenido.imgPortada = this.state.imgPortada;
-    contenido.items = this.state.items;
-
-    contenido = JSON.stringify(contenido);
-
-    if (this.props.match.params.idnoticia) {
-      url = '/update-noticia';
-      objectoPost = {
-        id: parseInt(this.props.match.params.idnoticia),
-        nombre: this.state.orderForm.nombre.value,
-        descripcion: this.state.orderForm.descripcion.value,
-        estado: this.state.orderForm.estado.value,
-        destacado: this.state.orderForm.destacado.value,
-        principal: this.state.orderForm.principal.value,
-        idTipoNoticia: this.props.idTipoNoticia,
-        idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
-        tags: this.state.tags,
-        contenido: contenido,
-        fechaInicio: this.state.fechaInicio,
-        fechaFinalizacion: this.state.fechaFinalizacion
-
-      }
-
-    } else {
-      url = '/insert-noticia';
-      objectoPost = {
-        nombre: this.state.orderForm.nombre.value,
-        descripcion: this.state.orderForm.descripcion.value,
-        estado: this.state.orderForm.estado.value,
-        destacado: this.state.orderForm.destacado.value,
-        principal: this.state.orderForm.principal.value,
-        idTipoNoticia: this.props.idTipoNoticia,
-        idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
-        tags: this.state.tags,
-        contenido: contenido,
-        fechaInicio: this.state.fechaInicio,
-        fechaFinalizacion: this.state.fechaFinalizacion
-
-      }
-
-
+    let orderFormCopy = { ... this.state.orderForm }
+    for (let key in orderFormCopy) {
+      orderFormCopy[key].touched = true
     }
 
+    let { orderForm, formIsValid } = inputAllChangedHandler(orderFormCopy)
+
+    this.setState({
+      formIsValid: formIsValid,
+      orderForm: orderForm
+    })
+
+    if (formIsValid) {
+      contenido.imgPortada = this.state.imgPortada;
+      contenido.items = this.state.items;
+
+      contenido = JSON.stringify(contenido);
+
+      if (this.props.match.params.idnoticia) {
+        url = '/update-noticia';
+        objectoPost = {
+          id: parseInt(this.props.match.params.idnoticia),
+          nombre: this.state.orderForm.nombre.value,
+          descripcion: this.state.orderForm.descripcion.value,
+          estado: this.state.orderForm.estado.value,
+          destacado: this.state.orderForm.destacado.value,
+          principal: this.state.orderForm.principal.value,
+          idTipoNoticia: this.props.idTipoNoticia,
+          idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
+          tags: this.state.tags,
+          contenido: contenido,
+          fechaInicio: this.state.fechaInicio,
+          fechaFinalizacion: this.state.fechaFinalizacion
+
+        }
+
+      } else {
+        url = '/insert-noticia';
+        objectoPost = {
+          nombre: this.state.orderForm.nombre.value,
+          descripcion: this.state.orderForm.descripcion.value,
+          estado: this.state.orderForm.estado.value,
+          destacado: this.state.orderForm.destacado.value,
+          principal: this.state.orderForm.principal.value,
+          idTipoNoticia: this.props.idTipoNoticia,
+          idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
+          tags: this.state.tags,
+          contenido: contenido,
+          fechaInicio: this.state.fechaInicio,
+          fechaFinalizacion: this.state.fechaFinalizacion
+
+        }
 
 
-    Database.post(url, objectoPost, this)
-      .then(res => {
-
-        this.setState({
-          successSubmit: true,
-          formIsValid: false,
-          disableAllButtons: false
-        }, () => {
-          toast.success("Modificacion exitosa");
+      }
 
 
 
+      Database.post(url, objectoPost, this)
+        .then(res => {
 
-          this.props.getNoticias();
+          this.setState({
+            successSubmit: true,
+            formIsValid: false,
+            disableAllButtons: false
+          }, () => {
+            toast.success("Modificacion exitosa");
+            this.props.getNoticias();
+            if (!this.props.match.params.idnoticia) {
+              let urlBase = "/" + this.props.match.path.split("/")[1] + "/" + this.props.match.path.split("/")[2] + "/edit/" + res.resultInsert[0][0].id_noticia;
+              this.props.history.replace(urlBase);
+              this.setState({vistaPrevia:true})
+            }
+            
+
+
+          })
+
+        }, err => {
+          toast.error(err.message);
 
         })
 
-      }, err => {
-        toast.error(err.message);
-
-      })
-
+    } else {
+      toast.error("verifique los campos a completar");
+    }
   }
 
 
@@ -521,19 +540,18 @@ class NewEditNoticia extends Component {
 
 
   componentDidMount() {
-    let thumbs =[];
-
-    if (this.props.match.params.idnoticia)
+    let thumbs = [];
+    if (this.props.match.params.idnoticia) {
       this.getNoticiaEdit(this.props.match.params.idnoticia);
-
+    }
     this.getTiposCategorias();
 
-   
+
 
   }
 
   render() {
-   
+
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
       formElementsArray.push({
@@ -558,19 +576,19 @@ class NewEditNoticia extends Component {
 
     if (this.props.idTipoNoticia == 1) {
       titulo = 'Noticia';
-      thumbs = [{width:900,height:400},{width:500,height:650},{width:600,height:350},{width:230,height:230},{width:768,height:600}];
+      thumbs = [{ width: 900, height: 400 }, { width: 500, height: 650 }, { width: 600, height: 350 }, { width: 230, height: 230 }, { width: 768, height: 600 }];
       aspectRadio = 1.5;
       width = 900;
     }
     else if (this.props.idTipoNoticia == 2) {
       titulo = 'Actividad';
-      thumbs = [{width:400,height:500},{width:230,height:230}];
+      thumbs = [{ width: 400, height: 500 }, { width: 230, height: 230 }];
       aspectRadio = 1.5;
       width = 900;
     }
     else if (this.props.idTipoNoticia == 3) {
       titulo = 'Campaña';
-      thumbs = [{width:400,height:270},{width:200,height:200},{width:230,height:230}];
+      thumbs = [{ width: 400, height: 270 }, { width: 200, height: 200 }, { width: 230, height: 230 }];
       aspectRadio = 1.5;
       width = 900;
     }
@@ -618,7 +636,7 @@ class NewEditNoticia extends Component {
                   ))}
                   {this.props.idTipoNoticia == 3 &&
 
-                    <div style={{ marginTop:'20px',marginBottom:'20px' }}>
+                    <div style={{ marginTop: '20px', marginBottom: '20px' }}>
                       <TextField
                         id="date"
                         label="Fecha de Inicio"
@@ -645,8 +663,8 @@ class NewEditNoticia extends Component {
 
 
                   }
-                  { this.props.idTipoNoticia == 2 &&
-                    <div style={{ marginTop:'20px',marginBottom:'20px' }}>
+                  {this.props.idTipoNoticia == 2 &&
+                    <div style={{ marginTop: '20px', marginBottom: '20px' }}>
                       <TextField
                         id="date"
                         label="Fecha y Hora de Inicio"
@@ -724,6 +742,7 @@ class NewEditNoticia extends Component {
                 </div>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
+                <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open( process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
 
                 <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
                   {this.state.items.map((elem, index) => (
@@ -742,7 +761,7 @@ class NewEditNoticia extends Component {
 
 
 
-                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+                <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
               </CardBody>
@@ -752,8 +771,8 @@ class NewEditNoticia extends Component {
                 openSelectImage={this.state.openImgPortada}
                 handleSelectImage={this.handleSelectImage}
                 handleClose={this.handleClose}
-                width={ width }
-                aspectradio={ aspectRadio }
+                width={width}
+                aspectradio={aspectRadio}
                 thumbs={thumbs}
               />
             }
@@ -765,7 +784,7 @@ class NewEditNoticia extends Component {
                 orderForm={this.state.orderFormItems}
                 handleSelect={this.handleSelectTexto}
                 handleClose={this.handleClose}
-               
+
               />
             }
 
@@ -782,7 +801,7 @@ class NewEditNoticia extends Component {
               />
             }
 
-        
+
 
           </ form>
         }

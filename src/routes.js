@@ -47,6 +47,7 @@ const dashboardRoutes = [
      component: Pages,
      layout: "/admin"
    },
+   /*
    {
     accesos: [],
     path: "/itemsmenu",
@@ -56,7 +57,7 @@ const dashboardRoutes = [
     component: ItemsMenu,
     layout: "/admin"
   }, 
-  
+  */
   {
     accesos: [],
     path: "/noticias",
@@ -94,7 +95,7 @@ const dashboardRoutes = [
     },
     layout: "/admin"
   },  
-
+  /*
   {
     show:false,
     accesos: [],
@@ -118,6 +119,7 @@ const dashboardRoutes = [
 
     ]
   },
+  */
   {
     show:false,
     accesos: [],

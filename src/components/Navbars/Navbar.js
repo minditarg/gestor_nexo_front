@@ -17,7 +17,7 @@ import Button from "components/CustomButtons/Button.js";
 import { Route, Switch} from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 
-import logo from 'assets/img/internet_logo.png';
+import logo from 'assets/img/ods_logo.png';
 
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
 

@@ -119,7 +119,8 @@ export const StateNewEditNoticia = {
     openImgInterior:false,
     openAgregarTexto:false,
     thumbs:[],
-    thumbsInterno:[]
+    thumbsInterno:[],
+    vistaPrevia: false
 
 }
 

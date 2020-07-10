@@ -398,6 +398,91 @@ class EditModule extends Component {
                       valid: true,
                       touched: false
                     },
+                    texto_telegram: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Texto Telegram',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    url_telegram: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'URL Telegram',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    texto_youtube: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Texto Youtube',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    url_youtube: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'URL Youtube',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    texto_twitter: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'Texto Twitter',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    },
+                    url_twitter: {
+                      elementType: 'input',
+                      elementConfig: {
+                        type: 'text',
+                        label: 'URL Twitter',
+                        fullWidth: true
+                      },
+                      value: '',
+                      validation: {
+                        required: false
+                      },
+                      valid: true,
+                      touched: false
+                    }
+
 
                   }}
                   archivo={false}

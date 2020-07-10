@@ -119,18 +119,18 @@ export default function ModalSelectImage(props) {
     }
 
     const handleSelect = () => {
-        if(cropper.current.getData().width >= props.width || aceptarBoolean) { 
-        let imageURL = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
-        
-        handleFile(imageURL, function (filename) {
+        if (cropper.current.getData().width >= props.width || aceptarBoolean) {
+            let imageURL = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
 
-            props.handleSelectImage(filename);
+            handleFile(imageURL, function (filename) {
 
-        })
-    } else {
-        setSizeMsj(true);
-        aceptarBoolean = true;
-    }
+                props.handleSelectImage(filename);
+
+            })
+        } else {
+            setSizeMsj(true);
+            aceptarBoolean = true;
+        }
 
 
 
@@ -140,6 +140,8 @@ export default function ModalSelectImage(props) {
     console.log(img);
     return (
         <Dialog
+            maxWidth={"md"}
+            fullWidth={true}
             open={props.openSelectImage}
             onClose={props.handleClose}
             aria-labelledby="alert-dialog-title"
@@ -171,7 +173,7 @@ export default function ModalSelectImage(props) {
                     guides={false}
                     crop={_crop} />
 
-                {sizeMsj && <p style={{ color:'red' }}>El tamaño del recuadro es inferior a la resolución necesaria. Agrande el recuadro o vulva a presionar "Aceptar para continuar igualmente"  </p>}
+                {sizeMsj && <p style={{ color: 'red' }}>El tamaño del recuadro es inferior a la resolución necesaria. Agrande el recuadro o vulva a presionar "Aceptar para continuar igualmente"  </p>}
 
             </DialogContent>
 
