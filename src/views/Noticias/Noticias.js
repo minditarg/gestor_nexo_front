@@ -77,10 +77,11 @@ class Noticias extends Component {
       isLoading: true
     })
 
-    Database.get('/list-noticias-bytipo/' + this.props.idTipoNoticia , this, null, true)
+    Database.get('/list-noticias-bytipo/' + this.props.idTipoNoticia, this, null, true)
       .then(res => {
         let resultado = [...res.result];
-        console.log(resultado);
+
+
         this.setState({
           isLoading: false,
           noticias: resultado,
@@ -172,6 +173,36 @@ class Noticias extends Component {
       titulo = 'Campañas';
       singular = 'campaña'
     }
+    console.log(this.state.noticias);
+
+    let noticias = this.state.noticias.map(elem => {
+      let estado;
+      let destacado;
+      let principal;
+
+      if (elem.estado == 1)
+        estado = 'Publicado';
+      if (elem.estado == 2)
+        estado = 'Despublicado';
+
+      if (elem.destacado == 1)
+        destacado = 'Si';
+      if (elem.destacado == 0)
+        destacado = '';
+
+      if (elem.principal == 1)
+        principal = 'Si';
+      if (elem.principal == 0)
+        principal = '';
+
+      return {
+        ...elem,
+        estado: estado,
+        destacado:destacado,
+        principal:principal
+      }
+
+    })
 
     let style = {}
     if (this.props.match.url != this.props.location.pathname) {
@@ -192,7 +223,7 @@ class Noticias extends Component {
               <MaterialTable
                 isLoading={this.state.isLoading}
                 columns={ColumnsListado}
-                data={this.state.noticias}
+                data={noticias}
                 title=""
                 localization={localization}
 

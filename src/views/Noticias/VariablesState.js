@@ -131,5 +131,7 @@ export const StateNewEditNoticia = {
 export const ColumnsListado = [
 { title: "Nombre", field: "nombre" },
 { title: "Descripcion", field: "descripcion" },
-{ title: "Estado", field: "estado" }
+{ title: "Estado", field: "estado" },
+{ title: "Dest", field: "destacado" },
+{ title: "Princ", field: "principal" }
 ];

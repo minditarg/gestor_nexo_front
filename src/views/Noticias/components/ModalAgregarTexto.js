@@ -68,8 +68,7 @@ export default function ModalSelectImage(props) {
 
     return (
         <Dialog
-            maxWidth={"lg"}
-            fullWidth={true}
+            fullScreen={true}
             open={props.openAgregarTexto}
             onClose={props.handleClose}
             aria-labelledby="alert-dialog-title"
@@ -102,11 +101,12 @@ export default function ModalSelectImage(props) {
                     <Editor
                         initialValue={htmlText}
                         apiKey='ursxh3uvsir7p6qyklffy60b3nt2fn5wpwpexy5t9mweaxla'
+                    
                         init={{
                             force_br_newlines: true,
                             force_p_newlines: false,
                             forced_root_block: '', // Needed for 3.x
-                            height: 150,
+                            min_height:500,
                             menubar: false,
                             paste_as_text: true,
                             plugins: [
@@ -132,7 +132,11 @@ export default function ModalSelectImage(props) {
                 <Button onClick={() => props.handleClose()} color="primary">
                     Cancelar
  </Button>
-                <Button onClick={() => props.handleSelect(orderForm, htmlText)} color="primary">
+                <Button onClick={() =>{ 
+                    let objeto = {}
+                    objeto.descripcion = orderForm.descripcion.value;
+                    objeto.htmlText = htmlText;
+                    props.handleSelect(rowItem, objeto) } } color="primary">
                     Aceptar
  </Button>
             </DialogActions>

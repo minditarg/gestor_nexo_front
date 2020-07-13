@@ -419,9 +419,9 @@ class NewEditNoticia extends Component {
             if (!this.props.match.params.idnoticia) {
               let urlBase = "/" + this.props.match.path.split("/")[1] + "/" + this.props.match.path.split("/")[2] + "/edit/" + res.resultInsert[0][0].id_noticia;
               this.props.history.replace(urlBase);
-              this.setState({vistaPrevia:true})
+              this.setState({ vistaPrevia: true })
             }
-            
+
 
 
           })
@@ -493,11 +493,21 @@ class NewEditNoticia extends Component {
 
   }
 
-  handleSelectTexto = (orderForm, htmlText) => {
+  handleSelectTexto = (rowItem, objeto) => {
     this.handleClose();
-    let objetoCopy = { descripcion: orderForm.descripcion.value, htmlText: htmlText }
+    let objetoCopy = { descripcion: objeto.descripcion, htmlText: objeto.htmlText }
     let items = [...this.state.items];
-    items.push(objetoCopy);
+    if (rowItem) {
+      console.log(rowItem);
+      let indice = items.indexOf(rowItem);
+
+      console.log(indice);
+      if (indice > -1)
+        items[indice] = objetoCopy;
+    } else {
+      items.push(objetoCopy);
+    }
+
     this.setState({
       items: items
 
@@ -543,6 +553,7 @@ class NewEditNoticia extends Component {
     let thumbs = [];
     if (this.props.match.params.idnoticia) {
       this.getNoticiaEdit(this.props.match.params.idnoticia);
+      this.setState({ vistaPrevia: true })
     }
     this.getTiposCategorias();
 
@@ -742,7 +753,7 @@ class NewEditNoticia extends Component {
                 </div>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
-                <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open( process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
+                <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open(process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
 
                 <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
                   {this.state.items.map((elem, index) => (
