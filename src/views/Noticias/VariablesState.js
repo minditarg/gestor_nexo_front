@@ -15,7 +15,7 @@ export const StateNewEditNoticia = {
             elementType: 'input',
             elementConfig: {
                 type: 'text',
-                label: 'Nombre',
+                label: 'Título',
                 fullWidth: true
             },
             value: '',
@@ -29,7 +29,7 @@ export const StateNewEditNoticia = {
             elementType: 'input',
             elementConfig: {
                 type: 'text',
-                label: 'descripcion',
+                label: 'Bajada',
                 fullWidth: true,
             },
             value: '',

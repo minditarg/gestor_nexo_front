@@ -593,13 +593,13 @@ class NewEditNoticia extends Component {
     }
     else if (this.props.idTipoNoticia == 2) {
       titulo = 'Actividad';
-      thumbs = [{ width: 400, height: 500 }, { width: 230, height: 230 }];
+      thumbs = [{ width: 900, height: 400 },{ width: 400, height: 500 }, { width: 230, height: 230 }];
       aspectRadio = 1.5;
       width = 900;
     }
     else if (this.props.idTipoNoticia == 3) {
       titulo = 'Campaña';
-      thumbs = [{ width: 400, height: 270 }, { width: 200, height: 200 }, { width: 230, height: 230 }];
+      thumbs = [{ width: 900, height: 400 },{ width: 400, height: 270 }, { width: 200, height: 200 }, { width: 230, height: 230 }];
       aspectRadio = 1.5;
       width = 900;
     }

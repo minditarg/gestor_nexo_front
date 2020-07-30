@@ -39,6 +39,7 @@ import Noticias from "views/Noticias/Noticias.js";
 
 const dashboardRoutes = [
    {
+    show:false,
      accesos: [],
      path: "/pages",
      name: "Paginas",
@@ -58,8 +59,10 @@ const dashboardRoutes = [
     layout: "/admin"
   }, 
   */
+  
   {
-    accesos: [],
+    show:false,
+    accesos: [31],
     path: "/noticias",
     name: "Noticias",
     rtlName: "DS",
@@ -72,7 +75,8 @@ const dashboardRoutes = [
   }, 
 
   {
-    accesos: [],
+    show:false,
+    accesos: [41],
     path: "/actividades",
     name: "Actividades",
     rtlName: "DS",
@@ -84,7 +88,8 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    accesos: [],
+    show:false,
+    accesos: [51],
     path: "/campanas",
     name: "Campañas",
     rtlName: "DS",
@@ -122,7 +127,7 @@ const dashboardRoutes = [
   */
   {
     show:false,
-    accesos: [],
+    accesos: [11,12],
     groupComponent: true,
     name: 'Usuarios',
     open: 'open21',
@@ -130,7 +135,7 @@ const dashboardRoutes = [
     dependences: [
       {
         show:false,
-        accesos: [],
+        accesos: [11],
         path: "/usuarios",
         name: "Usuarios",
         rtlName: "Us",
@@ -141,7 +146,7 @@ const dashboardRoutes = [
 
       {
         show:false,
-        accesos: [],
+        accesos: [12],
         path: "/tiposusuarios",
         name: "Tipos Usuarios",
         rtlName: "Us",
