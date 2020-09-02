@@ -72,7 +72,7 @@ export default function ModalSelectImage(props) {
         Database.post('/insert-noticia-image', { extension: 'jpg' }, this)
             .then(res => {
                 let file_name = res.result[0].file_name;
-                let file = urltoFile(UrlFile, file_name, 'image/png');
+                let file = urltoFile(UrlFile, file_name, 'image/jpg');
                 setIsLoading(false);
                 file.then(file => {
 
@@ -119,7 +119,7 @@ export default function ModalSelectImage(props) {
     }
 
     const handleSelect = () => {
-        if (cropper.current.getData().width >= props.width || aceptarBoolean) {
+       // if (cropper.current.getData().width >= props.width || aceptarBoolean) {
             let imageURL = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
 
             handleFile(imageURL, function (filename) {
@@ -127,10 +127,10 @@ export default function ModalSelectImage(props) {
                 props.handleSelectImage(filename);
 
             })
-        } else {
-            setSizeMsj(true);
-            aceptarBoolean = true;
-        }
+       // } else {
+         //   setSizeMsj(true);
+          //  aceptarBoolean = true;
+       // }
 
 
 

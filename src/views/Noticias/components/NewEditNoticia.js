@@ -193,6 +193,12 @@ class NewEditNoticia extends Component {
     })
   };
 
+  handleOpenImgPortada2 = () => {
+    this.setState({
+      openImgPortada2: true
+    })
+  };
+
   handleOpenAgregarTexto = () => {
     this.setState({
       rowItem: null,
@@ -211,6 +217,7 @@ class NewEditNoticia extends Component {
   handleClose = () => {
     this.setState({
       openImgPortada: false,
+      openImgPortada2: false,
       openImgInterior: false,
       openAgregarTexto: false
     })
@@ -273,10 +280,12 @@ class NewEditNoticia extends Component {
         if (resultado.noticia.length > 0) {
           let contenido = null;
           let imgPortada = null;
+          let imgPortada2 = null;
           let items = [];
           if (resultado.noticia[0].contenido) {
             contenido = JSON.parse(resultado.noticia[0].contenido);
             imgPortada = contenido.imgPortada || null;
+            imgPortada2 = contenido.imgPortada2 || null;
             items = contenido.items || [];
           }
 
@@ -317,6 +326,7 @@ class NewEditNoticia extends Component {
             tags: tags,
             idCategoria: categoria,
             imgPortada: imgPortada,
+            imgPortada2: imgPortada2,
             items: items,
             fechaInicio: fechaInicio,
             fechaFinalizacion: fechaFinalizacion
@@ -362,6 +372,7 @@ class NewEditNoticia extends Component {
 
     if (formIsValid) {
       contenido.imgPortada = this.state.imgPortada;
+      contenido.imgPortada2 = this.state.imgPortada2;
       contenido.items = this.state.items;
 
       contenido = JSON.stringify(contenido);
@@ -458,6 +469,16 @@ class NewEditNoticia extends Component {
 
     this.setState({
       imgPortada: filename
+    })
+
+
+  }
+
+  handleSelectImage2 = (filename) => {
+    this.handleClose();
+    console.log(filename);
+    this.setState({
+      imgPortada2: filename
     })
 
 
@@ -565,6 +586,7 @@ class NewEditNoticia extends Component {
 
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
+      if(this.props.idTipoNoticia == 1 || (key != 'destacado' && key != 'principal') )
       formElementsArray.push({
         id: key,
         config: this.state.orderForm[key]
@@ -580,27 +602,43 @@ class NewEditNoticia extends Component {
     if (this.state.imgPortada)
       img = '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.imgPortada;
 
+    let img2 = defaultImage;
+      if (this.state.imgPortada2)
+        img2 = '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.imgPortada2;
+
     let titulo = null;
     let thumbs = [];
+    let thumbs2 = [];
     let aspectRadio = null;
+    let aspectRadio2 = null;
     let width = null;
+    let width2 = null;
 
     if (this.props.idTipoNoticia == 1) {
       titulo = 'Noticia';
-      thumbs = [{ width: 900, height: 400 }, { width: 500, height: 650 }, { width: 600, height: 350 }, { width: 230, height: 230 }, { width: 768, height: 600 }];
-      aspectRadio = 1.5;
+      thumbs = [{ width: 450, height: 225 }];
+      thumbs2 = [{ width: 250, height: 300 }];
+      aspectRadio = 2;
+      aspectRadio2 = 0.833
+      width2 = 500;
       width = 900;
     }
     else if (this.props.idTipoNoticia == 2) {
       titulo = 'Actividad';
-      thumbs = [{ width: 900, height: 400 },{ width: 400, height: 500 }, { width: 230, height: 230 }];
-      aspectRadio = 1.5;
+      thumbs = [{ width: 450, height: 225 }];
+      thumbs2 = [{ width: 250, height: 300 }];
+      aspectRadio = 2;
+      aspectRadio2 = 0.833
+      width2 = 500;
       width = 900;
     }
     else if (this.props.idTipoNoticia == 3) {
       titulo = 'Campaña';
-      thumbs = [{ width: 900, height: 400 },{ width: 400, height: 270 }, { width: 200, height: 200 }, { width: 230, height: 230 }];
-      aspectRadio = 1.5;
+      thumbs = [{ width: 450, height: 225 }];
+      thumbs2 = [{ width: 250, height: 300 }];
+      aspectRadio = 2;
+      aspectRadio2 = 0.833
+      width2 = 500;
       width = 900;
     }
 
@@ -750,6 +788,14 @@ class NewEditNoticia extends Component {
                     <img style={{ height: 150 }} src={img} />
                   </div>
 
+                  <h5>Imagen Secundaria</h5>
+
+                  <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada2} >Imagen Secundaria +</Button>
+
+                  <div style={{ marginTop: 25 }}>
+                    <img style={{ height: 150 }} src={img2} />
+                  </div>
+
                 </div>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                 <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
@@ -785,6 +831,17 @@ class NewEditNoticia extends Component {
                 width={width}
                 aspectradio={aspectRadio}
                 thumbs={thumbs}
+              />
+            }
+
+            {this.state.openImgPortada2 &&
+              <ModalSelectImage
+                openSelectImage={this.state.openImgPortada2}
+                handleSelectImage={this.handleSelectImage2}
+                handleClose={this.handleClose}
+                width={width2}
+                aspectradio={aspectRadio2}
+                thumbs={thumbs2}
               />
             }
 

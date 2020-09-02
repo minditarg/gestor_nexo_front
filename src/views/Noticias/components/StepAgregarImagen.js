@@ -135,7 +135,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
         Database.post('/insert-noticia-image', { extension: 'jpg' }, this)
             .then(res => {
                 let file_name = res.result[0].file_name;
-                let file = urltoFile(UrlFile, file_name, 'image/png');
+                let file = urltoFile(UrlFile, file_name, 'image/jpg');
                 setIsLoading(false);
                 file.then(file => {
 
@@ -251,17 +251,17 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }
 
     const handleSeleccionar = () => {
-        if (cropper.current.getData().width >= props.width || aceptarBoolean) {
+        //if (cropper.current.getData().width >= props.width || aceptarBoolean) {
             let imageB64 = cropper.current.getCroppedCanvas({ minWidth: props.width, width: props.width, fillColor: '#fff' }).toDataURL('image/jpeg');
             handleFile(imageB64, function (filename) {
                 setUrlImg(filename);
                 handleNext();
 
             });
-        } else {
-            setSizeMsj(true);
-            aceptarBoolean = true;
-        }
+       // } else {
+        //    setSizeMsj(true);
+        //    aceptarBoolean = true;
+       // }
 
     }
 

@@ -40,7 +40,7 @@ import Noticias from "views/Noticias/Noticias.js";
 const dashboardRoutes = [
    {
     show:false,
-     accesos: [],
+     accesos: [21],
      path: "/pages",
      name: "Paginas",
      rtlName: "DS",

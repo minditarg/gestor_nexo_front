@@ -112,6 +112,7 @@ export const StateNewEditNoticia = {
     successSubmit: null,
     disableAllButtons:false,
     openImagePortada:false,
+    openImagePortada2:false,
     fechaInicio:null,
     fechaFinalizacion:null,
     items: [],
