@@ -422,7 +422,7 @@ class ModType3 extends Component {
                                     force_br_newlines: true,
                                     force_p_newlines: false,
                                     forced_root_block: '', // Needed for 3.x
-                                    height: 150,
+                                    height: 600,
                                     menubar: false,
                                     paste_as_text: true,
                                     plugins: [

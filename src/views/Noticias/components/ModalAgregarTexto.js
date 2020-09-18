@@ -106,7 +106,7 @@ export default function ModalSelectImage(props) {
                             force_br_newlines: true,
                             force_p_newlines: false,
                             forced_root_block: '', // Needed for 3.x
-                            min_height:500,
+                            min_height:650,
                             menubar: false,
                             paste_as_text: true,
                             plugins: [
