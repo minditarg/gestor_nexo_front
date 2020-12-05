@@ -12,6 +12,8 @@ import { localization } from "variables/general.js";
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
 
 import { Editor } from '@tinymce/tinymce-react';
+import $ from 'jquery';
+
 
 
 
@@ -37,6 +39,29 @@ export default function ModalSelectImage(props) {
 
 
     React.useEffect(() => {
+
+
+        $(document).on('focusin', function(e) {
+            console.log("paso por aca");
+            
+            if ($(e).closest(".tox-dialog, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                console.log("entre acaaaa");
+              e.stopImmediatePropagation();
+            }
+
+           
+          });
+
+          $(document).on('focusin', function(e) {
+            if ($(e.target).closest(".tox-dialog").length)
+               e.stopImmediatePropagation();
+     });
+       $('.modal').on('shown.bs.modal', function() {
+         $(document).off('focusin.modal');
+     })
+       $('.modal').on('hide.bs.modal', function() {
+             $(".tox-toolbar__overflow").hide();
+     })
 
         if (props.orderForm) {
             let orderFormCopy = JSON.parse(JSON.stringify(props.orderForm));
@@ -68,6 +93,7 @@ export default function ModalSelectImage(props) {
 
     return (
         <Dialog
+            disableEnforceFocus={true}
             fullScreen={true}
             open={props.openAgregarTexto}
             onClose={props.handleClose}
@@ -107,7 +133,7 @@ export default function ModalSelectImage(props) {
                             force_p_newlines: false,
                             forced_root_block: '', // Needed for 3.x
                             min_height:650,
-                            menubar: false,
+                            menubar: true,
                             paste_as_text: true,
                             plugins: [
                                 'advlist autolink lists link image charmap print preview anchor',

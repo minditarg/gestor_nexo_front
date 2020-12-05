@@ -338,7 +338,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                                     force_p_newlines: false,
                                     forced_root_block: '', // Needed for 3.x
                                     height: 750,
-                                    menubar: false,
+                                    menubar: true,
                                     paste_as_text: true,
                                     plugins: [
                                         'advlist autolink lists link image charmap print preview anchor',
@@ -369,6 +369,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     return (
         <Dialog
+            disableEnforceFocus={true}
             maxWidth={"md"}
             fullWidth={true}
             open={props.openSelectImage}

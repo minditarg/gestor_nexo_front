@@ -423,7 +423,7 @@ class ModType3 extends Component {
                                     force_p_newlines: false,
                                     forced_root_block: '', // Needed for 3.x
                                     height: 600,
-                                    menubar: false,
+                                    menubar: true,
                                     paste_as_text: true,
                                     plugins: [
                                         'advlist autolink lists link image charmap print preview anchor',
@@ -467,6 +467,7 @@ class ModType3 extends Component {
 
             </div>,
             <Dialog
+                disableEnforceFocus={true}
                 open={this.state.open}
                 onClose={this.closeDialog.bind(this)}
                 fullWidth={true}
@@ -507,6 +508,7 @@ class ModType3 extends Component {
                 </DialogContent>
             </Dialog>,
             <Dialog
+                disableEnforceFocus={true}
                 open={this.state.openItems}
                 onClose={this.closeDialog.bind(this)}
                 fullWidth={true}

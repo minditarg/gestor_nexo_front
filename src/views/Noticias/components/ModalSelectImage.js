@@ -140,6 +140,7 @@ export default function ModalSelectImage(props) {
     console.log(img);
     return (
         <Dialog
+            disableEnforceFocus={true}
             maxWidth={"md"}
             fullWidth={true}
             open={props.openSelectImage}

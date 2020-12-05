@@ -495,6 +495,7 @@ class ModType4 extends Component {
             </div>,
 
             <Dialog
+                disableEnforceFocus={true}
                 open={this.state.openItems}
                 onClose={this.closeDialog.bind(this)}
                 fullWidth={true}
