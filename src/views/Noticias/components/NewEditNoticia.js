@@ -54,19 +54,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { StateNewEditNoticia } from "../VariablesState";
+import { StateNewEditNoticiaTransparente } from "../VariablesState";
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
 
 import textIcon from 'assets/img/textIcon.png';
 
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
 
-];
 
 
 const styles = {
@@ -184,8 +178,17 @@ const SortableContainer = sortableContainer(({ children, orderForm }) => {
 
 
 class NewEditNoticia extends Component {
-  fecha = "matias";
+
   state = JSON.parse(JSON.stringify(StateNewEditNoticia));
+
+
+  constructor(props) {
+    super(props);
+    if (this.props.idTipoNoticia != 4)
+      this.state = JSON.parse(JSON.stringify(StateNewEditNoticia));
+    else
+      this.state = JSON.parse(JSON.stringify(StateNewEditNoticiaTransparente));
+  }
 
   handleOpenImgPortada = () => {
     this.setState({
@@ -274,7 +277,12 @@ class NewEditNoticia extends Component {
 
 
   getNoticiaEdit = (id) => {
-    Database.get('/list-noticias/' + id, this)
+    let url = '/list-noticias/'
+    if (this.props.misNoticias)
+      url = '/list-mis-noticias/';
+
+
+    Database.get(url + id, this)
       .then(resultado => {
         console.log(resultado);
         if (resultado.noticia.length > 0) {
@@ -287,11 +295,17 @@ class NewEditNoticia extends Component {
             imgPortada = contenido.imgPortada || null;
             imgPortada2 = contenido.imgPortada2 || null;
             items = contenido.items || [];
+            if(this.props.idTipoNoticia == 4){
+              this.state.orderForm.profesor.value = contenido.profesor || '';
+              this.state.orderForm.nombre_link.value = contenido.nombre_link || '';
+              this.state.orderForm.url_link.value = contenido.url_link || '';
+            }
+
           }
 
           let orderFormCopy = { ...this.state.orderForm };
           for (let key in orderFormCopy) {
-            if (resultado.noticia[0][key])
+            if (key in resultado.noticia[0])
               orderFormCopy[key].value = resultado.noticia[0][key];
           }
 
@@ -375,17 +389,28 @@ class NewEditNoticia extends Component {
       contenido.imgPortada2 = this.state.imgPortada2;
       contenido.items = this.state.items;
 
+      //Es para el tipo de noticia transparente unicamente
+      if (this.state.orderForm.profesor)
+        contenido.profesor = this.state.orderForm.profesor.value;
+      if (this.state.orderForm.nombre_link)
+        contenido.nombre_link = this.state.orderForm.nombre_link.value;
+      if (this.state.orderForm.url_link)
+        contenido.url_link = this.state.orderForm.url_link.value;
+
       contenido = JSON.stringify(contenido);
 
       if (this.props.match.params.idnoticia) {
-        url = '/update-noticia';
+        if (this.props.misNoticias)
+          url = '/update-mi-noticia';
+        else
+          url = '/update-noticia/';
         objectoPost = {
           id: parseInt(this.props.match.params.idnoticia),
-          nombre: this.state.orderForm.nombre.value,
-          descripcion: this.state.orderForm.descripcion.value,
+          nombre:(this.state.orderForm.nombre && this.state.orderForm.nombre.value )|| null,
+          descripcion: ( this.state.orderForm.descripcion && this.state.orderForm.descripcion.value )|| null,
           estado: this.state.orderForm.estado.value,
-          destacado: this.state.orderForm.destacado.value,
-          principal: this.state.orderForm.principal.value,
+          destacado: (this.state.orderForm.destacado && this.state.orderForm.destacado.value) || null ,
+          principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
           idTipoNoticia: this.props.idTipoNoticia,
           idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
           tags: this.state.tags,
@@ -398,11 +423,11 @@ class NewEditNoticia extends Component {
       } else {
         url = '/insert-noticia';
         objectoPost = {
-          nombre: this.state.orderForm.nombre.value,
-          descripcion: this.state.orderForm.descripcion.value,
+          nombre:(this.state.orderForm.nombre && this.state.orderForm.nombre.value )|| null,
+          descripcion: ( this.state.orderForm.descripcion && this.state.orderForm.descripcion.value )|| null,
           estado: this.state.orderForm.estado.value,
-          destacado: this.state.orderForm.destacado.value,
-          principal: this.state.orderForm.principal.value,
+          destacado: (this.state.orderForm.destacado && this.state.orderForm.destacado.value) || null ,
+          principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
           idTipoNoticia: this.props.idTipoNoticia,
           idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
           tags: this.state.tags,
@@ -519,10 +544,10 @@ class NewEditNoticia extends Component {
     let objetoCopy = { descripcion: objeto.descripcion, htmlText: objeto.htmlText }
     let items = [...this.state.items];
     if (rowItem) {
-      console.log(rowItem);
+
       let indice = items.indexOf(rowItem);
 
-      console.log(indice);
+
       if (indice > -1)
         items[indice] = objetoCopy;
     } else {
@@ -586,11 +611,11 @@ class NewEditNoticia extends Component {
 
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
-      if(this.props.idTipoNoticia == 1 || (key != 'destacado' && key != 'principal') )
-      formElementsArray.push({
-        id: key,
-        config: this.state.orderForm[key]
-      });
+      if (this.props.idTipoNoticia == 1 || (key != 'destacado' && key != 'principal'))
+        formElementsArray.push({
+          id: key,
+          config: this.state.orderForm[key]
+        });
     }
 
     let mostrar = true;
@@ -603,8 +628,8 @@ class NewEditNoticia extends Component {
       img = '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.imgPortada;
 
     let img2 = defaultImage;
-      if (this.state.imgPortada2)
-        img2 = '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.imgPortada2;
+    if (this.state.imgPortada2)
+      img2 = '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + this.state.imgPortada2;
 
     let titulo = null;
     let thumbs = [];
@@ -634,6 +659,15 @@ class NewEditNoticia extends Component {
     }
     else if (this.props.idTipoNoticia == 3) {
       titulo = 'Campaña';
+      thumbs = [{ width: 450, height: 225 }];
+      thumbs2 = [{ width: 250, height: 300 }];
+      aspectRadio = 2;
+      aspectRadio2 = 0.833
+      width2 = 500;
+      width = 900;
+    }
+    else if (this.props.idTipoNoticia == 4) {
+      titulo = 'Transparencia';
       thumbs = [{ width: 450, height: 225 }];
       thumbs2 = [{ width: 250, height: 300 }];
       aspectRadio = 2;
@@ -712,7 +746,7 @@ class NewEditNoticia extends Component {
 
 
                   }
-                  {this.props.idTipoNoticia == 2 &&
+                  {(this.props.idTipoNoticia == 2 || this.props.idTipoNoticia == 4) &&
                     <div style={{ marginTop: '20px', marginBottom: '20px' }}>
                       <TextField
                         id="date"
@@ -740,6 +774,9 @@ class NewEditNoticia extends Component {
                     </div>
                   }
 
+
+                  { /*
+
                   <Autocomplete
                     multiple
                     id="tags-filled"
@@ -766,6 +803,7 @@ class NewEditNoticia extends Component {
                         return option.descripcion
                       }
                     }
+                 
 
                     renderInput={(params) => (
                       <TextField
@@ -779,44 +817,54 @@ class NewEditNoticia extends Component {
                       <TextField {...params} label="categoria" />
                     )}
                   />
+                  */
+                  }
 
-                  <h5>Imagen Portada</h5>
+                  {this.props.idTipoNoticia != 4 &&
 
-                  <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada} >Imagen Portada +</Button>
+                    <div>
+                      <h5>Imagen Portada</h5>
 
-                  <div style={{ marginTop: 25 }}>
-                    <img style={{ height: 150 }} src={img} />
-                  </div>
+                      <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada} >Imagen Portada +</Button>
 
-                  <h5>Imagen Secundaria</h5>
+                      <div style={{ marginTop: 25 }}>
+                        <img style={{ height: 150 }} src={img} />
+                      </div>
 
-                  <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada2} >Imagen Secundaria +</Button>
+                      <h5>Imagen Secundaria</h5>
 
-                  <div style={{ marginTop: 25 }}>
-                    <img style={{ height: 150 }} src={img2} />
-                  </div>
 
+                      <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada2} >Imagen Secundaria +</Button>
+
+                      <div style={{ marginTop: 25 }}>
+                        <img style={{ height: 150 }} src={img2} />
+                      </div>
+                    </div>
+
+                  }
                 </div>
-                <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
-                <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
-                <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open(process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
 
-                <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
-                  {this.state.items.map((elem, index) => (
-                    <SortableItem key={`item-${index}`} index={index} value={elem} deleteItem={this.deleteItem.bind(this)} editItem={this.editItem.bind(this)} orderForm={this.state.orderFormItems} />
-                  ))}
+                {this.props.idTipoNoticia != 4 &&
+                  <div>
+                    <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
+                    <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
+                    <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open(process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
+
+                    <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
+                      {this.state.items.map((elem, index) => (
+                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteItem={this.deleteItem.bind(this)} editItem={this.editItem.bind(this)} orderForm={this.state.orderFormItems} />
+                      ))}
 
 
-                </SortableContainer>
-                {this.state.isLoading &&
-                  <div style={{ textAlign: 'center' }}>
-                    <CircularProgress />
+                    </SortableContainer>
+                    {this.state.isLoading &&
+                      <div style={{ textAlign: 'center' }}>
+                        <CircularProgress />
+                      </div>
+
+                    }
                   </div>
-
                 }
-
-
-
 
                 <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.goBack()} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 

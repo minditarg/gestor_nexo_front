@@ -17,7 +17,7 @@ import Button from "components/CustomButtons/Button.js";
 import { Route, Switch} from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 
-import logo from 'assets/img/ods_logo.png';
+import logo from 'assets/img/logo-unr.png';
 
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
 
@@ -34,8 +34,6 @@ export default function Header(props) {
     })
   }
 
-
-  console.log(props);
   const { color } = props;
   const appBarClasses = classNames({
     [" " + classes[color]]: color

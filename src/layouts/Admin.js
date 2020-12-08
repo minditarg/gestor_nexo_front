@@ -23,7 +23,7 @@ import { breadcrumRoutes } from "routes.js";
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 import bgImage from "assets/img/side_bar.jpg";
-import logoside from "assets/img/ods_side.png";
+import logoside from "assets/img/unr_side.png";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -138,7 +138,7 @@ export default function Admin({ ...rest }) {
           return (
             <Route
               path={prop.layout + prop.path}
-              render={(props) => <prop.component {...props} {...prop.parametros } />}
+              render={(props) => <prop.component {...props} {...prop.parametros } user={ user } />}
               key={key}
               />
           );
@@ -148,7 +148,7 @@ export default function Admin({ ...rest }) {
             return (
               <Route
                 path={prop.layout + prop.path}
-                component={prop.component}
+                render={(props) => <prop.component {...props} {...prop.parametros } user={ user } />}
                 key={key}
                 />
             )
@@ -165,7 +165,7 @@ export default function Admin({ ...rest }) {
         path="/admin"
         exact
         render={() => {
-          return (<div><h2>Bienvenid@ a ODS GESTOR</h2><h4>Seleccione un Item del menú lateral para continuar</h4></div>)
+          return (<div><h2>Bienvenid@ a UNR GESTOR</h2><h4>Seleccione un Item del menú lateral para continuar</h4></div>)
 
         }}
 
@@ -267,7 +267,7 @@ export default function Admin({ ...rest }) {
         handleCloseSession={()=>handleCloseSession()}
         user={user}
         routes={routes}
-        logoText={"GESTOR ODS"}
+        logoText={"GESTOR UNR"}
         logo={logoside}
         image={image}
         handleDrawerToggle={handleDrawerToggle}

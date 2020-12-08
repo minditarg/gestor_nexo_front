@@ -127,6 +127,131 @@ export const StateNewEditNoticia = {
 
 
 
+export const StateNewEditNoticiaTransparente = {
+
+  orderForm: {
+      nombre: {
+          elementType: 'input',
+          elementConfig: {
+              type: 'text',
+              label: 'Título',
+              fullWidth: true
+          },
+          value: '',
+          validation: {
+              required: true
+          },
+          valid: false,
+          touched: false
+      },
+      profesor: {
+          elementType: 'input',
+          elementConfig: {
+              type: 'text',
+              label: 'Profesor',
+              fullWidth: true,
+          },
+          value: '',
+          validation: {
+              required: false
+          },
+          valid: true,
+          touched: false
+      },
+      nombre_link: {
+        elementType: 'input',
+        elementConfig: {
+            type: 'text',
+            label: 'Nombre Enlance',
+            fullWidth: true,
+        },
+        value: '',
+        validation: {
+            required: false
+        },
+        valid: true,
+        touched: false
+    },
+    url_link: {
+      elementType: 'input',
+      elementConfig: {
+          type: 'text',
+          label: 'Enlance',
+          fullWidth: true,
+      },
+      value: '',
+      validation: {
+          required: false
+      },
+      valid: true,
+      touched: false
+  },
+   
+
+  
+      estado: {
+          elementType: 'select',
+          elementConfig: {
+            label: 'Estado',
+            options: [
+              { value: 1, displayValue: 'Publicado' },
+              { value: 2, displayValue: 'Despublicado' }
+  
+            ],
+            fullWidth: true
+          },
+          value: '1',
+          validation: {
+            required: true
+          },
+  
+          valid: false,
+          touched: false
+        }
+
+
+      
+  },
+  orderFormItems: {
+      descripcion: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Descripción',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: false
+        },
+        valid: true,
+        touched: false
+      },
+    
+    },
+  tags:[],
+  tiposCategorias: [],
+  idCategoria:null,
+  orderFormIsValid: false,
+  successSubmit: null,
+  disableAllButtons:false,
+  openImagePortada:false,
+  openImagePortada2:false,
+  fechaInicio:null,
+  fechaFinalizacion:null,
+  items: [],
+  rowItem:null,
+  openImgInterior:false,
+  openAgregarTexto:false,
+  thumbs:[],
+  thumbsInterno:[],
+  vistaPrevia: false
+
+}
+
+
+
+
 
 
 export const ColumnsListado = [

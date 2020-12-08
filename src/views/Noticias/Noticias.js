@@ -76,8 +76,12 @@ class Noticias extends Component {
     this.setState({
       isLoading: true
     })
+    let url = '/list-noticias-bytipo/'
+    if (this.props.misNoticias)
+      url = '/list-mis-noticias-bytipo/';
 
-    Database.get('/list-noticias-bytipo/' + this.props.idTipoNoticia, this, null, true)
+
+    Database.get(url + this.props.idTipoNoticia, this, null, true)
       .then(res => {
         let resultado = [...res.result];
 
@@ -112,8 +116,12 @@ class Noticias extends Component {
   }
 
   handleDelete = rowData => {
+    let url = '/delete-noticia';
+    if (this.props.misNoticias)
+      url = '/delete-mi-noticia';
 
-    Database.post('/delete-noticia', { id: rowData.id }, this).then(res => {
+
+    Database.post(url, { id: rowData.id }, this).then(res => {
       let noticias = [...this.state.noticias]
       noticias = noticias.filter(elem => {
         if (elem.id == rowData.id)
@@ -173,6 +181,10 @@ class Noticias extends Component {
       titulo = 'Campañas';
       singular = 'campaña'
     }
+    else if (this.props.idTipoNoticia == 4) {
+      titulo = 'Transparencias';
+      singular = 'transparencia'
+    }
     console.log(this.state.noticias);
 
     let noticias = this.state.noticias.map(elem => {
@@ -198,8 +210,8 @@ class Noticias extends Component {
       return {
         ...elem,
         estado: estado,
-        destacado:destacado,
-        principal:principal
+        destacado: destacado,
+        principal: principal
       }
 
     })
@@ -255,6 +267,7 @@ class Noticias extends Component {
               <NewEditNoticia
                 idTipoNoticia={this.props.idTipoNoticia}
                 getNoticias={() => this.getNoticias()}
+                misNoticias={this.props.misNoticias}
 
 
               />}
@@ -265,6 +278,7 @@ class Noticias extends Component {
               <NewEditNoticia
                 idTipoNoticia={this.props.idTipoNoticia}
                 getNoticias={() => this.getNoticias()}
+                misNoticias={this.props.misNoticias}
 
 
 

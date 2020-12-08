@@ -73,6 +73,34 @@ const dashboardRoutes = [
     },
     layout: "/admin"
   }, 
+  {
+    show:false,
+    accesos: [32],
+    path: "/misnoticias",
+    name: "Mis Noticias",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:1,
+      misNoticias:true
+    },
+    layout: "/admin"
+  }, 
+
+  {
+    show:false,
+    accesos: [61],
+    path: "/transparencias",
+    name: "Transparencias",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:4
+    },
+    layout: "/admin"
+  }, 
 
   {
     show:false,
