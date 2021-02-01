@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
+import Prueba from "variables/Prueba.js";
 import moment from 'moment';
 
 import { Route, Switch, Link } from 'react-router-dom';
@@ -67,6 +68,7 @@ class Noticias extends Component {
 
   componentDidMount() {
     this.getNoticias();
+    Prueba.sumar();
   }
 
 
@@ -182,8 +184,8 @@ class Noticias extends Component {
       singular = 'campaña'
     }
     else if (this.props.idTipoNoticia == 4) {
-      titulo = 'Transparencias';
-      singular = 'transparencia'
+      titulo = 'Transparentes';
+      singular = 'transparente'
     }
     console.log(this.state.noticias);
 

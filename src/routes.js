@@ -91,13 +91,28 @@ const dashboardRoutes = [
   {
     show:false,
     accesos: [61],
-    path: "/transparencias",
-    name: "Transparencias",
+    path: "/transparente",
+    name: "Transparente",
     rtlName: "DS",
     icon: Notes,
     component: Noticias,
     parametros:{
       idTipoNoticia:4
+    },
+    layout: "/admin"
+  }, 
+
+  {
+    show:false,
+    accesos: [62],
+    path: "/mistransparentes",
+    name: "Mis Transparente",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:4,
+      misNoticias:true
     },
     layout: "/admin"
   }, 

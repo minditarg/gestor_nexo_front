@@ -252,6 +252,7 @@ React.useEffect(() => {
           <Typography component="h1" variant="h5">
            Inicio de Sesión
           </Typography>
+          <input type="radio" name="matias" id="matias" />
           <form className={classes.form} onSubmit={handleSubmit}>
           {alerta}
           {formElementsArray.map(formElement => (

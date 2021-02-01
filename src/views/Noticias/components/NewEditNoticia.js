@@ -413,6 +413,8 @@ class NewEditNoticia extends Component {
           principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
           idTipoNoticia: this.props.idTipoNoticia,
           idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
+          id_categoria_personal: (this.state.orderForm.id_categoria_personal && this.state.orderForm.id_categoria_personal.value) || null,
+          id_categoria_transparente: (this.state.orderForm.id_categoria_transparente && this.state.orderForm.id_categoria_transparente.value) || null,
           tags: this.state.tags,
           contenido: contenido,
           fechaInicio: this.state.fechaInicio,
@@ -430,6 +432,8 @@ class NewEditNoticia extends Component {
           principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
           idTipoNoticia: this.props.idTipoNoticia,
           idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
+          id_categoria_personal: (this.state.orderForm.id_categoria_personal && this.state.orderForm.id_categoria_personal.value) || null,
+          id_categoria_transparente: (this.state.orderForm.id_categoria_transparente && this.state.orderForm.id_categoria_transparente.value) || null,
           tags: this.state.tags,
           contenido: contenido,
           fechaInicio: this.state.fechaInicio,
@@ -667,7 +671,7 @@ class NewEditNoticia extends Component {
       width = 900;
     }
     else if (this.props.idTipoNoticia == 4) {
-      titulo = 'Transparencia';
+      titulo = 'Transparente';
       thumbs = [{ width: 450, height: 225 }];
       thumbs2 = [{ width: 250, height: 300 }];
       aspectRadio = 2;

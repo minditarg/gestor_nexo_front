@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
+import Prueba from "variables/Prueba.js";
 import moment from 'moment';
 
 import { Route, Switch, Link } from 'react-router-dom';
@@ -67,6 +68,7 @@ class Users extends Component {
 
   componentDidMount() {
     this.getUsersAdmin();
+    Prueba.sumar();
   }
 
 

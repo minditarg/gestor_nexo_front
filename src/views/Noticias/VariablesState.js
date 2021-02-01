@@ -39,6 +39,7 @@ export const StateNewEditNoticia = {
             valid: false,
             touched: false
         },
+        /*
         destacado: {
           elementType: 'checkbox',
           elementConfig: {
@@ -62,7 +63,7 @@ export const StateNewEditNoticia = {
         },
         valid: true,
         touched: true
-    },
+    },*/
 
     
         estado: {
@@ -185,6 +186,52 @@ export const StateNewEditNoticiaTransparente = {
       },
       valid: true,
       touched: false
+  },
+  id_categoria_personal: {
+    elementType: 'select',
+    elementConfig: {
+      label: 'Categoria Personal',
+      options: [
+        { value: 1, displayValue: 'Estudiantes' },
+        { value: 2, displayValue: 'Docentes' },
+        { value: 3, displayValue: 'Nodocentes' },
+        { value: 4, displayValue: 'Egresados' }
+
+      ],
+      fullWidth: true
+    },
+    value: '',
+    validation: {
+      required: false
+    },
+
+    valid: true,
+    touched: false
+  },
+  id_categoria_transparente: {
+    elementType: 'select',
+    elementConfig: {
+      label: 'Categoria Transparente',
+      options: [
+        { value: 1, displayValue: 'Clases de Grado' },
+        { value: 2, displayValue: 'Disertaciones y charlas' },
+        { value: 3, displayValue: 'Congresos y jornadas' },
+        { value: 4, displayValue: 'Cursos' },
+        { value: 5, displayValue: 'Reuniones de consejo' },
+        { value: 6, displayValue: 'Defensa de tesis' },
+        { value: 7, displayValue: 'Defensa de PIF' }
+
+
+      ],
+      fullWidth: true
+    },
+    value: '',
+    validation: {
+      required: false
+    },
+
+    valid: true,
+    touched: false
   },
    
 
