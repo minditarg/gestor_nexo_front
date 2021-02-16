@@ -119,6 +119,7 @@ export const StateNewEditNoticia = {
     items: [],
     rowItem:null,
     openImgInterior:false,
+    openArchivoInterior:false,
     openAgregarTexto:false,
     thumbs:[],
     thumbsInterno:[],

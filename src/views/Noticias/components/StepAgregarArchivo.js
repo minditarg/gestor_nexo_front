@@ -24,8 +24,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Files from 'react-files'
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
 
 //BOTONES Y VARIOS
 import Button from '@material-ui/core/Button';
@@ -65,15 +63,9 @@ const columns = [
 ];
 
 function getSteps() {
-    return ['Seleccione una Imagen', 'Confirme la selección'];
+    return ['Seleccione un Archivo', 'Confirme la selección'];
 }
 
-function urltoFile(url, filename, mimeType) {
-    return (fetch(url)
-        .then(function (res) { return res.arrayBuffer(); })
-        .then(function (buf) { return new File([buf], filename, { type: mimeType }); })
-    );
-}
 
 
 
@@ -87,7 +79,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const formElementsArray = [];
     const [activeStep, setActiveStep] = React.useState(0);
     const [htmlText, setHtmlText] = React.useState(null);
-    const [img, setImg] = React.useState(null);
+    const [archivo, setArchivo] = React.useState(null);
     const [urlImg, setUrlImg] = React.useState(null);
     const [sizeMsj, setSizeMsj] = React.useState(false);
 
@@ -97,78 +89,40 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     const cropper = useRef();
 
     const onFilesChange = function (files) {
-        setImg(URL.createObjectURL(files[0]));
-
+        setArchivo(files[0]);
     }
 
     const onFilesError = function (error, file) {
-        console.log('error code ' + error.code + ': ' + error.message)
+        if (error.code == 1){
+            //error.message
+            toast.error("Tipo de archivo no autorizado para subir")
+        } else {
+            toast.error("Ha ocurrido un error al subir el archivo")
+        }
     }
 
-    const _crop = function () {
+  
 
-        aceptarBoolean = false;
-        /*
-        cropper.current.getCroppedCanvas().toBlob((blob) => {
-
-
-
-        });
-        */
-
-
-        /*
-        let file = urltoFile(imageURL, 'hello.png','image/png');
-
-        file.then( elem => {
-
-           // console.log(elem);
-
-
-        } )
-        */
-    }
-
-
-    const handleFile = (UrlFile, callback) => {
+    const handleFile = (file,id_noticia, callback) => {
         setIsLoading(true);
-        Database.post('/insert-noticia-image', { extension: 'jpg' }, this)
+        const formData = new FormData();
+        formData.append('id_noticia',id_noticia)
+        formData.append('userFile', file);
+        Database.post('/insert-noticia-file', formData, this,false,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            
+                
             .then(res => {
-                let file_name = res.result[0].file_name;
-                let file = urltoFile(UrlFile, file_name, 'image/jpg');
-                setIsLoading(false);
-                file.then(file => {
-
-                    const formData = new FormData();
-                    formData.append('userPhoto', file);
-                    if (props.thumbs)
-                        formData.append('thumbs', JSON.stringify(props.thumbs));
-
-                    Database.post('/insert-only-file', formData, this, false, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-
-                        .then(res => {
-                            setIsLoading(false);
-                            toast.success("El archivo" + file.name + "se ha subido con exito!");
-                            callback.bind(this)(file_name);
-
-
-                        }, err => {
-                            setIsLoading(false);
-                            toast.error(err.message)
-
-                        })
-
-
-
-
-                }, err => {
                     setIsLoading(false);
-                    this.setState({ isLoading: false })
-                })
+                            toast.success("El archivo " + res.file.filename + " se ha subido con exito!");
+                            callback.bind(this)(res.file.filename);
+
+
+                     
+
 
             }, err => {
 
@@ -181,15 +135,16 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
     }
 
-    const handleSelectImage = () => {
+    const handleSelectArchivo = () => {
         let objeto = {};
         for (let key in orderForm) {
             objeto[key] = orderForm[key].value;
 
         }
         objeto.imageURL = urlImg;
+        objeto.noticiasFolder = true;
 
-        props.handleSelectImage(rowItem, objeto);
+        props.handleSelectArchivo(rowItem, objeto);
 
     }
 
@@ -198,27 +153,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
         if (props.orderForm) {
             let orderFormCopy = JSON.parse(JSON.stringify(props.orderForm));
-            for (let key in orderFormCopy) {
-                if (rowItem && rowItem[key])
-                    orderFormCopy[key].value = rowItem[key];
-            }
-
             let objeto = inputAllChangedHandler(orderFormCopy);
             setOrderForm(objeto.orderForm);
             setFormIsValid(objeto.formIsValid);
 
 
         }
-        if (rowItem) {
-            if (rowItem.imageURL) {
-                setUrlImg(rowItem.imageURL);
-                setImg('/' + process.env.REACT_APP_UPLOADS_FOLDER + '/' + rowItem.imageURL);
-            }
-            handleNext();
-        }
-        if (props.htmlText && rowItem)
-            setHtmlText(rowItem.htmlText)
-
 
     }, []);
 
@@ -251,17 +191,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
     }
 
     const handleSeleccionar = () => {
-        //if (cropper.current.getData().width >= props.width || aceptarBoolean) {
-            let imageB64 = cropper.current.getCroppedCanvas({ fillColor: '#fff' }).toDataURL('image/jpeg');
-            handleFile(imageB64, function (filename) {
+            handleFile(archivo,props.id_noticia,function (filename) {
                 setUrlImg(filename);
                 handleNext();
 
             });
-       // } else {
-        //    setSizeMsj(true);
-        //    aceptarBoolean = true;
-       // }
+     
 
     }
 
@@ -279,24 +214,15 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                             onChange={onFilesChange}
                             onError={onFilesError}
                             multiple={false}
-                            accepts={['image/*', '.pdf', 'audio/*']}
+                            accepts={['image/*', '.pdf', 'audio/*','application/*','text/*',]}
                             maxFileSize={10000000}
                             minFileSize={0}
                             clickable
                         >
-                            Arrastre una foto aquí o haga click
+                            Arrastre una archivo aquí o haga click
         </Files>
-
-                        <Cropper
-                            ref={cropper}
-                            src={img}
-                            style={{ height: 300, width: '100%' }}
-                            // Cropper.js options
-                            //aspectRatio={props.aspectradio}
-                            guides={false}
-                            crop={_crop} />
-
-                        {sizeMsj && <p style={{ color: 'red' }}>El tamaño del recuadro es inferior a la resolución necesaria. Agrande el recuadro o vulva a presionar "Seleccionar" para continuar igualmente"  </p>}
+                    { archivo ? <p>Nombre: <b>{ archivo.name }</b></p> : null }
+                       
                     </div>
 
                 )
@@ -324,39 +250,8 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                             />
                         ))
                     }
-                    <div style={{ marginTop: '25px' }}>
-                        <img style={{ height: '250px' }} src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/' + urlImg} />
-                    </div>
-                    {props.htmlText &&
-                        <div>
-                            <h4>Texto/Descripcion</h4>
-                            <Editor
-                                initialValue={htmlText}
-                                apiKey='ursxh3uvsir7p6qyklffy60b3nt2fn5wpwpexy5t9mweaxla'
-                                init={{
-                                    language: "es",
-                                    language_url: "/langs/es.js",
-                                    directionality :"rtl",  
-                                    force_br_newlines: true,
-                                    force_p_newlines: false,
-                                    forced_root_block: '', // Needed for 3.x
-                                    height: 750,
-                                    menubar: true,
-                                    paste_as_text: true,
-                                    plugins: [
-                                        'advlist autolink lists link image charmap print preview anchor',
-                                        'searchreplace visualblocks code fullscreen',
-                                        'insertdatetime media table paste code help wordcount'
-                                    ],
-                                    toolbar:
-                                        'undo redo  | bold italic backcolor | \
-                                 alignleft aligncenter alignright alignjustify | \
-                                   bullist numlist outdent indent | removeformat | help'
-                                }}
-                                onEditorChange={handleEditorChange}
-                            />
-                        </div>
-                    }
+                 
+                 
                 </React.Fragment>);
             default:
                 return 'Paso no seleccionado';
@@ -375,12 +270,12 @@ export default function HorizontalLabelPositionBelowStepper(props) {
             disableEnforceFocus={true}
             maxWidth={"md"}
             fullWidth={true}
-            open={props.openSelectImage}
+            open={props.openSelectArchivo}
             onClose={props.handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">Seleccione Imagen</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Seleccione Archivo</DialogTitle>
             <DialogContent>
                 <div className={classes.root}>
                     <Stepper activeStep={activeStep} alternativeLabel>
@@ -405,7 +300,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
 
 
                         {activeStep === 0 ? (
-                            <Button disabled={!img} variant="contained" color="primary" onClick={handleSeleccionar}>
+                            <Button disabled={!archivo} variant="contained" color="primary" onClick={handleSeleccionar}>
                                 Seleccionar
                             </Button>
                         ) : null}
@@ -421,7 +316,7 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                 <Button onClick={() => props.handleClose()} color="primary">
                     Cancelar
                 </Button>
-                <Button disabled={!formIsValid || activeStep != 1} onClick={() => handleSelectImage()} color="primary">
+                <Button disabled={!formIsValid || activeStep != 1} onClick={() => handleSelectArchivo()} color="primary">
                     Aceptar
                 </Button>
             </DialogActions>

@@ -27,6 +27,8 @@ import Chip from '@material-ui/core/Chip';
 import ModalSelectImage from './ModalSelectImage';
 import ModalAgregarTexto from './ModalAgregarTexto';
 import StepAgregarImagen from './StepAgregarImagen';
+import StepAgregarArchivo from './StepAgregarArchivo';
+
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -58,6 +60,7 @@ import { StateNewEditNoticiaTransparente } from "../VariablesState";
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
 
 import textIcon from 'assets/img/textIcon.png';
+import fileIcon from 'assets/img/file_icon.png';
 
 
 
@@ -102,18 +105,23 @@ function urltoFile(url, filename, mimeType) {
 }
 
 
-const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }) => {
+const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm,idnoticia }) => {
   let imagen = null;
   let array = [];
-  if (value.imageURL && (value.imageURL.endsWith('.jpg') || value.imageURL.endsWith('.png') || value.imageURL.endsWith('.jpeg') || value.imageURL.endsWith('.gif')))
+  if (value.imageURL && !value.noticiasFolder  && (value.imageURL.endsWith('.jpg') || value.imageURL.endsWith('.png') || value.imageURL.endsWith('.jpeg') || value.imageURL.endsWith('.gif')))
     imagen = (<img src={'/' + process.env.REACT_APP_UPLOADS_FOLDER + '/thumbs/' + value.imageURL} style={{ width: '75px' }} />);
   else if (value.htmlText)
     imagen = (<img src={textIcon} style={{ width: '75px' }} />)
+  else if(value.noticiasFolder){
+    imagen = (<img src={fileIcon} style={{ width: '75px' }} />)
+  }  
   if (orderForm) {
     for (let key in orderForm) {
       array.push(value[key]);
     }
   }
+
+  
 
   return (
     <TableRow>
@@ -124,7 +132,7 @@ const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }
         <IconButton onClick={() => deleteItem(value)}>
           <DeleteIcon />
         </IconButton>
-        <IconButton onClick={() => editItem(value)}>
+        <IconButton disabled={ value.noticiasFolder ? true : false } onClick={() => editItem(value)}>
           <EditIcon />
         </IconButton>
       </TableCell>
@@ -137,8 +145,12 @@ const SortableItem = sortableElement(({ value, deleteItem, editItem, orderForm }
         </TableCell>
 
       )}
-
-
+      
+       <TableCell>
+        { value.noticiasFolder ? process.env.REACT_APP_GESTOR_URL + '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/' + process.env.REACT_APP_NOTICIAS_FOLDER + '/' + idnoticia  + '/' + value.imageURL : 
+          value.imageURL ? process.env.REACT_APP_GESTOR_URL + '/' + process.env.REACT_APP_UPLOADS_FOLDER + '/'  + value.imageURL : null  }
+      </TableCell>
+      
 
     </TableRow>
   )
@@ -167,6 +179,7 @@ const SortableContainer = sortableContainer(({ children, orderForm }) => {
           </TableCell>
 
         )}
+          <TableCell>URL</TableCell>
 
       </TableRow>
     </TableHead>
@@ -216,13 +229,22 @@ class NewEditNoticia extends Component {
     })
   };
 
+  handleOpenArchivoInterior = () => {
+    this.setState({
+      rowItem: null,
+      openArchivoInterior: true
+    })
+  };
+
 
   handleClose = () => {
     this.setState({
       openImgPortada: false,
       openImgPortada2: false,
       openImgInterior: false,
-      openAgregarTexto: false
+      openArchivoInterior:false,
+      openAgregarTexto: false,
+      openArchivo: false
     })
   };
 
@@ -586,7 +608,6 @@ class NewEditNoticia extends Component {
       items.push(objetoCopy)
     }
 
-
     this.setState({
       items: items
 
@@ -852,11 +873,12 @@ class NewEditNoticia extends Component {
                   <div>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
+                    <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenArchivoInterior} >Archivo +</Button>
                     <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open(process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
 
                     <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
                       {this.state.items.map((elem, index) => (
-                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteItem={this.deleteItem.bind(this)} editItem={this.editItem.bind(this)} orderForm={this.state.orderFormItems} />
+                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteItem={this.deleteItem.bind(this)} editItem={this.editItem.bind(this)} orderForm={this.state.orderFormItems} idnoticia={this.props.match.params.idnoticia} />
                       ))}
 
 
@@ -920,6 +942,19 @@ class NewEditNoticia extends Component {
 
               />
             }
+
+            {this.state.openArchivoInterior &&
+              <StepAgregarArchivo
+                openSelectArchivo={this.state.openArchivoInterior}
+                orderForm={this.state.orderFormItems}
+                rowItem={this.state.rowItem}
+                handleSelectArchivo={this.handleSelectImageInterior}
+                handleClose={this.handleClose}
+                id_noticia={this.props.match.params.idnoticia}
+               
+              />
+            }
+
 
 
 
