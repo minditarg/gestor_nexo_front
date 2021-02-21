@@ -119,6 +119,36 @@ const dashboardRoutes = [
 
   {
     show:false,
+    accesos: [],
+    path: "/videoteca",
+    name: "Videoteca",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:5,
+    },
+    layout: "/admin"
+  }, 
+
+  {
+    show:false,
+    accesos: [],
+    path: "/mivideoteca",
+    name: "Mi Videoteca",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:5
+      ,
+      misNoticias:true
+    },
+    layout: "/admin"
+  }, 
+
+  {
+    show:false,
     accesos: [41],
     path: "/actividades",
     name: "Actividades",

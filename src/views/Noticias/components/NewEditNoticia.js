@@ -55,7 +55,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { StateNewEditNoticia } from "../VariablesState";
+import { StateNewEditNoticia, StateNewEditNoticiaVideoteca } from "../VariablesState";
 import { StateNewEditNoticiaTransparente } from "../VariablesState";
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
 
@@ -197,10 +197,13 @@ class NewEditNoticia extends Component {
 
   constructor(props) {
     super(props);
-    if (this.props.idTipoNoticia != 4)
-      this.state = JSON.parse(JSON.stringify(StateNewEditNoticia));
+    if (this.props.idTipoNoticia == 4)
+    this.state = JSON.parse(JSON.stringify(StateNewEditNoticiaTransparente))
+    else if(this.props.idTipoNoticia == 5)
+    this.state = JSON.parse(JSON.stringify(StateNewEditNoticiaVideoteca))
     else
-      this.state = JSON.parse(JSON.stringify(StateNewEditNoticiaTransparente));
+    this.state = JSON.parse(JSON.stringify(StateNewEditNoticia));
+
   }
 
   handleOpenImgPortada = () => {
@@ -320,6 +323,9 @@ class NewEditNoticia extends Component {
             if(this.props.idTipoNoticia == 4){
               this.state.orderForm.profesor.value = contenido.profesor || '';
               this.state.orderForm.nombre_link.value = contenido.nombre_link || '';
+              this.state.orderForm.url_link.value = contenido.url_link || '';
+            }
+            if(this.props.idTipoNoticia == 5){
               this.state.orderForm.url_link.value = contenido.url_link || '';
             }
 
@@ -699,6 +705,14 @@ class NewEditNoticia extends Component {
       aspectRadio2 = 0.833
       width2 = 500;
       width = 900;
+    }   else if (this.props.idTipoNoticia == 5) {
+      titulo = 'Videoteca';
+      thumbs = [{ width: 450, height: 225 }];
+      thumbs2 = [{ width: 250, height: 300 }];
+      aspectRadio = 2;
+      aspectRadio2 = 0.833
+      width2 = 500;
+      width = 900;
     }
 
     return ([
@@ -845,9 +859,9 @@ class NewEditNoticia extends Component {
                   */
                   }
 
-                  {this.props.idTipoNoticia != 4 &&
+                  {this.props.idTipoNoticia != 4  &&
 
-                    <div>
+                  <div>
                       <h5>Imagen Portada</h5>
 
                       <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgPortada} >Imagen Portada +</Button>
@@ -855,7 +869,12 @@ class NewEditNoticia extends Component {
                       <div style={{ marginTop: 25 }}>
                         <img style={{ height: 150 }} src={img} />
                       </div>
+                  
+                  </div>
+                  }
+                  { (this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 5 ) &&
 
+                  <div>
                       <h5>Imagen Secundaria</h5>
 
 
@@ -864,12 +883,14 @@ class NewEditNoticia extends Component {
                       <div style={{ marginTop: 25 }}>
                         <img style={{ height: 150 }} src={img2} />
                       </div>
-                    </div>
-
-                  }
+                   
+                  </div>
+                 }
+                
+                 
                 </div>
 
-                {this.props.idTipoNoticia != 4 &&
+                {this.props.idTipoNoticia != 4 || this.props.idTipoNoticia != 5  &&
                   <div>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>

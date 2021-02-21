@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Database from "variables/Database.js";
+import Prueba from "variables/Prueba.js";
 import moment from 'moment';
 
 import { Route, Switch, Link } from 'react-router-dom';
@@ -16,7 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from "components/CustomButtons/Button.js";
 import AddIcon from '@material-ui/icons/Add';
 
-import NewEditNoticia from "./components/NewEditNoticia";
+import NewEditVideoteca from "./components/NewEditVideoteca";
 
 import ModalDelete from "./components/ModalDelete"
 import { localization } from "variables/general.js";
@@ -24,7 +25,7 @@ import { localization } from "variables/general.js";
 import { toast } from 'react-toastify';
 
 
-import { StateListNoticias, ColumnsListado, ColumnsListadoVideoteca } from "./VariablesState";
+import { StateListVideoteca, ColumnsListado } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
@@ -61,42 +62,34 @@ const styles = {
 };
 
 
-class Noticias extends Component {
-  state = { ...StateListNoticias };
+class Videoteca extends Component {
+  state = { ...StateListVideoteca };
 
 
   componentDidMount() {
-    this.getNoticias();
+    this.getVideoteca();
   }
 
 
 
 
-  getNoticias = () => {
+  getVideoteca = () => {
     this.setState({
       isLoading: true
     })
-    let url = '/list-noticias-bytipo/'
-    if (this.props.misNoticias)
-      url = '/list-mis-noticias-bytipo/';
+    let url = '/list-videoteca/'
+    if (this.props.miVideoteca)
+      url = '/list-mi-videoteca/';
 
 
-    Database.get(url + this.props.idTipoNoticia, this, null, true)
+    Database.get(url, this, null, true)
       .then(res => {
         let resultado = [...res.result];
 
-        if(this.props.idTipoNoticia == 5) {
-        resultado = resultado.map(elem =>{
-          let contenido = JSON.parse(elem.contenido);
-          elem.url = contenido.url_link;
-          return elem;
-
-        })
-      }
 
         this.setState({
           isLoading: false,
-          noticias: resultado,
+          videos: resultado,
 
         })
 
@@ -124,14 +117,14 @@ class Noticias extends Component {
   }
 
   handleDelete = rowData => {
-    let url = '/delete-noticia';
+    let url = '/delete-videoteca';
     if (this.props.misNoticias)
-      url = '/delete-mi-noticia';
+      url = '/delete-mi-videoteca';
 
 
     Database.post(url, { id: rowData.id }, this).then(res => {
-      let noticias = [...this.state.noticias]
-      noticias = noticias.filter(elem => {
+      let videos = [...this.state.videos]
+      videos = videos.filter(elem => {
         if (elem.id == rowData.id)
           return false;
 
@@ -140,10 +133,10 @@ class Noticias extends Component {
       })
 
       this.setState({
-        noticias: noticias,
+        videos: videos,
         openDeleteDialog: false
       }, () => {
-        toast.success("El item se ha eliminado con exito!");
+        toast.success("El video se ha eliminado con exito!");
       })
 
 
@@ -175,40 +168,8 @@ class Noticias extends Component {
 
 
   render() {
-    let titulo = null;
-    let singular = null;
-    let columnsListado = null;
-
     
-
-    if (this.props.idTipoNoticia == 1) {
-      titulo = 'Noticias';
-      singular = 'noticia';
-      columnsListado = ColumnsListado
-    }
-    else if (this.props.idTipoNoticia == 2) {
-      titulo = 'Actividades';
-      singular = 'actividad';
-      columnsListado = ColumnsListado
-    }
-    else if (this.props.idTipoNoticia == 3) {
-      titulo = 'Campañas';
-      singular = 'campaña';
-      columnsListado = ColumnsListado;
-    }
-    else if (this.props.idTipoNoticia == 4) {
-      titulo = 'Transparentes';
-      singular = 'transparente';
-      columnsListado = ColumnsListado;
-    }
-    else if (this.props.idTipoNoticia == 5) {
-      titulo = 'Videos';
-      singular = 'video';
-      columnsListado = ColumnsListadoVideoteca;
-    }
-    
-
-    let noticias = this.state.noticias.map(elem => {
+    let videos = this.state.videos.map(elem => {
       let estado;
       let destacado;
       let principal;
@@ -218,21 +179,9 @@ class Noticias extends Component {
       if (elem.estado == 2)
         estado = 'Despublicado';
 
-      if (elem.destacado == 1)
-        destacado = 'Si';
-      if (elem.destacado == 0)
-        destacado = '';
-
-      if (elem.principal == 1)
-        principal = 'Si';
-      if (elem.principal == 0)
-        principal = '';
-
       return {
         ...elem,
         estado: estado,
-        destacado: destacado,
-        principal: principal
       }
 
     })
@@ -246,28 +195,28 @@ class Noticias extends Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card style={style}>
             <CardHeader color="primary">
-              <h4 className={this.props.classes.cardTitleWhite} >{titulo}</h4>
+              <h4 className={this.props.classes.cardTitleWhite} >Videoteca</h4>
               <p className={this.props.classes.cardCategoryWhite} >
-                Listado de {titulo}
+                Listado de Videos
               </p>
             </CardHeader>
             <CardBody>
-              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/new')} color="primary"><AddIcon /> Nueva {singular}</Button>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/new')} color="primary"><AddIcon /> Nuevo Video</Button>
               <MaterialTable
                 isLoading={this.state.isLoading}
-                columns={columnsListado}
-                data={noticias}
+                columns={ColumnsListado}
+                data={videos}
                 title=""
                 localization={localization}
 
                 actions={[{
                   icon: 'edit',
-                  tooltip: 'Editar ${singular}',
+                  tooltip: 'Editar Video',
                   onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/edit/' + rowData.id)
                 },
                 {
                   icon: 'delete',
-                  tooltip: 'Borrar ${singular}',
+                  tooltip: 'Borrar Video',
                   onClick: (event, rowData) => this.handleDeleteButton(rowData)
 
                 }]}
@@ -285,22 +234,20 @@ class Noticias extends Component {
           <Switch>
             <Route path={this.props.match.url + "/new"} render={() =>
 
-              <NewEditNoticia
-                idTipoNoticia={this.props.idTipoNoticia}
-                getNoticias={() => this.getNoticias()}
-                misNoticias={this.props.misNoticias}
+              <NewEditVideoteca
+                
+                getVideoteca={() => this.getVideoteca()}
+                miVideoteca={this.props.miVideoteca}
 
 
               />}
             />
 
-            <Route path={this.props.match.url + "/edit/:idnoticia"} render={() =>
+            <Route path={this.props.match.url + "/edit/:idVideoteca"} render={() =>
 
-              <NewEditNoticia
-                idTipoNoticia={this.props.idTipoNoticia}
-                getNoticias={() => this.getNoticias()}
-                misNoticias={this.props.misNoticias}
-
+              <NewEditVideoteca
+              getVideoteca={() => this.getVideoteca()}
+              miVideoteca={this.props.miVideoteca}
 
 
               />}
@@ -326,4 +273,4 @@ class Noticias extends Component {
 }
 
 
-export default withStyles(styles)(Noticias);
+export default withStyles(styles)(Videoteca);
