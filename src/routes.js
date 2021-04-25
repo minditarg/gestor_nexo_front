@@ -119,7 +119,7 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [],
+    accesos: [71],
     path: "/videoteca",
     name: "Videoteca",
     rtlName: "DS",
@@ -133,7 +133,7 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [],
+    accesos: [72],
     path: "/mivideoteca",
     name: "Mi Videoteca",
     rtlName: "DS",

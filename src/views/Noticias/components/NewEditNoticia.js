@@ -324,6 +324,7 @@ class NewEditNoticia extends Component {
               this.state.orderForm.profesor.value = contenido.profesor || '';
               this.state.orderForm.nombre_link.value = contenido.nombre_link || '';
               this.state.orderForm.url_link.value = contenido.url_link || '';
+              this.state.orderForm.link_vivo.value = contenido.link_vivo || '';
             }
             if(this.props.idTipoNoticia == 5){
               this.state.orderForm.url_link.value = contenido.url_link || '';
@@ -353,12 +354,12 @@ class NewEditNoticia extends Component {
 
           let fechaInicio = null;
           if (resultado.noticia[0].fecha_inicio) {
-            fechaInicio = moment(resultado.noticia[0].fecha_inicio).format("YYYY-MM-DD HH:mm");
+            fechaInicio = moment(resultado.noticia[0].fecha_inicio).format("YYYY-MM-DDTHH:mm");
           }
 
           let fechaFinalizacion = null;
           if (resultado.noticia[0].fecha_finalizacion) {
-            fechaFinalizacion = moment(resultado.noticia[0].fecha_finalizacion).format("YYYY-MM-DD HH:mm");
+            fechaFinalizacion = moment(resultado.noticia[0].fecha_finalizacion).format("YYYY-MM-DDTHH:mm");
           }
 
 
@@ -424,6 +425,9 @@ class NewEditNoticia extends Component {
         contenido.nombre_link = this.state.orderForm.nombre_link.value;
       if (this.state.orderForm.url_link)
         contenido.url_link = this.state.orderForm.url_link.value;
+
+      if (this.state.orderForm.link_vivo)
+        contenido.link_vivo = this.state.orderForm.link_vivo.value;
 
       contenido = JSON.stringify(contenido);
 
@@ -792,7 +796,7 @@ class NewEditNoticia extends Component {
                         label="Fecha y Hora de Inicio"
                         type="datetime-local"
 
-                        value={moment(this.state.fechaInicio).format("YYYY-MM-DDTHH:mm")}
+                        value={this.state.fechaInicio}
                         onChange={(event) => this.handleFechaInicio(event)}
                         InputLabelProps={{
                           shrink: true,
@@ -804,7 +808,7 @@ class NewEditNoticia extends Component {
                         id="datetime"
                         label="Fecha y Hora de Finalizacion"
                         type="datetime-local"
-                        value={moment(this.state.fechaFinalizacion).format("YYYY-MM-DDTHH:mm")}
+                        value={this.state.fechaFinalizacion}
                         onChange={(event) => this.handleFechaFinalizacion(event)}
                         InputLabelProps={{
                           shrink: true,
@@ -890,7 +894,7 @@ class NewEditNoticia extends Component {
                  
                 </div>
 
-                {this.props.idTipoNoticia != 4 || this.props.idTipoNoticia != 5  &&
+                {(this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 5)  &&
                   <div>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>

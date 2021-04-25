@@ -188,6 +188,20 @@ export const StateNewEditNoticiaTransparente = {
       valid: true,
       touched: false
   },
+  link_vivo: {
+    elementType: 'input',
+    elementConfig: {
+        type: 'text',
+        label: 'Link Vivo',
+        fullWidth: true,
+    },
+    value: '',
+    validation: {
+        required: false
+    },
+    valid: true,
+    touched: false
+},
   id_categoria_personal: {
     elementType: 'select',
     elementConfig: {
@@ -196,7 +210,8 @@ export const StateNewEditNoticiaTransparente = {
         { value: 1, displayValue: 'Estudiantes' },
         { value: 2, displayValue: 'Docentes' },
         { value: 3, displayValue: 'Nodocentes' },
-        { value: 4, displayValue: 'Egresados' }
+        { value: 4, displayValue: 'Egresados' },
+        { value: 5, displayValue: 'Toda la comunidad' }
 
       ],
       fullWidth: true
@@ -220,7 +235,8 @@ export const StateNewEditNoticiaTransparente = {
         { value: 4, displayValue: 'Cursos' },
         { value: 5, displayValue: 'Reuniones de consejo' },
         { value: 6, displayValue: 'Defensa de tesis' },
-        { value: 7, displayValue: 'Defensa de PIF' }
+        { value: 7, displayValue: 'Defensa de PIF' },
+        { value: 8, displayValue: 'Interés General' }
 
 
       ],
@@ -353,7 +369,8 @@ export const StateNewEditNoticiaVideoteca= {
         { value: 1, displayValue: 'Estudiantes' },
         { value: 2, displayValue: 'Docentes' },
         { value: 3, displayValue: 'Nodocentes' },
-        { value: 4, displayValue: 'Egresados' }
+        { value: 4, displayValue: 'Egresados' },
+        { value: 5, displayValue: 'Toda la comunidad' }
 
       ],
       fullWidth: true
@@ -377,7 +394,10 @@ export const StateNewEditNoticiaVideoteca= {
         { value: 4, displayValue: 'Cursos' },
         { value: 5, displayValue: 'Reuniones de consejo' },
         { value: 6, displayValue: 'Defensa de tesis' },
-        { value: 7, displayValue: 'Defensa de PIF' }
+        { value: 7, displayValue: 'Defensa de PIF' },
+        { value: 8, displayValue: 'Interés General' },
+        { value: 9, displayValue: 'Tutoriales' },
+
 
 
       ],

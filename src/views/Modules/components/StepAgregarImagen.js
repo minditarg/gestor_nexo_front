@@ -310,9 +310,11 @@ export default function HorizontalLabelPositionBelowStepper(props) {
                                 initialValue={htmlText}
                                 apiKey='ursxh3uvsir7p6qyklffy60b3nt2fn5wpwpexy5t9mweaxla'
                                 init={{
+                                    relative_urls : false,
+                                    remove_script_host : false,
+                                    convert_urls : true,
                                     language: "es",
                                     language_url: "/langs/es.js",
-                                    directionality :"rtl",  
                                     force_br_newlines: true,
                                     force_p_newlines: false,
                                     forced_root_block: '', // Needed for 3.x
