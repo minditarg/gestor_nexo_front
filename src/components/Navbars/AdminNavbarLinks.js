@@ -53,6 +53,11 @@ export default function AdminNavbarLinks(props) {
     setOpenProfile(null);
     props.handleCloseSession();
   };
+  const f_handleChangePass = (event) => {
+    event.preventDefault();
+    setOpenProfile(null);
+    props.handleChangePass();
+  };
   return (
     <div>
       <div className={classes.searchWrapper}>
@@ -221,8 +226,16 @@ export default function AdminNavbarLinks(props) {
                     >
                       Settings
                     </MenuItem>
+                
+                     <MenuItem
+                      onClick={(event)=>f_handleChangePass(event)}
+                      className={classes.dropdownItem}
+                    >
+                      Cambiar contraseña
+                    </MenuItem>
+
                     <Divider light />
-                  */}
+                      */}
                     <MenuItem
                       onClick={(event)=>f_handleCloseSession(event)}
                       className={classes.dropdownItem}

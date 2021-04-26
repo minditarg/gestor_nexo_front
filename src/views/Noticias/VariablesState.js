@@ -475,6 +475,100 @@ export const StateNewEditNoticiaVideoteca= {
 }
 
 
+export const StateNewEditBolsa = {
+
+  orderForm: {
+      nombre: {
+          elementType: 'input',
+          elementConfig: {
+              type: 'text',
+              label: 'Título',
+              fullWidth: true
+          },
+          value: '',
+          validation: {
+              required: true
+          },
+          valid: false,
+          touched: false
+      },
+      descripcion: {
+          elementType: 'input',
+          elementConfig: {
+              type: 'text',
+              label: 'Descripcion',
+              fullWidth: true,
+          },
+          value: '',
+          validation: {
+              required: true
+          },
+          valid: false,
+          touched: false
+      },
+      
+      estado: {
+          elementType: 'select',
+          elementConfig: {
+            label: 'Estado',
+            options: [
+              { value: 1, displayValue: 'Publicado' },
+              { value: 2, displayValue: 'Despublicado' }
+  
+            ],
+            fullWidth: true
+          },
+          value: '1',
+          validation: {
+            required: true
+          },
+  
+          valid: false,
+          touched: false
+        }
+
+
+      
+  },
+  orderFormItems: {
+      descripcion: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          label: 'Descripción',
+          fullWidth: true
+        },
+        value: '',
+        validation: {
+          required: false
+        },
+        valid: true,
+        touched: false
+      },
+    
+    },
+  tags:[],
+  tiposCategorias: [],
+  idCategoria:null,
+  orderFormIsValid: false,
+  successSubmit: null,
+  disableAllButtons:false,
+  openImagePortada:false,
+  openImagePortada2:false,
+  fechaInicio:null,
+  fechaFinalizacion:null,
+  items: [],
+  rowItem:null,
+  openImgInterior:false,
+  openArchivoInterior:false,
+  openAgregarTexto:false,
+  thumbs:[],
+  thumbsInterno:[],
+  vistaPrevia: false
+
+}
+
+
 
 
 

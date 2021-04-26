@@ -25,6 +25,8 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/side_bar.jpg";
 import logoside from "assets/img/unr_side.png";
 
+import ModalchangePass from './ModalChangePass';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -116,6 +118,7 @@ export default function Admin({ ...rest }) {
   const [color, setColor] = React.useState("green");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [openChangePass,setOpenChangePass] = React.useState(false);
   setRoutesOut = setRoutes;
   setUserOut = setUser;
   propsOut = rest;
@@ -200,6 +203,11 @@ export default function Admin({ ...rest }) {
     })
   }
 
+  const handleChangePass = ()=> {
+    setOpenChangePass(true);
+  }
+
+
   const handleImageClick = image => {
     setImage(image);
   };
@@ -264,6 +272,7 @@ export default function Admin({ ...rest }) {
 
     <div className={classes.wrapper}>
       <Sidebar
+       
         handleCloseSession={()=>handleCloseSession()}
         user={user}
         routes={routes}
@@ -277,6 +286,7 @@ export default function Admin({ ...rest }) {
         />
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
+         handleChangePass={() => handleChangePass() }
           handleCloseSession={()=>handleCloseSession()}
           user={user}
           routes={routes}
@@ -317,6 +327,10 @@ export default function Admin({ ...rest }) {
         fixedClasses={fixedClasses*/}
 
       </div>
+
+      
+        <ModalchangePass openChangePass={ openChangePass } />
+
     </div>
   );
 }

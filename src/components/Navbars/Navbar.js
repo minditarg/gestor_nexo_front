@@ -46,7 +46,7 @@ export default function Header(props) {
         <img style={{ marginLeft:'1em',height:65}} src={logo} />
         </div>
         <Hidden smDown implementation="css">
-          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks user={props.user} handleCloseSession={props.handleCloseSession} />}
+          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks user={props.user} handleCloseSession={props.handleCloseSession} handleChangePass={props.handleChangePass} />}
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

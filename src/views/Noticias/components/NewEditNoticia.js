@@ -55,8 +55,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { StateNewEditNoticia, StateNewEditNoticiaVideoteca } from "../VariablesState";
-import { StateNewEditNoticiaTransparente } from "../VariablesState";
+import { StateNewEditNoticia, StateNewEditNoticiaVideoteca,StateNewEditNoticiaTransparente,StateNewEditBolsa } from "../VariablesState";
 import { inputChangedHandler, inputAllChangedHandler } from "variables/input.js";
 
 import textIcon from 'assets/img/textIcon.png';
@@ -201,6 +200,8 @@ class NewEditNoticia extends Component {
     this.state = JSON.parse(JSON.stringify(StateNewEditNoticiaTransparente))
     else if(this.props.idTipoNoticia == 5)
     this.state = JSON.parse(JSON.stringify(StateNewEditNoticiaVideoteca))
+    else if(this.props.idTipoNoticia == 6)
+    this.state = JSON.parse(JSON.stringify(StateNewEditBolsa))
     else
     this.state = JSON.parse(JSON.stringify(StateNewEditNoticia));
 
@@ -718,6 +719,10 @@ class NewEditNoticia extends Component {
       width2 = 500;
       width = 900;
     }
+    else if (this.props.idTipoNoticia == 6) {
+      titulo = 'Oferta Laboral';
+      
+    }
 
     return ([
       <div>
@@ -760,9 +765,12 @@ class NewEditNoticia extends Component {
                       }}
                     />
                   ))}
-                  {this.props.idTipoNoticia == 3 &&
 
-                    <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+                <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+
+                  {(this.props.idTipoNoticia == 3 || this.props.idTipoNoticia == 6) &&
+
+                   
                       <TextField
                         id="date"
                         label="Fecha de Inicio"
@@ -773,7 +781,11 @@ class NewEditNoticia extends Component {
                           shrink: true,
                         }}
                       />
+                      
 
+                  }
+                  { this.props.idTipoNoticia == 3 &&
+                 
                       <TextField
                         id="date"
                         style={{ marginLeft: "25px" }}
@@ -785,10 +797,12 @@ class NewEditNoticia extends Component {
                           shrink: true,
                         }}
                       />
-                    </div>
-
+                    
 
                   }
+
+                  </div>
+
                   {(this.props.idTipoNoticia == 2 || this.props.idTipoNoticia == 4) &&
                     <div style={{ marginTop: '20px', marginBottom: '20px' }}>
                       <TextField
@@ -863,7 +877,7 @@ class NewEditNoticia extends Component {
                   */
                   }
 
-                  {this.props.idTipoNoticia != 4  &&
+                  { (this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 6) &&
 
                   <div>
                       <h5>Imagen Portada</h5>
@@ -876,7 +890,7 @@ class NewEditNoticia extends Component {
                   
                   </div>
                   }
-                  { (this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 5 ) &&
+                  { (this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 5 && this.props.idTipoNoticia != 6 ) &&
 
                   <div>
                       <h5>Imagen Secundaria</h5>
@@ -894,11 +908,33 @@ class NewEditNoticia extends Component {
                  
                 </div>
 
-                {(this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 5)  &&
+                {(this.props.idTipoNoticia != 4 && this.props.idTipoNoticia != 5 && this.props.idTipoNoticia != 6)  &&
                   <div>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenImgInterior} >Imagen Interior +</Button>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
                     <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenArchivoInterior} >Archivo +</Button>
+                    <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open(process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
+
+                    <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
+                      {this.state.items.map((elem, index) => (
+                        <SortableItem key={`item-${index}`} index={index} value={elem} deleteItem={this.deleteItem.bind(this)} editItem={this.editItem.bind(this)} orderForm={this.state.orderFormItems} idnoticia={this.props.match.params.idnoticia} />
+                      ))}
+
+
+                    </SortableContainer>
+                    {this.state.isLoading &&
+                      <div style={{ textAlign: 'center' }}>
+                        <CircularProgress />
+                      </div>
+
+                    }
+                  </div>
+                }
+
+                {(this.props.idTipoNoticia == 6)  &&
+                  <div>
+                   
+                    <Button variant="contained" disabled={this.state.isloading} onClick={this.handleOpenAgregarTexto} >Texto +</Button>
                     <Button variant="contained" color="secondary" disabled={this.state.isloading || !this.state.vistaPrevia} onClick={() => window.open(process.env.REACT_APP_SITE_URL + "/noticia_preview.php?id=" + this.props.match.params.idnoticia)} >Vista Previa</Button>
 
                     <SortableContainer onSortEnd={this.onSortEnd} orderForm={this.state.orderFormItems} useDragHandle>
