@@ -506,6 +506,62 @@ export const StateNewEditBolsa = {
           valid: false,
           touched: false
       },
+      fecha_string: {
+        elementType: 'input',
+        elementConfig: {
+            type: 'text',
+            label: 'Fecha',
+            fullWidth: true,
+        },
+        value: '',
+        validation: {
+            required: false
+        },
+        valid: true,
+        touched: false
+    },
+    locacion: {
+      elementType: 'input',
+      elementConfig: {
+          type: 'text',
+          label: 'Locación',
+          fullWidth: true,
+      },
+      value: '',
+      validation: {
+          required: false
+      },
+      valid: true,
+      touched: false
+  },
+  email: {
+    elementType: 'input',
+    elementConfig: {
+        type: 'text',
+        label: 'Email',
+        fullWidth: true,
+    },
+    value: '',
+    validation: {
+        required: false
+    },
+    valid: true,
+    touched: false
+},
+telefono: {
+  elementType: 'input',
+  elementConfig: {
+      type: 'text',
+      label: 'Telefono',
+      fullWidth: true,
+  },
+  value: '',
+  validation: {
+      required: false
+  },
+  valid: true,
+  touched: false
+},
       
       estado: {
           elementType: 'select',

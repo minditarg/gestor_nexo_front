@@ -330,6 +330,12 @@ class NewEditNoticia extends Component {
             if(this.props.idTipoNoticia == 5){
               this.state.orderForm.url_link.value = contenido.url_link || '';
             }
+            if(this.props.idTipoNoticia == 6){
+              this.state.orderForm.fecha_string.value = contenido.fecha_string || '';
+              this.state.orderForm.locacion.value = contenido.locacion || '';
+              this.state.orderForm.email.value = contenido.email || '';
+              this.state.orderForm.telefono.value = contenido.telefono || '';
+            }
 
           }
 
@@ -429,6 +435,15 @@ class NewEditNoticia extends Component {
 
       if (this.state.orderForm.link_vivo)
         contenido.link_vivo = this.state.orderForm.link_vivo.value;
+
+      if (this.state.orderForm.fecha_string)
+        contenido.fecha_string = this.state.orderForm.fecha_string.value;
+      if (this.state.orderForm.locacion)
+        contenido.locacion = this.state.orderForm.locacion.value;
+      if (this.state.orderForm.email)
+        contenido.email = this.state.orderForm.email.value;
+      if (this.state.orderForm.telefono)
+        contenido.telefono = this.state.orderForm.telefono.value;
 
       contenido = JSON.stringify(contenido);
 
@@ -768,7 +783,7 @@ class NewEditNoticia extends Component {
 
                 <div style={{ marginTop: '20px', marginBottom: '20px' }}>
 
-                  {(this.props.idTipoNoticia == 3 || this.props.idTipoNoticia == 6) &&
+                  {this.props.idTipoNoticia == 3  &&
 
                    
                       <TextField
