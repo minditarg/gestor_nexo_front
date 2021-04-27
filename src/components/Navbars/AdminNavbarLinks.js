@@ -226,7 +226,7 @@ export default function AdminNavbarLinks(props) {
                     >
                       Settings
                     </MenuItem>
-                
+                    */}
                      <MenuItem
                       onClick={(event)=>f_handleChangePass(event)}
                       className={classes.dropdownItem}
@@ -235,7 +235,7 @@ export default function AdminNavbarLinks(props) {
                     </MenuItem>
 
                     <Divider light />
-                      */}
+                      
                     <MenuItem
                       onClick={(event)=>f_handleCloseSession(event)}
                       className={classes.dropdownItem}

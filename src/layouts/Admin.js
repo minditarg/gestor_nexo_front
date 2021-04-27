@@ -207,6 +207,10 @@ export default function Admin({ ...rest }) {
     setOpenChangePass(true);
   }
 
+  const handleCloseChangePass = () => {
+    setOpenChangePass(false);
+  }
+
 
   const handleImageClick = image => {
     setImage(image);
@@ -329,7 +333,7 @@ export default function Admin({ ...rest }) {
       </div>
 
       
-        <ModalchangePass openChangePass={ openChangePass } />
+        <ModalchangePass openChangePass={ openChangePass } handleClose = { handleCloseChangePass } />
 
     </div>
   );
