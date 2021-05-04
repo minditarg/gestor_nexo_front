@@ -233,10 +233,12 @@ export const StateNewEditNoticiaTransparente = {
         { value: 2, displayValue: 'Disertaciones y charlas' },
         { value: 3, displayValue: 'Congresos y jornadas' },
         { value: 4, displayValue: 'Cursos' },
+        { value: 10, displayValue: 'Exámenes Finales' },
         { value: 5, displayValue: 'Reuniones de consejo' },
         { value: 6, displayValue: 'Defensa de tesis' },
         { value: 7, displayValue: 'Defensa de PIF' },
-        { value: 8, displayValue: 'Interés General' }
+        { value: 8, displayValue: 'Interés General' },
+        
 
 
       ],
@@ -364,7 +366,7 @@ export const StateNewEditNoticiaVideoteca= {
   id_categoria_personal: {
     elementType: 'select',
     elementConfig: {
-      label: 'Categoria',
+      label: 'Dirigido A',
       options: [
         { value: 1, displayValue: 'Estudiantes' },
         { value: 2, displayValue: 'Docentes' },
@@ -386,7 +388,7 @@ export const StateNewEditNoticiaVideoteca= {
   id_categoria_transparente: {
     elementType: 'select',
     elementConfig: {
-      label: 'Dirigido A',
+      label: 'Categoria',
       options: [
         { value: 1, displayValue: 'Clases de Grado' },
         { value: 2, displayValue: 'Disertaciones y charlas' },
@@ -632,13 +634,15 @@ export const ColumnsListado = [
 { title: "Nombre", field: "nombre" },
 { title: "Descripcion", field: "descripcion" },
 { title: "Estado", field: "estado" },
-{ title: "Dest", field: "destacado" },
-{ title: "Princ", field: "principal" }
+{ title: "Usuario", field: "nombre_user" },
+
 ];
 
 export const ColumnsListadoVideoteca = [
   { title: "Titulo", field: "nombre" },
   { title: "Descripcion", field: "descripcion" },
   { title: "Estado", field: "estado" },
-  { title: "URL", field: "url" }
+  { title: "URL", field: "url" },
+  { title: "Usuario", field: "nombre_user" },
+
   ];
