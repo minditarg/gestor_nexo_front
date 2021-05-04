@@ -205,7 +205,7 @@ export const StateNewEditNoticiaTransparente = {
   id_categoria_personal: {
     elementType: 'select',
     elementConfig: {
-      label: 'Categoria Personal',
+      label: 'Dirigido A',
       options: [
         { value: 1, displayValue: 'Estudiantes' },
         { value: 2, displayValue: 'Docentes' },
