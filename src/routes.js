@@ -119,7 +119,7 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [],
+    accesos: [71],
     path: "/videoteca",
     name: "Videoteca",
     rtlName: "DS",
@@ -133,7 +133,7 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [],
+    accesos: [72],
     path: "/mivideoteca",
     name: "Mi Videoteca",
     rtlName: "DS",
@@ -143,6 +143,19 @@ const dashboardRoutes = [
       idTipoNoticia:5
       ,
       misNoticias:true
+    },
+    layout: "/admin"
+  }, 
+  {
+    show:false,
+    accesos: [81],
+    path: "/bolsa",
+    name: "Bolsa de Trabajo",
+    rtlName: "DS",
+    icon: Notes,
+    component: Noticias,
+    parametros:{
+      idTipoNoticia:6,
     },
     layout: "/admin"
   }, 

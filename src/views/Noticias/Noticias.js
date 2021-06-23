@@ -206,6 +206,11 @@ class Noticias extends Component {
       singular = 'video';
       columnsListado = ColumnsListadoVideoteca;
     }
+    else if (this.props.idTipoNoticia == 6) {
+      titulo = 'Ofertas Laborales';
+      singular = 'oferta';
+      columnsListado = ColumnsListado;
+    }
     
 
     let noticias = this.state.noticias.map(elem => {
