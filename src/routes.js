@@ -36,6 +36,7 @@ import TiposUsuarios from "views/Users/TiposUsuarios.js";
 import Users from "views/Users/Users.js";
 import Noticias from "views/Noticias/Noticias.js";
 import TiposFaltas from 'views/TiposFaltas/TiposFaltas.js';
+import Empleados from 'views/Empleados/Empleados.js';
 
 
 const dashboardRoutes = [
@@ -169,6 +170,16 @@ const dashboardRoutes = [
     open: 'open22',
     icon: Person,
     dependences: [
+      {
+        show:false,
+        accesos: [91],
+        path: "/empleados",
+        name: "Empleados",
+        rtlName: "EM",
+        icon: Person,
+        component: Empleados,
+        layout: "/admin"
+      },
       {
         show:false,
         accesos: [92],
