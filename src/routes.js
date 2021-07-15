@@ -35,6 +35,7 @@ import Files from "views/Files/Files.js";
 import TiposUsuarios from "views/Users/TiposUsuarios.js";
 import Users from "views/Users/Users.js";
 import Noticias from "views/Noticias/Noticias.js";
+import TiposFaltas from 'views/TiposFaltas/TiposFaltas.js';
 
 
 const dashboardRoutes = [
@@ -159,6 +160,27 @@ const dashboardRoutes = [
     },
     layout: "/admin"
   }, 
+
+  {
+    show:false,
+    accesos: [91,92],
+    groupComponent: true,
+    name: 'Personal',
+    open: 'open22',
+    icon: Person,
+    dependences: [
+      {
+        show:false,
+        accesos: [92],
+        path: "/tiposfaltas",
+        name: "Tipos Faltas",
+        rtlName: "TF",
+        icon: Person,
+        component: TiposFaltas,
+        layout: "/admin"
+      },
+    ]
+  },
 
   {
     show:false,
