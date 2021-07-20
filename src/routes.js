@@ -37,6 +37,7 @@ import Users from "views/Users/Users.js";
 import Noticias from "views/Noticias/Noticias.js";
 import TiposFaltas from 'views/TiposFaltas/TiposFaltas.js';
 import Empleados from 'views/Empleados/Empleados.js';
+import ControlFaltas from 'views/ControlFaltas/ControlFaltas.js';
 
 
 const dashboardRoutes = [
@@ -164,7 +165,7 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [91,92],
+    accesos: [91,92,93],
     groupComponent: true,
     name: 'Personal',
     open: 'open22',
@@ -188,6 +189,16 @@ const dashboardRoutes = [
         rtlName: "TF",
         icon: Person,
         component: TiposFaltas,
+        layout: "/admin"
+      },
+      {
+        show:false,
+        accesos: [93],
+        path: "/controlfaltas",
+        name: "Control Faltas",
+        rtlName: "CF",
+        icon: Person,
+        component: ControlFaltas,
         layout: "/admin"
       },
     ]
