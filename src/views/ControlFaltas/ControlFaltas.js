@@ -194,7 +194,6 @@ class ControlFaltas extends Component {
   }
 
   handleDeleteControlFalta = rowData => {
-
     Database.post('/delete-controlfalta', { id: rowData.id },this).then(res => {
         let controlfaltas = [...this.state.controlfaltas]
         controlfaltas = controlfaltas.filter(elem => {
@@ -209,7 +208,7 @@ class ControlFaltas extends Component {
           controlfaltas: controlfaltas,
           openDeleteDialog:false
         },()=>{
-          toast.success("El controlfalta se ha eliminado con exito!");
+          toast.success("La falta se ha eliminado con exito!");
         })
 
 
@@ -266,12 +265,12 @@ class ControlFaltas extends Component {
 
                 actions={[{
                   icon: 'edit',
-                  tooltip: 'Editar ControlFalta',
+                  tooltip: 'Editar Falta',
                   onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarcontrolfalta/' + rowData.id)
                 },
                 {
                   icon: 'delete',
-                  tooltip: 'Borrar ControlFalta',
+                  tooltip: 'Borrar Falta',
                   onClick: (event, rowData) => this.handleDeleteButton(rowData)
 
                 }]}

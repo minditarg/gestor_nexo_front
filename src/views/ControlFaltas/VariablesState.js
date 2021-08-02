@@ -35,80 +35,10 @@ export const StateListControlFaltas = {
 export const StateEditControlFalta = {
 
     editControlFaltaForm: {
-        nombre: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'Nombre',
-                fullWidth: true
-            },
-            value: '',
-            validation: {
-                required: true
-            },
-            valid: false,
-            touched: false
-        },
-        apellido: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'Apellido',
-                fullWidth: true
-            },
-            value: '',
-            validation: {
-                required: true
-            },
-            valid: false,
-            touched: false
-        },
-        dni: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'DNI',
-                fullWidth: true
-            },
-            value: '',
-            validation: {
-                required: true
-            },
-            valid: false,
-            touched: false
-        },
-        telefono: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'Teléfono',
-                fullWidth: true
-            },
-            value: '',
-            validation: {
-                required: false
-            },
-            valid: false,
-            touched: false
-        },
-        direccion: {
-            elementType: 'input',
-            elementConfig: {
-                type: 'text',
-                label: 'Dirección',
-                fullWidth: true
-            },
-            value: '',
-            validation: {
-                required: false
-            },
-            valid: false,
-            touched: false
-        },
-        id_tipo_controlfalta: {
+        id_empleado: {
             elementType: 'select',
             elementConfig: {
-                label: 'Tipo',
+                label: 'Empleado',
                 options: [
                 ],
                 fullWidth: true
@@ -120,21 +50,29 @@ export const StateEditControlFalta = {
             valid: true,
             touched: false
         },
-        mail: {
-            elementType: 'input',
+        id_tipo_falta: {
+            elementType: 'select',
             elementConfig: {
-                type: 'text',
-                label: 'Mail',
+                label: 'Falta',
+                options: [
+                ],
                 fullWidth: true
             },
             value: '',
             validation: {
                 required: false
             },
-            valid: false,
+            valid: true,
             touched: false
         },    
     },
+    
+    files: [],
+    url_archivo:null,
+    openDeleteArchivo:false,
+
+    fechaInicioLicencia:null,
+    fechaFinLicencia:null,
     controlfaltaEdit: null,
     editFormIsValid: false,
     successSubmitEdit: null,
