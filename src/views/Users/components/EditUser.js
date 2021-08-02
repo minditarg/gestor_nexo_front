@@ -97,6 +97,26 @@ class EditUser extends Component {
       },err => {
         toast.error(err.message);
       })
+
+      Database.get('/list-empleado', this)
+      .then(res => {
+
+        let resultado = [...res.result];
+        let a = [];
+        resultado.forEach(function (entry) {
+          a.push({
+            value: entry.id,
+            displayValue: entry.apellido + ", " + entry.nombre
+          });
+        })
+        let formulario = { ...this.state.editUserForm }
+        formulario.id_empleado.elementConfig.options = [...a];
+        this.setState({
+            editUserForm: formulario
+        })
+      }, err => {
+        toast.error(err.message);
+      })
   }
 
 
@@ -134,6 +154,7 @@ class EditUser extends Component {
             })
 
             let editUserFormAlt = { ...this.state.editUserForm };
+            editUserFormAlt.id_empleado.value = resultado.result[0].id_empleado;
             editUserFormAlt.username.value = resultado.result[0].username;
             editUserFormAlt.nombre.value = resultado.result[0].nombre;
             editUserFormAlt.tipoUser.value = resultado.result[0].id_users_type.toString();
@@ -171,7 +192,7 @@ class EditUser extends Component {
 
     event.preventDefault();
 
-    Database.post(`/update-user`, { id: this.props.match.params.iduser,username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
+    Database.post(`/update-user`, { id: this.props.match.params.iduser, id_empleado:this.state.editUserForm.id_empleado.value, username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
       .then(res => {
 
           this.setState({
