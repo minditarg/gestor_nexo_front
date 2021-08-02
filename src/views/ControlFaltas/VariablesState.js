@@ -67,6 +67,10 @@ export const StateEditControlFalta = {
         },    
     },
     
+    files: [],
+    url_archivo:null,
+    openDeleteArchivo:false,
+
     fechaInicioLicencia:null,
     fechaFinLicencia:null,
     controlfaltaEdit: null,

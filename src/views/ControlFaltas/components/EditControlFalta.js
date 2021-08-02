@@ -14,6 +14,8 @@ import Card from "components/Card/Card.js";
 import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
+import BackupIcon from '@material-ui/icons/Backup';
+import Files from 'react-files'
 
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -126,7 +128,8 @@ class EditControlFalta extends Component {
             }
 
             this.setState({
-              editControlFaltaForm: editControlFaltaFormAlt
+              editControlFaltaForm: editControlFaltaFormAlt,
+              url_archivo: resultado.result[0].archivo
             })
            // this.getControlFaltasType("edit", editControlFaltaFormAlt);
           }
@@ -240,6 +243,45 @@ class EditControlFalta extends Component {
 
   }
 
+  onFilesArchivoChange = (files) => {
+    console.log(files)
+    this.setState({
+      files: files
+    })
+    console.log(this.state.files);
+
+    const formData = new FormData();
+    formData.append('archivo', files[0]);
+    // if (props.thumbs)
+    //     formData.append('thumbs', JSON.stringify(props.thumbs));
+
+    var id = this.props.match.params.idcontrolfalta;//buscar id
+
+    Database.post('/insert-archivo/' + id + "/" + files[0].name, formData, this, false, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+      .then(res => {
+        // setIsLoading(false);
+        toast.success("El archivo " + files[0].name + " se ha subido con exito!");
+        // callback.bind(this)(file_name);
+        console.log(res);
+
+      }, err => {
+        //    setIsLoading(false);
+        toast.error(err.message)
+
+      })
+
+  }
+
+  onFilesArchivoError = (error, file) => {
+    toast.warn('Error al subir el archivo ' + error.code + ': ' + error.message);
+    console.log('error code ' + error.code + ': ' + error.message)
+  }
+
 
 
 
@@ -263,6 +305,42 @@ class EditControlFalta extends Component {
 
    // this.getControlFaltasType();
     this.getControlFaltaEdit(this.props.match.params.idcontrolfalta);
+  }
+
+  handleClickOpenArchivo = () => {
+    this.setState({
+      openDeleteArchivo: true
+    })
+  };
+
+  handleCloseArchivo = () => {
+    this.setState({
+      openDeleteArchivo: false
+    })
+  };
+
+  handleDeleteArchivo = (event) => {
+    event.preventDefault();
+    this.setState({
+      openDeleteArchivo: false
+    })
+
+    Database.post(`/delete-archivo`, { id: this.props.match.params.idcontrolfalta }, this)
+      .then(res => {
+        this.setState({
+          successSubmitEdit: true,
+          editFormIsValid: false,
+          disableAllButtons: false
+        }, () => {
+          toast.success("El archivo se ha eliminado con exito!");
+
+          //this.props.getEmpleadosAdmin();
+
+        })
+      }, err => {
+        toast.error(err.message);
+
+      })
   }
 
   handleFechaInicio = (date) => {
@@ -366,6 +444,56 @@ class EditControlFalta extends Component {
                   />
                 </div>
               </MuiPickersUtilsProvider>
+
+              <div className="files">
+                <Files
+                  className='files-dropzone'
+                  onChange={this.onFilesArchivoChange}
+                  onError={this.onFilesArchivoError}
+                  accepts={['image/png', '.pdf', 'audio/*', '.docx', '.doc', '.jpg']}
+                  multiple
+                  maxFiles={3}
+                  maxFileSize={10000000}
+                  minFileSize={0}
+                  clickable
+                >
+                  <Button style={{ marginTop: '25px' }} color="primary" variant="contained" ><BackupIcon />&nbsp; Adjuntar archivo</Button>
+                </Files>
+                </div>
+
+                {this.state.url_archivo ?
+                <div>
+                <br></br>
+                <a target="_blank" href={this.state.url_archivo}>ver archivo adjunto</a>
+                <Button color="info" onClick={this.handleClickOpenArchivo} >Eliminar archivo</Button>
+                </div>
+                :null}
+
+              <Dialog open={this.state.openDeleteArchivo} onClose={this.handleCloseArchivo} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Eliminar archivo</DialogTitle>
+                <form onSubmit={(event) => {
+                  this.handleDeleteArchivo(event)
+
+                }}>
+                  {this.state.openDeleteArchivo &&
+                    <DialogContent>
+
+                      <DialogContentText>
+                        Esta seguro que desea eliminar el archivo subido?
+                      </DialogContentText>
+                    </DialogContent>
+                  }
+                  <DialogActions>
+                    <Button onClick={this.handleCloseArchivo} color="primary">
+                      Cancelar
+                    </Button>
+                    <Button type="submit" color="primary">
+                      Aceptar
+                    </Button>
+                  </DialogActions>
+                </form>
+              </Dialog>
+
             </div>
 
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/controlfaltas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
