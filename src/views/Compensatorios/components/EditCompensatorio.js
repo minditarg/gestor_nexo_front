@@ -22,7 +22,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { StateEditUser } from "../VariablesState";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import esLocale from "date-fns/locale/es";
+
+import { StateEditCompensatorio } from "../VariablesState";
 
 
 
@@ -57,8 +65,8 @@ const styles = {
 };
 
 
-class EditUser extends Component {
-  state = JSON.parse(JSON.stringify(StateEditUser));
+class EditCompensatorio extends Component {
+  state = JSON.parse(JSON.stringify(StateEditCompensatorio));
 
   handleClickOpen = () => {
     this.setState({
@@ -72,52 +80,6 @@ class EditUser extends Component {
     })
   };
 
-  getUsersType = () => {
-    Database.get('/list-users_type',this)
-      .then(res => {
-
-          let resultadoUserType = [...res.result];
-          let a = [];
-          resultadoUserType.forEach(function (entry) {
-            a.push({
-              value: entry.id,
-              displayValue: entry.descripcion
-            });
-          })
-
-
-          let formulario = { ...this.state.editUserForm }
-          formulario.tipoUser.elementConfig.options = [...a];
-          this.setState({
-            editUserForm: formulario
-          })
-
-
-
-      },err => {
-        toast.error(err.message);
-      })
-
-      Database.get('/list-empleado', this)
-      .then(res => {
-
-        let resultado = [...res.result];
-        let a = [];
-        resultado.forEach(function (entry) {
-          a.push({
-            value: entry.id,
-            displayValue: entry.apellido + ", " + entry.nombre
-          });
-        })
-        let formulario = { ...this.state.editUserForm }
-        formulario.id_empleado.elementConfig.options = [...a];
-        this.setState({
-            editUserForm: formulario
-        })
-      }, err => {
-        toast.error(err.message);
-      })
-  }
 
 
 
@@ -144,55 +106,78 @@ class EditUser extends Component {
   }
 
 
-  getUserEdit = (id) => {
-    Database.get('/list-users/' + id)
+  getCompensatorioEdit = (id) => {
+    
+    Database.get('/list-compensatorios/' + id)
       .then(resultado => {
-
+        console.log(resultado);
           if (resultado.result.length > 0) {
             this.setState({
-              userEdit: resultado.result[0]
+              compensatorioEdit: resultado.result[0]
             })
 
-            let editUserFormAlt = { ...this.state.editUserForm };
-            editUserFormAlt.id_empleado.value = resultado.result[0].id_empleado;
-            editUserFormAlt.username.value = resultado.result[0].username;
-            editUserFormAlt.nombre.value = resultado.result[0].nombre;
-            editUserFormAlt.tipoUser.value = resultado.result[0].id_users_type.toString();
-            for (let key in editUserFormAlt) {
-              editUserFormAlt[key].touched = true;
-              editUserFormAlt[key].valid = true;
+            let editCompensatorioFormAlt = { ...this.state.editCompensatorioForm };
+            editCompensatorioFormAlt.id_empleado.value = resultado.result[0].id_empleado;
+            if (resultado.result[0].minutos) {
+              editCompensatorioFormAlt.horas.value = Math.trunc(resultado.result[0].minutos/60);
+              editCompensatorioFormAlt.minutos.value = resultado.result[0].minutos%60;
             }
-            this.getUsersType("edit", editUserFormAlt);
+            else{
+              editCompensatorioFormAlt.minutos.value = resultado.result[0].minutos;
+            }
+            this.state.fechaCompensatorio = resultado.result[0].fecha;
+            for (let key in editCompensatorioFormAlt) {
+              editCompensatorioFormAlt[key].touched = true;
+              editCompensatorioFormAlt[key].valid = true;
+            }
+
+            this.setState({
+              editCompensatorioForm: editCompensatorioFormAlt
+            })
+           // this.getCompensatoriosType("edit", editCompensatorioFormAlt);
           }
           else {
             this.setState({
-              userEdit: null
+              compensatorioEdit: null
             })
           }
 
       })
-  }
 
-  handleChangePass = (event) => {
-    event.preventDefault();
-    this.setState({
-      openChangePass:false
-    })
-    
-    Database.post(`/update-pass`,{id: this.props.match.params.iduser,newpass:event.target.contrasenia.value})
+      Database.get('/list-empleado', this)
       .then(res => {
-        toast.success("El Usuario se ha modificado con exito!");
-      },err =>{
-        toast.error(err.message);
 
-    })
+        let resultado = [...res.result];
+        let a = [];
+        resultado.forEach(function (entry) {
+          a.push({
+            value: entry.id,
+            displayValue: entry.apellido + ", " + entry.nombre
+          });
+        })
+        let formulario = { ...this.state.editCompensatorioForm }
+        formulario.id_empleado.elementConfig.options = [...a];
+        this.setState({
+            editCompensatorioForm: formulario
+        })
+      }, err => {
+        toast.error(err.message);
+      })
+
+    
   }
 
-  handleSubmitEditUser = (event) => {
+
+  handleSubmitEditCompensatorio = (event) => {
 
     event.preventDefault();
 
-    Database.post(`/update-user`, { id: this.props.match.params.iduser, id_empleado:this.state.editUserForm.id_empleado.value, username:this.state.editUserForm.username.value, nombre: this.state.editUserForm.nombre.value, id_users_type: this.state.editUserForm.tipoUser.value })
+    Database.post(`/update-compensatorio`, { id: this.props.match.params.idcompensatorio, 
+        id_empleado: this.state.editCompensatorioForm.id_empleado.value, 
+        horas: this.state.editCompensatorioForm.horas.value,
+        minutos: this.state.editCompensatorioForm.minutos.value,
+        fecha: this.state.fechaCompensatorio
+        },this)
       .then(res => {
 
           this.setState({
@@ -200,9 +185,9 @@ class EditUser extends Component {
             editFormIsValid: false,
             disableAllButtons:false
           },()=>{
-              toast.success("El Usuario se ha modificado con exito!");
+              toast.success("El compensatorio se ha modificado con exito!");
 
-              this.props.getUsersAdmin();
+              this.props.getCompensatoriosAdmin();
 
           })
 
@@ -217,7 +202,7 @@ class EditUser extends Component {
   inputEditChangedHandler = (event, inputIdentifier) => {
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.editUserForm
+      ...this.state.editCompensatorioForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
@@ -234,7 +219,7 @@ class EditUser extends Component {
       formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
     }
     this.setState({
-      editUserForm: updatedOrderForm,
+      editCompensatorioForm: updatedOrderForm,
       editFormIsValid: formIsValidAlt
     })
 
@@ -245,10 +230,10 @@ class EditUser extends Component {
 
 
   resetEditForm = () => {
-    let editUserFormAlt = { ...this.state.editUserForm };
+    let editCompensatorioFormAlt = { ...this.state.editCompensatorioForm };
     let successSubmitEdit = this.state.successSubmitEdit;
-    for (let key in editUserFormAlt) {
-      editUserFormAlt[key].value = ''
+    for (let key in editCompensatorioFormAlt) {
+      editCompensatorioFormAlt[key].value = ''
     }
 
     this.setState({
@@ -261,17 +246,26 @@ class EditUser extends Component {
 
   componentDidMount() {
 
-    this.getUsersType();
-    this.getUserEdit(this.props.match.params.iduser);
+   // this.getCompensatoriosType();
+   console.log(this.props);
+    this.getCompensatorioEdit(this.props.match.params.idcompensatorio);
   }
+
+  handleFechaInicio = (date) => {
+    this.setState(
+      {
+        fechaCompensatorio: date
+      }
+    )
+  };
 
   render() {
 
     const formElementsArray = [];
-    for (let key in this.state.editUserForm) {
+    for (let key in this.state.editCompensatorioForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.editUserForm[key]
+        config: this.state.editCompensatorioForm[key]
       });
     }
 
@@ -279,7 +273,7 @@ class EditUser extends Component {
 
       <form onSubmit={(event) => {
         
-        this.handleSubmitEditUser(event)
+        this.handleSubmitEditCompensatorio(event)
 
       } }>
 
@@ -289,20 +283,20 @@ class EditUser extends Component {
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Editar Usuario</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Editar Compensatorio</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Formulario para modificar los datos del usuario
+              Formulario para modificar los datos del compensatorio
       </p>
           </CardHeader>
           <CardBody>
-          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+          {/* <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
         Cambiar Contraseña
-      </Button>
+      </Button> */}
 
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={"edituser-" + formElement.id}
+                  key={"editcompensatorio-" + formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -313,9 +307,27 @@ class EditUser extends Component {
                   changed={(event) => this.inputEditChangedHandler(event, formElement.id)}
                   />
               ))}
+
+              <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
+                <div>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="fechainicio"
+                    label="Fecha"
+                    format="dd/MM/yyyy"
+                    value={this.state.fechaCompensatorio}
+                    onChange={this.handleFechaInicio}
+                    autoOk={true}
+                    cancelLabel={"Cancelar"}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </div>
+              </MuiPickersUtilsProvider>
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/compensatorios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
@@ -334,7 +346,7 @@ class EditUser extends Component {
       <DialogContent>
       
         <DialogContentText>
-          Ingrese una nueva contraseña para el Usuario
+          Ingrese una nueva contraseña para el Compensatorio
         </DialogContentText>
         <TextField
           autoFocus
@@ -365,4 +377,4 @@ class EditUser extends Component {
 
 };
 
-export default withRouter(withStyles(styles)(EditUser));
+export default withRouter(withStyles(styles)(EditCompensatorio));

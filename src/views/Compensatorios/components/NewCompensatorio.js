@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
-import { StateNewUser } from "../VariablesState";
+import { StateNewCompensatorio } from "../VariablesState";
 
 import Database from "variables/Database.js";
 
@@ -14,6 +14,14 @@ import Card from "components/Card/Card.js";
 import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Save from '@material-ui/icons/Save';
+
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import esLocale from "date-fns/locale/es";
 
 
 
@@ -48,22 +56,22 @@ const styles = {
 };
 
 
-class NewUser extends Component {
-  state =JSON.parse(JSON.stringify(StateNewUser));
+class NewCompensatorio extends Component {
+  state =JSON.parse(JSON.stringify(StateNewCompensatorio));
 
 
-  handleSubmitNewUser = (event) => {
+  handleSubmitNewCompensatorio = (event) => {
     event.preventDefault();
-
-    Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value, id_empleado: this.state.newUserForm.id_empleado.value },this)
+    Database.post(`/insert-compensatorios`, {id_empleado: this.state.newCompensatorioForm.id_empleado.value, horas: this.state.newCompensatorioForm.horas.value * this.props.Testing(), 
+                                            minutos: this.state.newCompensatorioForm.minutos.value * this.props.Testing(), fecha: this.state.fechaCompensatorio},this)
       .then(res => {
 
-          toast.success("El usuario se ha creado con exito!");
+          toast.success("El compensatorio se ha creado con exito!");
           this.setState({
             successSubmit: true,
             formIsValid: false,
           },()=>{
-              this.props.getUsersAdmin();
+              this.props.getCompensatoriosAdmin();
           })
           this.resetNewForm();
 
@@ -78,7 +86,7 @@ class NewUser extends Component {
   inputChangedHandler = (event, inputIdentifier) => {
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.newUserForm
+      ...this.state.newCompensatorioForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
@@ -95,17 +103,17 @@ class NewUser extends Component {
       formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
     }
     this.setState({
-      newUserForm: updatedOrderForm,
+      newCompensatorioForm: updatedOrderForm,
       formIsValid: formIsValidAlt
     })
 
   }
 
   resetNewForm = (all) => {
-    let newUserFormAlt = { ...this.state.newUserForm };
+    let newCompensatorioFormAlt = { ...this.state.newCompensatorioForm };
     let successSubmit = this.state.successSubmit;
-    for (let key in newUserFormAlt) {
-      newUserFormAlt[key].value = ''
+    for (let key in newCompensatorioFormAlt) {
+      newCompensatorioFormAlt[key].value = ''
     }
     if (all)
       successSubmit = false;
@@ -114,36 +122,13 @@ class NewUser extends Component {
       successSubmit: successSubmit,
       formIsValid: false
     })
-    this.getUsersType("new", newUserFormAlt);
+    //this.getCompensatoriosType("new", newCompensatorioFormAlt);
 
   }
 
-  getUsersType = () => {
-    Database.get('/list-users_type',this)
-      .then(res => {
-
-          let resultadoUserType = [...res.result];
-          let a = [];
-          resultadoUserType.forEach(function (entry) {
-            a.push({
-              value: entry.id,
-              displayValue: entry.descripcion
-            });
-          })
-          let formulario = { ...this.state.newUserForm }
-          formulario.tipoUser.elementConfig.options = [...a];
-          this.setState({
-            newUserForm: formulario
-          })
-
-
-
-
-      },err => {
-        toast.error(err.message);
-      })
-
-      Database.get('/list-empleado', this)
+  getTipoCompensatorio = () => {
+    console.log(this.props.Testing());
+    Database.get('/list-empleado', this)
       .then(res => {
 
         let resultado = [...res.result];
@@ -154,14 +139,15 @@ class NewUser extends Component {
             displayValue: entry.apellido + ", " + entry.nombre
           });
         })
-        let formulario = { ...this.state.newUserForm }
+        let formulario = { ...this.state.newCompensatorioForm }
         formulario.id_empleado.elementConfig.options = [...a];
         this.setState({
-            newUserForm: formulario
+            newCompensatorioForm: formulario
         })
       }, err => {
         toast.error(err.message);
       })
+
 
   }
 
@@ -191,24 +177,33 @@ class NewUser extends Component {
 
   componentDidMount() {
 
-    this.getUsersType();
+    this.getTipoCompensatorio();
   }
+
+  handleFechaInicio = (date) => {
+    this.setState(
+      {
+        fechaCompensatorio: date
+      }
+    )
+  };
+
 
 
 
   render() {
 
     const formElementsArray = [];
-    for (let key in this.state.newUserForm) {
+    for (let key in this.state.newCompensatorioForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.newUserForm[key]
+        config: this.state.newCompensatorioForm[key]
       });
     }
     return (
 
       <form onSubmit={(event) => {
-        this.handleSubmitNewUser(event)
+        this.handleSubmitNewCompensatorio(event)
 
       } }>
 
@@ -218,9 +213,9 @@ class NewUser extends Component {
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Nuevo Usuario</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Nuevo Compensatorio</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Formulario de un usuario nuevo
+              Formulario de alta de compensatorio
       </p>
           </CardHeader>
           <CardBody>
@@ -228,7 +223,7 @@ class NewUser extends Component {
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={"edituser-" + formElement.id}
+                  key={"editcompensatorio-" + formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -239,9 +234,29 @@ class NewUser extends Component {
                   changed={(event) => this.inputChangedHandler(event, formElement.id)}
                   />
               ))}
+
+              <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
+                <div>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="fechainicio"
+                    label="Fecha"
+                    format="dd/MM/yyyy"
+                    value={this.state.fechaCompensatorio}
+                    onChange={this.handleFechaInicio}
+                    autoOk={true}
+                    cancelLabel={"Cancelar"}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </div>
+              </MuiPickersUtilsProvider>
+
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/usuarios')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/compensatorios')} ><ArrowBack />Volver</Button>
+            <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
           </CardBody>
@@ -258,4 +273,4 @@ class NewUser extends Component {
 
 };
 
-export default withRouter(withStyles(styles)(NewUser));
+export default withRouter(withStyles(styles)(NewCompensatorio));

@@ -25,6 +25,7 @@ import Person from "@material-ui/icons/Person";
 import Today from "@material-ui/icons/Today";
 import Notes from "@material-ui/icons/Notes";
 import DirectionsBike from "@material-ui/icons/DirectionsBike";
+import ExposureIcon from '@material-ui/icons/Exposure';
 
 
 
@@ -38,6 +39,7 @@ import Noticias from "views/Noticias/Noticias.js";
 import TiposFaltas from 'views/TiposFaltas/TiposFaltas.js';
 import Empleados from 'views/Empleados/Empleados.js';
 import ControlFaltas from 'views/ControlFaltas/ControlFaltas.js';
+import Compensatorios from 'views/Compensatorios/Compensatorios.js';
 
 
 const dashboardRoutes = [
@@ -199,6 +201,16 @@ const dashboardRoutes = [
         rtlName: "CF",
         icon: Person,
         component: ControlFaltas,
+        layout: "/admin"
+      },
+      {
+        show:false,
+        accesos: [94],
+        path: "/compensatorios",
+        name: "Compensatorios",
+        rtlName: "CO",
+        icon: ExposureIcon,
+        component: Compensatorios,
         layout: "/admin"
       },
     ]

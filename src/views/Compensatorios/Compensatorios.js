@@ -15,16 +15,18 @@ import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
 import Button from "components/CustomButtons/Button.js";
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
-import NewUser from "./components/NewEmpleado";
-import EditEmpleado from "./components/EditEmpleado";
+import AddCompensatorio from "./components/NewCompensatorio";
+import RemoveCompensatorio from "./components/NewCompensatorio";
+import EditCompensatorio from "./components/EditCompensatorio";
 import ModalDelete from "./components/ModalDelete"
 import { localization } from "variables/general.js";
 
 import { toast } from 'react-toastify';
 
 
-import { StateListEmpleados, ColumnsListado } from "./VariablesState";
+import { StateListCompensatorios, ColumnsListado } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
@@ -61,12 +63,14 @@ const styles = {
 };
 
 
-class Empleados extends Component {
-  state = { ...StateListEmpleados };
+class Compensatorios extends Component {
+  state = { ...StateListCompensatorios };
 
 
   componentDidMount() {
-    this.getEmpleadosAdmin();
+    //console.log("ROWDATA :");
+    //console.log(rowData.id);
+    this.getCompensatoriosAdmin();
   }
 
 
@@ -112,7 +116,7 @@ class Empleados extends Component {
         this.setState({
           menuContext: menuContext
         })
-        this.props.history.push(this.props.match.url + '/nuevoempleado');
+        this.props.history.push(this.props.match.url + '/nuevocompensatorio');
       }
 
       if (value === 'editar' && this.state.checked.length === 1) {
@@ -120,7 +124,7 @@ class Empleados extends Component {
           menuContext: menuContext
         })
         let idUser = this.state.checked[0].id;
-        this.props.history.push(this.props.match.url + '/editarempleado/' + idUser);
+        this.props.history.push(this.props.match.url + '/editarcompensatorio/' + idUser);
       }
     }
   }
@@ -131,18 +135,26 @@ class Empleados extends Component {
     })
   }
 
-  getEmpleadosAdmin = () => {
+  getCompensatoriosAdmin = () => {
     this.setState({
       isLoading: true
     })
 
-    Database.get('/list-empleados',this,null,true)
+    Database.get('/list-compensatorios',this,null,true)
       .then(res => {
-        let resultado = [...res.result];
+        let resultado = [...res.result[0]];
         console.log(resultado);
+
+        resultado = resultado.map(elem => {
+            return {
+              ...elem,
+              fecha_mostrar: (( moment(elem.fecha).isValid()) ? moment(elem.fecha).format("DD/MM/YYYY") : '')
+            }
+          })
+
         this.setState({
           isLoading:false,
-          empleados: resultado,
+          compensatorios: resultado,
           checked: [],
           menuContext: null,
           botonesAcciones: {
@@ -174,7 +186,7 @@ class Empleados extends Component {
 
 
   editSingleUser = value => {
-    this.props.history.push(this.props.match.url + '/editarempleado/' + value);
+    this.props.history.push(this.props.match.url + '/editarcompensatorio/' + value);
   }
 
   handlePagination = offset => {
@@ -184,11 +196,12 @@ class Empleados extends Component {
 
   }
 
-  handleDeleteEmpleado = rowData => {
+  handleDeleteCompensatorio = rowData => {
     console.log(rowData);
-    Database.post('/delete-empleado', { id: rowData.id },this).then(res => {
-        let empleados = [...this.state.empleados]
-        empleados = empleados.filter(elem => {
+    console.log(rowData.tableData.id);
+    Database.post('/delete-compensatorio', { id: rowData.id },this).then(res => {
+        let compensatorios = [...this.state.compensatorios]
+        compensatorios = compensatorios.filter(elem => {
           if (elem.id === rowData.id)
             return false;
 
@@ -197,10 +210,10 @@ class Empleados extends Component {
         })
 
         this.setState({
-          empleados: empleados,
+          compensatorios: compensatorios,
           openDeleteDialog:false
         },()=>{
-          toast.success("El empleado se ha eliminado con exito!");
+          toast.success("El compensatorio se ha eliminado con exito!");
         })
 
 
@@ -241,28 +254,29 @@ class Empleados extends Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card style={style}>
             <CardHeader color="primary">
-              <h4 className={this.props.classes.cardTitleWhite} >Empleados</h4>
+              <h4 className={this.props.classes.cardTitleWhite} >Compensatorios</h4>
               <p className={this.props.classes.cardCategoryWhite} >
-                Listado de Empleados
+                Listado de Compensatorios
                       </p>
             </CardHeader>
             <CardBody>
-              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/nuevoempleado')} color="primary"><AddIcon /> Nuevo Empleado</Button>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/sumarcompensatorio')} color="primary"><AddIcon /> Sumar Compensatorio</Button>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/restarcompensatorio')} color="primary"><RemoveIcon /> Restar Compensatorio</Button>
               <MaterialTable
                 isLoading={this.state.isLoading}
                 columns={ColumnsListado}
-                data={this.state.empleados}
+                data={this.state.compensatorios}
                 title=""
                 localization={localization}
 
                 actions={[{
                   icon: 'edit',
-                  tooltip: 'Editar Empleado',
-                  onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarempleado/' + rowData.id)
+                  tooltip: 'Editar Compensatorio',
+                  onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/editarcompensatorio/' + rowData.id)
                 },
                 {
                   icon: 'delete',
-                  tooltip: 'Borrar Empleado',
+                  tooltip: 'Borrar Compensatorio',
                   onClick: (event, rowData) => this.handleDeleteButton(rowData)
 
                 }]}
@@ -276,7 +290,7 @@ class Empleados extends Component {
                   actionsColumnIndex: -1,
                   exportButton: true,
                   exportAllData:true,
-                  exportFileName:"Empleados " + moment().format("DD-MM-YYYY"),
+                  exportFileName:"Compensatorios " + moment().format("DD-MM-YYYY"),
                   exportDelimiter:";",
                   headerStyle: {
                     backgroundColor: lightGreen[700],
@@ -288,31 +302,44 @@ class Empleados extends Component {
           </Card>
 
           <Switch>
-            <Route path={this.props.match.url + "/nuevoempleado"} render={() =>
+            <Route path={this.props.match.url + "/sumarcompensatorio"} render={() =>
 
-              <NewUser
+              <AddCompensatorio
 
-                getEmpleadosAdmin={() => this.getEmpleadosAdmin()}
+                getCompensatoriosAdmin={() => this.getCompensatoriosAdmin()}
                 handleListNewUser={(rowData) => this.handleListNewUser(rowData)}
+                Testing={() => 1}
 
 
                 />}
               />
 
-            <Route path={this.props.match.url + "/editarempleado/:idempleado"} render={() =>
+            <Route path={this.props.match.url + "/restarcompensatorio"} render={() =>
 
-              <EditEmpleado
-                orderForm={this.state.editEmpleadoForm}
+            <RemoveCompensatorio
+
+              getCompensatoriosAdmin={() => this.getCompensatoriosAdmin()}
+              handleListNewUser={(rowData) => this.handleListNewUser(rowData)}
+              Testing={() => -1}
+
+
+              />}
+            />
+
+            <Route path={this.props.match.url + "/editarcompensatorio/:idcompensatorio"} render={() =>
+
+              <EditCompensatorio
+                orderForm={this.state.editCompensatorioForm}
                 editFormIsValid={this.state.editFormIsValid}
                 successSubmitEdit={this.state.successSubmitEdit}
 
 
-                handleSubmitEditEmpleado={(event) => { this.handleSubmitEditEmpleado(event) } }
+                handleSubmitEditCompensatorio={(event) => { this.handleSubmitEditCompensatorio(event) } }
                 inputEditChangedHandler={(event, inputIdentifier) => this.inputEditChangedHandler(event, inputIdentifier)}
                 getUserEdit={(id) => { this.getUserEdit(id) } }
                 resetEditForm={this.resetEditForm}
-                reloadEmpleados={this.reloadEmpleados}
-                getEmpleadosAdmin={() => this.getEmpleadosAdmin()}
+                reloadCompensatorios={this.reloadCompensatorios}
+                getCompensatoriosAdmin={() => this.getCompensatoriosAdmin()}
 
 
 
@@ -327,7 +354,7 @@ class Empleados extends Component {
           openDeleteDialog={this.state.openDeleteDialog}
           deleteRowData={this.state.deleteRowData}
           handleClose={() => this.handleModalClose()}
-          handleDelete={(rowData) => this.handleDeleteEmpleado(rowData)}
+          handleDelete={(rowData) => this.handleDeleteCompensatorio(rowData)}
           />
 
 
@@ -338,4 +365,4 @@ class Empleados extends Component {
 }
 
 
-export default withStyles(styles)(Empleados);
+export default withStyles(styles)(Compensatorios);
