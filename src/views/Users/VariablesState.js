@@ -33,6 +33,23 @@ export const StateListUsers = {
 export const StateEditUser = {
 
     editUserForm: {
+        id_empleado: {
+            elementType: 'select',
+            elementConfig: {
+                label: 'Empleado',
+                options: [
+
+                ],
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: false
+            },
+
+            valid: false,
+            touched: false
+        },
         nombre: {
             elementType: 'input',
             elementConfig: {
@@ -110,6 +127,23 @@ export const StateEditUser = {
 export const StateNewUser = {
 
     newUserForm: {
+        id_empleado: {
+            elementType: 'select',
+            elementConfig: {
+                label: 'Empleado',
+                options: [
+
+                ],
+                fullWidth: true
+            },
+            value: '',
+            validation: {
+                required: false
+            },
+
+            valid: false,
+            touched: false
+        },
         nombre: {
             elementType: 'input',
             elementConfig: {
