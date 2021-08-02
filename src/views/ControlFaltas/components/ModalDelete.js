@@ -16,10 +16,10 @@ onClose={props.handleClose}
 aria-labelledby="alert-dialog-title"
 aria-describedby="alert-dialog-description"
 >
-<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar al empleado "${props.deleteRowData.apellido}, ${props.deleteRowData.nombre}"?` )}</DialogTitle>
+<DialogTitle id="alert-dialog-title">{props.deleteRowData && (`Eliminar la falta del empleado "${props.deleteRowData.nombre_empleado}"?` )}</DialogTitle>
 <DialogContent>
  <DialogContentText id="alert-dialog-description">
- Se eliminará el empleado seleccionado. Realmente desea eliminarlo?
+ Se eliminará la falta seleccionada. Realmente desea eliminarla?
   </DialogContentText>
 </DialogContent>
 <DialogActions>

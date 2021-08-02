@@ -63,13 +63,14 @@ class NewControlFalta extends Component {
   handleSubmitNewControlFalta = (event) => {
     event.preventDefault();
 
-    Database.post(`/insert-controlfaltas`, {nombre: this.state.newControlFaltaForm.nombre.value, 
-                                        id_empleado: this.state.newControlFaltaForm.id_empleado.value,
-                                        id_tipo_falta: this.state.newControlFaltaForm.id_tipo_falta.value
+    Database.post(`/insert-controlfaltas`, {id_empleado: this.state.newControlFaltaForm.id_empleado.value,
+                                        id_tipo_falta: this.state.newControlFaltaForm.id_tipo_falta.value,
+                                        inicio_licencia: this.state.fechaInicioLicencia,
+                                        fin_licencia: this.state.fechaFinLicencia
                                         },this)
       .then(res => {
 
-          toast.success("El controlfalta se ha creado con exito!");
+          toast.success("La falta se ha creado con exito!");
           this.setState({
             successSubmit: true,
             formIsValid: false,

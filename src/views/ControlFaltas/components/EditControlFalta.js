@@ -22,6 +22,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import esLocale from "date-fns/locale/es";
+
 import { StateEditControlFalta } from "../VariablesState";
 
 
@@ -108,13 +116,10 @@ class EditControlFalta extends Component {
             })
 
             let editControlFaltaFormAlt = { ...this.state.editControlFaltaForm };
-            editControlFaltaFormAlt.nombre.value = resultado.result[0].nombre;
-            editControlFaltaFormAlt.apellido.value = resultado.result[0].apellido;
-            editControlFaltaFormAlt.dni.value = resultado.result[0].dni;
-            editControlFaltaFormAlt.telefono.value = resultado.result[0].telefono;
-            editControlFaltaFormAlt.direccion.value = resultado.result[0].direccion;
-            editControlFaltaFormAlt.id_tipo_controlfalta.value = resultado.result[0].id_tipo_controlfalta;
-            editControlFaltaFormAlt.mail.value = resultado.result[0].mail;
+            editControlFaltaFormAlt.id_empleado.value = resultado.result[0].id_empleado;
+            editControlFaltaFormAlt.id_tipo_falta.value = resultado.result[0].id_tipo_falta;
+            this.state.fechaInicioLicencia = resultado.result[0].inicio_licencia;
+            this.state.fechaFinLicencia = resultado.result[0].fin_licencia;
             for (let key in editControlFaltaFormAlt) {
               editControlFaltaFormAlt[key].touched = true;
               editControlFaltaFormAlt[key].valid = true;
@@ -134,24 +139,45 @@ class EditControlFalta extends Component {
       })
 
     
-    Database.get('/list-tipo-controlfalta', this)
+      Database.get('/list-empleado', this)
+      .then(res => {
+
+        let resultado = [...res.result];
+        let a = [];
+        resultado.forEach(function (entry) {
+          a.push({
+            value: entry.id,
+            displayValue: entry.apellido + ", " + entry.nombre
+          });
+        })
+        let formulario = { ...this.state.editControlFaltaForm }
+        formulario.id_empleado.elementConfig.options = [...a];
+        this.setState({
+            editControlFaltaForm: formulario
+        })
+      }, err => {
+        toast.error(err.message);
+      })
+
+
+    Database.get('/list-tipo-falta', this)
     .then(res => {
 
-    let resultado = [...res.result];
-    let a = [];
-    resultado.forEach(function (entry) {
+      let resultado = [...res.result];
+      let a = [];
+      resultado.forEach(function (entry) {
         a.push({
-        value: entry.id,
-        displayValue: entry.descripcion
+          value: entry.id,
+          displayValue: entry.descripcion
         });
-    })
-    let formulario = { ...this.state.editControlFaltaForm }
-    formulario.id_tipo_controlfalta.elementConfig.options = [...a];
-    this.setState({
-        editControlFaltaForm: formulario
-    })
+      })
+      let formulario = { ...this.state.editControlFaltaForm }
+      formulario.id_tipo_falta.elementConfig.options = [...a];
+      this.setState({
+          editControlFaltaForm: formulario
+      })
     }, err => {
-    toast.error(err.message);
+      toast.error(err.message);
     })
     
   }
@@ -162,13 +188,11 @@ class EditControlFalta extends Component {
     event.preventDefault();
 
     Database.post(`/update-controlfalta`, { id: this.props.match.params.idcontrolfalta, 
-        nombre: this.state.editControlFaltaForm.nombre.value, 
-        apellido: this.state.editControlFaltaForm.apellido.value,
-        dni: this.state.editControlFaltaForm.dni.value,
-        telefono: this.state.editControlFaltaForm.telefono.value,
-        direccion: this.state.editControlFaltaForm.direccion.value,
-        id_tipo_controlfalta: this.state.editControlFaltaForm.id_tipo_controlfalta.value,
-        mail: this.state.editControlFaltaForm.mail.value},this)
+        id_empleado: this.state.editControlFaltaForm.id_empleado.value, 
+        id_tipo_falta: this.state.editControlFaltaForm.id_tipo_falta.value,
+        inicio_licencia: this.state.fechaInicioLicencia,
+        fin_licencia: this.state.fechaFinLicencia
+        },this)
       .then(res => {
 
           this.setState({
@@ -241,6 +265,24 @@ class EditControlFalta extends Component {
     this.getControlFaltaEdit(this.props.match.params.idcontrolfalta);
   }
 
+  handleFechaInicio = (date) => {
+    this.setState(
+      {
+        fechaInicioLicencia: date,
+        editFormIsValid: true,
+      }
+    )
+  };
+
+  handleFechaFin = (date) => {
+    this.setState(
+      {
+        fechaFinLicencia: date,
+        editFormIsValid: true,
+      }
+    )
+  };
+
   render() {
 
     const formElementsArray = [];
@@ -265,9 +307,9 @@ class EditControlFalta extends Component {
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Editar ControlFalta</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Editar Falta</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Formulario para modificar los datos del controlfalta
+              Formulario para modificar los datos de la falta
       </p>
           </CardHeader>
           <CardBody>
@@ -289,6 +331,41 @@ class EditControlFalta extends Component {
                   changed={(event) => this.inputEditChangedHandler(event, formElement.id)}
                   />
               ))}
+              <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
+                <div>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="fechainicio"
+                    label="Inicio Licencia"
+                    format="dd/MM/yyyy"
+                    value={this.state.fechaInicioLicencia}
+                    onChange={this.handleFechaInicio}
+                    autoOk={true}
+                    cancelLabel={"Cancelar"}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </div>
+              </MuiPickersUtilsProvider>
+
+              <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
+                <div>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="fechafin"
+                    label="Fin Licencia"
+                    format="dd/MM/yyyy"
+                    value={this.state.fechaFinLicencia}
+                    onChange={this.handleFechaFin}
+                    autoOk={true}
+                    cancelLabel={"Cancelar"}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </div>
+              </MuiPickersUtilsProvider>
             </div>
 
             <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/controlfaltas')} ><ArrowBack />Volver</Button><Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.editFormIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
