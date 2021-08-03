@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Input from 'components/Input/Input';
 import { Route, Switch, Link, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
-import { StateNewControlFalta } from "../VariablesState";
+import { StateNewCompensatorio } from "../VariablesState";
 
 import Database from "variables/Database.js";
 
@@ -56,26 +56,22 @@ const styles = {
 };
 
 
-class NewControlFalta extends Component {
-  state =JSON.parse(JSON.stringify(StateNewControlFalta));
+class NewCompensatorio extends Component {
+  state =JSON.parse(JSON.stringify(StateNewCompensatorio));
 
 
-  handleSubmitNewControlFalta = (event) => {
+  handleSubmitNewCompensatorio = (event) => {
     event.preventDefault();
-
-    Database.post(`/insert-controlfaltas`, {id_empleado: this.state.newControlFaltaForm.id_empleado.value,
-                                        id_tipo_falta: this.state.newControlFaltaForm.id_tipo_falta.value,
-                                        inicio_licencia: this.state.fechaInicioLicencia,
-                                        fin_licencia: this.state.fechaFinLicencia
-                                        },this)
+    Database.post(`/insert-compensatorios`, {id_empleado: this.state.newCompensatorioForm.id_empleado.value, horas: this.state.newCompensatorioForm.horas.value * this.props.Testing(), 
+                                            minutos: this.state.newCompensatorioForm.minutos.value * this.props.Testing(), fecha: this.state.fechaCompensatorio},this)
       .then(res => {
 
-          toast.success("La falta se ha creado con exito!");
+          toast.success("El compensatorio se ha creado con exito!");
           this.setState({
             successSubmit: true,
             formIsValid: false,
           },()=>{
-              this.props.getControlFaltasAdmin();
+              this.props.getCompensatoriosAdmin();
           })
           this.resetNewForm();
 
@@ -90,7 +86,7 @@ class NewControlFalta extends Component {
   inputChangedHandler = (event, inputIdentifier) => {
     let checkValid;
     const updatedOrderForm = {
-      ...this.state.newControlFaltaForm
+      ...this.state.newCompensatorioForm
     };
     const updatedFormElement = {
       ...updatedOrderForm[inputIdentifier]
@@ -107,17 +103,17 @@ class NewControlFalta extends Component {
       formIsValidAlt = updatedOrderForm[inputIdentifier].valid && formIsValidAlt;
     }
     this.setState({
-      newControlFaltaForm: updatedOrderForm,
+      newCompensatorioForm: updatedOrderForm,
       formIsValid: formIsValidAlt
     })
 
   }
 
   resetNewForm = (all) => {
-    let newControlFaltaFormAlt = { ...this.state.newControlFaltaForm };
+    let newCompensatorioFormAlt = { ...this.state.newCompensatorioForm };
     let successSubmit = this.state.successSubmit;
-    for (let key in newControlFaltaFormAlt) {
-      newControlFaltaFormAlt[key].value = ''
+    for (let key in newCompensatorioFormAlt) {
+      newCompensatorioFormAlt[key].value = ''
     }
     if (all)
       successSubmit = false;
@@ -126,11 +122,12 @@ class NewControlFalta extends Component {
       successSubmit: successSubmit,
       formIsValid: false
     })
-    //this.getControlFaltasType("new", newControlFaltaFormAlt);
+    //this.getCompensatoriosType("new", newCompensatorioFormAlt);
 
   }
 
-  getTipoControlFalta = () => {
+  getTipoCompensatorio = () => {
+    console.log(this.props.Testing());
     Database.get('/list-empleado', this)
       .then(res => {
 
@@ -142,35 +139,16 @@ class NewControlFalta extends Component {
             displayValue: entry.apellido + ", " + entry.nombre
           });
         })
-        let formulario = { ...this.state.newControlFaltaForm }
+        let formulario = { ...this.state.newCompensatorioForm }
         formulario.id_empleado.elementConfig.options = [...a];
         this.setState({
-            newControlFaltaForm: formulario
+            newCompensatorioForm: formulario
         })
       }, err => {
         toast.error(err.message);
       })
 
 
-    Database.get('/list-tipo-falta', this)
-    .then(res => {
-
-      let resultado = [...res.result];
-      let a = [];
-      resultado.forEach(function (entry) {
-        a.push({
-          value: entry.id,
-          displayValue: entry.descripcion
-        });
-      })
-      let formulario = { ...this.state.newControlFaltaForm }
-      formulario.id_tipo_falta.elementConfig.options = [...a];
-      this.setState({
-          newControlFaltaForm: formulario
-      })
-    }, err => {
-      toast.error(err.message);
-    })
   }
 
 
@@ -199,40 +177,33 @@ class NewControlFalta extends Component {
 
   componentDidMount() {
 
-    this.getTipoControlFalta();
+    this.getTipoCompensatorio();
   }
 
   handleFechaInicio = (date) => {
     this.setState(
       {
-        fechaInicioLicencia: date
+        fechaCompensatorio: date
       }
     )
   };
 
-  handleFechaFin = (date) => {
-    this.setState(
-      {
-        fechaFinLicencia: date
-      }
-    )
-  };
 
 
 
   render() {
 
     const formElementsArray = [];
-    for (let key in this.state.newControlFaltaForm) {
+    for (let key in this.state.newCompensatorioForm) {
       formElementsArray.push({
         id: key,
-        config: this.state.newControlFaltaForm[key]
+        config: this.state.newCompensatorioForm[key]
       });
     }
     return (
 
       <form onSubmit={(event) => {
-        this.handleSubmitNewControlFalta(event)
+        this.handleSubmitNewCompensatorio(event)
 
       } }>
 
@@ -242,9 +213,9 @@ class NewControlFalta extends Component {
 
         <Card>
           <CardHeader color="primary">
-            <h4 className={this.props.classes.cardTitleWhite}>Nueva Falta</h4>
+            <h4 className={this.props.classes.cardTitleWhite}>Nuevo Compensatorio</h4>
             <p className={this.props.classes.cardCategoryWhite}>
-              Formulario de alta de falta
+              Formulario de alta de compensatorio
       </p>
           </CardHeader>
           <CardBody>
@@ -252,7 +223,7 @@ class NewControlFalta extends Component {
             <div className="mt-3 mb-3">
               {formElementsArray.map(formElement => (
                 <Input
-                  key={"editcontrolfalta-" + formElement.id}
+                  key={"editcompensatorio-" + formElement.id}
                   elementType={formElement.config.elementType}
                   elementConfig={formElement.config.elementConfig}
                   value={formElement.config.value}
@@ -269,9 +240,9 @@ class NewControlFalta extends Component {
                   <KeyboardDatePicker
                     margin="normal"
                     id="fechainicio"
-                    label="Inicio Licencia"
+                    label="Fecha"
                     format="dd/MM/yyyy"
-                    value={this.state.fechaInicioLicencia}
+                    value={this.state.fechaCompensatorio}
                     onChange={this.handleFechaInicio}
                     autoOk={true}
                     cancelLabel={"Cancelar"}
@@ -282,26 +253,9 @@ class NewControlFalta extends Component {
                 </div>
               </MuiPickersUtilsProvider>
 
-              <MuiPickersUtilsProvider locale={esLocale} utils={DateFnsUtils}>
-                <div>
-                  <KeyboardDatePicker
-                    margin="normal"
-                    id="fechafin"
-                    label="Fin Licencia"
-                    format="dd/MM/yyyy"
-                    value={this.state.fechaFinLicencia}
-                    onChange={this.handleFechaFin}
-                    autoOk={true}
-                    cancelLabel={"Cancelar"}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                  />
-                </div>
-              </MuiPickersUtilsProvider>
             </div>
 
-            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/controlfaltas')} ><ArrowBack />Volver</Button>
+            <Button style={{ marginTop: '25px' }} color="info" onClick={() => this.props.history.push('/admin/compensatorios')} ><ArrowBack />Volver</Button>
             <Button style={{ marginTop: '25px' }} color="primary" variant="contained" disabled={!this.state.formIsValid || this.state.disableAllButtons} type="submit" ><Save /> Guardar</Button>
 
 
@@ -319,4 +273,4 @@ class NewControlFalta extends Component {
 
 };
 
-export default withRouter(withStyles(styles)(NewControlFalta));
+export default withRouter(withStyles(styles)(NewCompensatorio));

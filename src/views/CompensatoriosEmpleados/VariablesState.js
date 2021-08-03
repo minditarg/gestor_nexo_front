@@ -1,7 +1,7 @@
-import moment from "moment";
+import moment from 'moment';
 
-export const StateListControlFaltas = {
-    controlfaltas: [],
+export const StateListCompensatorios = {
+    compensatorios: [],
     offset:0,
     checked: [],
     menuContext: null,
@@ -25,16 +25,15 @@ export const StateListControlFaltas = {
     modalOpen: false,
     openDeleteDialog:false,
     deleteRowData:null,
-    isLoading:false
-
-
-
+    isLoading:false,
+    minutosTotales: null,
+    nombreEmpleado:null
 
 }
 
-export const StateEditControlFalta = {
+export const StateEditCompensatorio = {
 
-    editControlFaltaForm: {
+    editCompensatorioForm: {
         id_empleado: {
             elementType: 'select',
             elementConfig: {
@@ -50,13 +49,13 @@ export const StateEditControlFalta = {
             valid: true,
             touched: false
         },
-        id_tipo_falta: {
-            elementType: 'select',
+        horas: {
+            elementType: 'input',
             elementConfig: {
-                label: 'Falta',
+                label: 'Horas',
                 options: [
                 ],
-                fullWidth: true
+                fullWidth: false
             },
             value: '',
             validation: {
@@ -64,16 +63,25 @@ export const StateEditControlFalta = {
             },
             valid: true,
             touched: false
-        },    
+        },
+        minutos: {
+            elementType: 'input',
+            elementConfig: {
+                label: 'Minutos',
+                options: [
+                ],
+                fullWidth: false
+            },
+            value: '',
+            validation: {
+                required: false
+            },
+            valid: true,
+            touched: false
+        },     
     },
-    
-    files: [],
-    url_archivo:null,
-    openDeleteArchivo:false,
-
-    fechaInicioLicencia:null,
-    fechaFinLicencia:null,
-    controlfaltaEdit: null,
+    fechaCompensatorio:null,
+    compensatorioEdit: null,
     editFormIsValid: false,
     successSubmitEdit: null,
     disableAllButtons:false,
@@ -81,9 +89,9 @@ export const StateEditControlFalta = {
 
 }
 
-export const StateNewControlFalta = {
+export const StateNewCompensatorio = {
 
-    newControlFaltaForm: {
+    newCompensatorioForm: {
         id_empleado: {
             elementType: 'select',
             elementConfig: {
@@ -99,13 +107,28 @@ export const StateNewControlFalta = {
             valid: true,
             touched: false
         },
-        id_tipo_falta: {
-            elementType: 'select',
+        horas: {
+            elementType: 'input',
             elementConfig: {
-                label: 'Falta',
+                label: 'Horas',
                 options: [
                 ],
-                fullWidth: true
+                fullWidth: false
+            },
+            value: '',
+            validation: {
+                required: false
+            },
+            valid: true,
+            touched: false
+        },
+        minutos: {
+            elementType: 'input',
+            elementConfig: {
+                label: 'Minutos',
+                options: [
+                ],
+                fullWidth: false
             },
             value: '',
             validation: {
@@ -116,8 +139,7 @@ export const StateNewControlFalta = {
         },  
     },
 
-    fechaInicioLicencia:null,
-    fechaFinLicencia:null,
+    fechaCompensatorio:null,
     formIsValid: false,
     successSubmit: null,
     disableAllButtons:false
@@ -125,8 +147,6 @@ export const StateNewControlFalta = {
 
 export const ColumnsListado = [
 { title: "Empleado", field: "nombre_empleado" },
-{ title: "Falta", field: "tipo_falta" },
-{ title: "Inicio Licencia", field: "inicio_licencia_mostrar", customSort: (a, b) => parseInt(moment(a.inicio_licencia).format("YYYYMMDD")) - parseInt(moment(b.inicio_licencia).format("YYYYMMDD")) },
-{ title: "Fin Licencia", field: "fin_licencia_mostrar", customSort: (a, b) => parseInt(moment(a.fin_licencia).format("YYYYMMDD")) - parseInt(moment(b.fin_licencia).format("YYYYMMDD")) },
-{ title: "Cant. Días", field: "cant_dias" }
+{ title: "Fecha", field: "fecha_mostrar", customSort: (a, b) => parseInt(moment(a.fecha).format("YYYYMMDD")) - parseInt(moment(b.fecha).format("YYYYMMDD")) },
+{ title: "Minutos", field: "minutos" }
 ];
