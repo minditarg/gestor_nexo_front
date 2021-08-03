@@ -126,7 +126,5 @@ export const StateNewControlFalta = {
 export const ColumnsListado = [
 { title: "Empleado", field: "nombre_empleado" },
 { title: "Falta", field: "tipo_falta" },
-{ title: "Inicio Licencia", field: "inicio_licencia_mostrar", customSort: (a, b) => parseInt(moment(a.inicio_licencia).format("YYYYMMDD")) - parseInt(moment(b.inicio_licencia).format("YYYYMMDD")) },
-{ title: "Fin Licencia", field: "fin_licencia_mostrar", customSort: (a, b) => parseInt(moment(a.fin_licencia).format("YYYYMMDD")) - parseInt(moment(b.fin_licencia).format("YYYYMMDD")) },
-{ title: "Cant. Días", field: "cant_dias" }
+{ title: "Días Tomados", field: "cant_dias" }
 ];

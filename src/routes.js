@@ -40,6 +40,8 @@ import TiposFaltas from 'views/TiposFaltas/TiposFaltas.js';
 import Empleados from 'views/Empleados/Empleados.js';
 import ControlFaltas from 'views/ControlFaltas/ControlFaltas.js';
 import Compensatorios from 'views/Compensatorios/Compensatorios.js';
+import ControlFaltasEmpleados from 'views/ControlFaltasEmpleados/ControlFaltas.js';
+import CompensatoriosEmpleados from 'views/CompensatoriosEmpleados/Compensatorios.js';
 
 
 const dashboardRoutes = [
@@ -167,7 +169,7 @@ const dashboardRoutes = [
 
   {
     show:false,
-    accesos: [91,92,93],
+    accesos: [91,92,93,94,95,96],
     groupComponent: true,
     name: 'Personal',
     open: 'open22',
@@ -208,9 +210,29 @@ const dashboardRoutes = [
         accesos: [94],
         path: "/compensatorios",
         name: "Compensatorios",
-        rtlName: "CO",
+        rtlName: "C",
         icon: ExposureIcon,
         component: Compensatorios,
+        layout: "/admin"
+      },
+      {
+        show:false,
+        accesos: [95],
+        path: "/controlfaltasempleados",
+        name: "Control Faltas",
+        rtlName: "CFE",
+        icon: Person,
+        component: ControlFaltasEmpleados,
+        layout: "/admin"
+      },
+      {
+        show:false,
+        accesos: [96],
+        path: "/compensatoriosempleados",
+        name: "Compensatorios",
+        rtlName: "COE",
+        icon: ExposureIcon,
+        component: CompensatoriosEmpleados,
         layout: "/admin"
       },
     ]
