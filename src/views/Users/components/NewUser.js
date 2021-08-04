@@ -148,6 +148,12 @@ class NewUser extends Component {
 
         let resultado = [...res.result];
         let a = [];
+
+        a.push({
+          value: "",
+          displayValue: "Quitar Empleado"
+        });
+
         resultado.forEach(function (entry) {
           a.push({
             value: entry.id,
