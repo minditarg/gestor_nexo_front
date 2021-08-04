@@ -81,6 +81,7 @@ class NewControlFalta extends Component {
 
 
       },err => {
+        err.message = err.message.substring(err.message.indexOf(':') + 1 );
         toast.error(err.message);
 
       })

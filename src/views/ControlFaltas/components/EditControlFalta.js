@@ -203,14 +203,15 @@ class EditControlFalta extends Component {
             editFormIsValid: false,
             disableAllButtons:false
           },()=>{
-              toast.success("El controlfalta se ha modificado con exito!");
+              toast.success("La falta se ha modificado con exito!");
 
               this.props.getControlFaltasAdmin();
 
           })
 
       },err =>{
-          toast.error(err.message);
+        err.message = err.message.substring(err.message.indexOf(':') + 1 );
+        toast.error(err.message);
 
       })
 

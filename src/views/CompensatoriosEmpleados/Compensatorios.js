@@ -144,8 +144,6 @@ class Compensatorios extends Component {
       .then(res => {
         let resultado = [...res.result[0]];
         console.log(resultado);
-        //console.log(resultado[0].min_totales);
-        //console.log(resultado[0][0].min_totales);
 
         resultado = resultado.map(elem => {
             return {
@@ -181,6 +179,7 @@ class Compensatorios extends Component {
         else{
           this.setState({
             isLoading:false,
+            minutosTotales: 0,
             compensatorios: resultado,
             checked: [],
             menuContext: null,

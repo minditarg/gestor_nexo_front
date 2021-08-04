@@ -21,8 +21,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="http://aula.ods.mindit.com.ar/">
-        ODS
+      <Link color="inherit" href="https://fveter.unr.edu.ar/">
+        UNR
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

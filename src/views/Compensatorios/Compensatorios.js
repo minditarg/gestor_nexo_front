@@ -260,8 +260,8 @@ class Compensatorios extends Component {
                       </p>
             </CardHeader>
             <CardBody>
-              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/sumarcompensatorio')} color="primary"><AddIcon /> Sumar Compensatorio</Button>
-              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/restarcompensatorio')} color="primary"><RemoveIcon /> Restar Compensatorio</Button>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/sumarcompensatorio')} color="primary"><AddIcon /> Sumar Horas</Button>
+              <Button style={{ marginTop: '25px' }} onClick={() => this.props.history.push(this.props.match.url + '/restarcompensatorio')} color="primary"><RemoveIcon /> Restar Horas</Button>
               <MaterialTable
                 isLoading={this.state.isLoading}
                 columns={ColumnsListado}

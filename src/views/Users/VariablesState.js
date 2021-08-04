@@ -47,8 +47,8 @@ export const StateEditUser = {
                 required: false
             },
 
-            valid: false,
-            touched: false
+            valid: true,
+            touched: true
         },
         nombre: {
             elementType: 'input',
@@ -141,8 +141,8 @@ export const StateNewUser = {
                 required: false
             },
 
-            valid: false,
-            touched: false
+            valid: true,
+            touched: true
         },
         nombre: {
             elementType: 'input',

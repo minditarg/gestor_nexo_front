@@ -126,5 +126,7 @@ export const StateNewControlFalta = {
 export const ColumnsListado = [
 { title: "Empleado", field: "nombre_empleado" },
 { title: "Falta", field: "tipo_falta" },
-{ title: "Días Tomados", field: "cant_dias" }
+{ title: "Días Tomados", field: "dias_tomados" },
+{ title: "Días Restantes", field: "dias_restantes" },
+{ title: "Días Totales", field: "dias_totales" }
 ];
