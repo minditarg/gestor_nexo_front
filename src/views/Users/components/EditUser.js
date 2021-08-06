@@ -98,11 +98,15 @@ class EditUser extends Component {
         toast.error(err.message);
       })
 
-      Database.get('/list-empleado', this)
+      Database.get('/list-empleado-edit-user/' + this.props.match.params.iduser)
       .then(res => {
 
-        let resultado = [...res.result];
+        let resultado = [...res.result[0]];
         let a = [];
+        console.log(resultado);
+        console.log(res.result);
+        console.log(res.result[0]);
+        console.log("entro");
 
         a.push({
           value: "",

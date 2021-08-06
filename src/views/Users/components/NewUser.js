@@ -143,7 +143,7 @@ class NewUser extends Component {
         toast.error(err.message);
       })
 
-      Database.get('/list-empleado', this)
+      Database.get('/list-empleado-user', this)
       .then(res => {
 
         let resultado = [...res.result];

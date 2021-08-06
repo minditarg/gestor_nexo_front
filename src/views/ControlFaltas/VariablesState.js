@@ -130,3 +130,11 @@ export const ColumnsListado = [
 { title: "Fin Licencia", field: "fin_licencia_mostrar", customSort: (a, b) => parseInt(moment(a.fin_licencia).format("YYYYMMDD")) - parseInt(moment(b.fin_licencia).format("YYYYMMDD")) },
 { title: "Cant. Días", field: "cant_dias" }
 ];
+
+export const ColumnsListadoEmpleados = [
+{ title: "Empleado", field: "nombre_empleado" },
+{ title: "Falta", field: "tipo_falta" },
+{ title: "Días Tomados", field: "dias_tomados" },
+{ title: "Días Restantes", field: "dias_restantes" },
+{ title: "Días Totales", field: "dias_totales" }
+];

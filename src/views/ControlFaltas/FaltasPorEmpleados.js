@@ -13,19 +13,18 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Card from "components/Card/Card.js";
 import Paper from '@material-ui/core/Paper';
-import SearchIcon from '@material-ui/icons/Search';
 import Button from "components/CustomButtons/Button.js";
 import AddIcon from '@material-ui/icons/Add';
 
 import NewUser from "./components/NewControlFalta";
-import ControlFaltaDetalle from "./components/EditControlFalta";
+import EditControlFalta from "./components/EditControlFalta";
 import ModalDelete from "./components/ModalDelete"
 import { localization } from "variables/general.js";
 
 import { toast } from 'react-toastify';
 
 
-import { StateListControlFaltas, ColumnsListado } from "./VariablesState";
+import { StateListControlFaltas, ColumnsListadoEmpleados } from "./VariablesState";
 
 import lightGreen from '@material-ui/core/colors/lightGreen';
 
@@ -137,7 +136,7 @@ class ControlFaltas extends Component {
       isLoading: true
     })
 
-    Database.get('/list-controlfaltas-empleados',this,null,true)
+    Database.get('/list-faltas-empleados',this,null,true)
       .then(res => {
         let resultado = [...res.result[0]];
         console.log(resultado);
@@ -195,7 +194,6 @@ class ControlFaltas extends Component {
   }
 
   handleDeleteControlFalta = rowData => {
-    console.log(rowData);
     Database.post('/delete-controlfalta', { id: rowData.id },this).then(res => {
         let controlfaltas = [...this.state.controlfaltas]
         controlfaltas = controlfaltas.filter(elem => {
@@ -251,30 +249,20 @@ class ControlFaltas extends Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card style={style}>
             <CardHeader color="primary">
-              <h4 className={this.props.classes.cardTitleWhite} >Faltas</h4>
+              <h4 className={this.props.classes.cardTitleWhite} >Faltas por Empleados</h4>
               <p className={this.props.classes.cardCategoryWhite} >
-                Listado de Faltas
+                Listado de Faltas por Empleados
                       </p>
             </CardHeader>
             <CardBody>
               <MaterialTable
                 isLoading={this.state.isLoading}
-                columns={ColumnsListado}
+                columns={ColumnsListadoEmpleados}
                 data={this.state.controlfaltas}
                 title=""
                 localization={localization}
 
-                actions={[{
-                icon: SearchIcon,
-                tooltip: 'Ver Detalle',
-                onClick: (event, rowData) => this.props.history.push(this.props.match.url + '/detallecompensatorio/' + rowData.id_empleado)
-                },
-                {
-                  icon: 'delete',
-                  tooltip: 'Borrar Falta',
-                  onClick: (event, rowData) => this.handleDeleteButton(rowData)
-
-                }]}
+                actions={[]}
                 components={{
                   Container: props => (
                     <Paper elevation={0} {...props} />
@@ -308,9 +296,9 @@ class ControlFaltas extends Component {
                 />}
               />
 
-            <Route path={this.props.match.url + "/detallecompensatorio/:idcontrolfalta"} render={() =>
+            <Route path={this.props.match.url + "/editarcontrolfalta/:idcontrolfalta"} render={() =>
 
-              <ControlFaltaDetalle
+              <EditControlFalta
                 orderForm={this.state.editControlFaltaForm}
                 editFormIsValid={this.state.editFormIsValid}
                 successSubmitEdit={this.state.successSubmitEdit}
