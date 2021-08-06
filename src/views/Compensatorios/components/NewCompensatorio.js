@@ -7,6 +7,7 @@ import { StateNewCompensatorio } from "../VariablesState";
 import Database from "variables/Database.js";
 
 import { toast } from 'react-toastify';
+import moment from "moment";
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -62,6 +63,12 @@ class NewCompensatorio extends Component {
 
   handleSubmitNewCompensatorio = (event) => {
     event.preventDefault();
+
+    let fechaCompensatorio = null;
+
+    if (this.state.fechaCompensatorio != null)
+    fechaCompensatorio = moment(this.state.fechaCompensatorio).format("YYYY-MM-DD HH:mm");
+
     Database.post(`/insert-compensatorios`, {id_empleado: this.state.newCompensatorioForm.id_empleado.value, horas: this.state.newCompensatorioForm.horas.value * this.props.Testing(), 
                                             minutos: this.state.newCompensatorioForm.minutos.value * this.props.Testing(), fecha: this.state.fechaCompensatorio},this)
       .then(res => {

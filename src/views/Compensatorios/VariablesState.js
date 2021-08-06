@@ -151,3 +151,8 @@ export const ColumnsListado = [
 { title: "Fecha", field: "fecha_mostrar", customSort: (a, b) => parseInt(moment(a.fecha).format("YYYYMMDD")) - parseInt(moment(b.fecha).format("YYYYMMDD")) },
 { title: "Minutos", field: "minutos" }
 ];
+
+export const ColumnsListadoCompensatorios = [
+{ title: "Empleado", field: "nombre_empleado" },
+{ title: "Minutos Totales", field: "min_totales" }
+];

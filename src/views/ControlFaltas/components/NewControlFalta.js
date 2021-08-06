@@ -7,6 +7,7 @@ import { StateNewControlFalta } from "../VariablesState";
 import Database from "variables/Database.js";
 
 import { toast } from 'react-toastify';
+import moment from "moment";
 
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -62,6 +63,15 @@ class NewControlFalta extends Component {
 
   handleSubmitNewControlFalta = (event) => {
     event.preventDefault();
+
+    let fechaInicioLicencia = null;
+    let fechaFinLicencia = null;
+
+    if (this.state.fechaInicioLicencia != null)
+    fechaInicioLicencia = moment(this.state.fechaInicioLicencia).format("YYYY-MM-DD HH:mm");
+
+    if (this.state.fechaFinLicencia != null)
+    fechaFinLicencia = moment(this.state.fechaFinLicencia).format("YYYY-MM-DD HH:mm");
 
     Database.post(`/insert-controlfaltas`, {id_empleado: this.state.newControlFaltaForm.id_empleado.value,
                                         id_tipo_falta: this.state.newControlFaltaForm.id_tipo_falta.value,

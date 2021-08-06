@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/styles';
 
 import Database from "variables/Database.js";
 import { toast,ToastContainer } from 'react-toastify';
+import moment from "moment";
 
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -189,6 +190,15 @@ class EditControlFalta extends Component {
   handleSubmitEditControlFalta = (event) => {
 
     event.preventDefault();
+
+    let fechaInicioLicencia = null;
+    let fechaFinLicencia = null;
+
+    if (this.state.fechaInicioLicencia != null)
+    fechaInicioLicencia = moment(this.state.fechaInicioLicencia).format("YYYY-MM-DD HH:mm");
+
+    if (this.state.fechaFinLicencia != null)
+    fechaFinLicencia = moment(this.state.fechaFinLicencia).format("YYYY-MM-DD HH:mm");
 
     Database.post(`/update-controlfalta`, { id: this.props.match.params.idcontrolfalta, 
         id_empleado: this.state.editControlFaltaForm.id_empleado.value, 

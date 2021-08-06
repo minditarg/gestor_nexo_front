@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/styles';
 
 import Database from "variables/Database.js";
 import { toast,ToastContainer } from 'react-toastify';
+import moment from "moment";
 
 
 import CardHeader from "components/Card/CardHeader.js";
@@ -171,6 +172,11 @@ class EditCompensatorio extends Component {
   handleSubmitEditCompensatorio = (event) => {
 
     event.preventDefault();
+
+    let fechaCompensatorio = null;
+
+    if (this.state.fechaCompensatorio != null)
+    fechaCompensatorio = moment(this.state.fechaCompensatorio).format("YYYY-MM-DD HH:mm");
 
     Database.post(`/update-compensatorio`, { id: this.props.match.params.idcompensatorio, 
         id_empleado: this.state.editCompensatorioForm.id_empleado.value, 
