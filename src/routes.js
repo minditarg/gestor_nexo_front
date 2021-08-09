@@ -352,21 +352,21 @@ const dashboardRoutes = [
 
 export const breadcrumRoutes = [
   {
-    path: "/admin/usuarios",
-    name: "Usuarios",
-    to: "/admin/usuarios",
-    children: [
-      {
-        path: "/nuevousuario",
-        name: "Nuevo",
-        to: "/admin/usuarios/nuevousuario"
-      },
-      {
-        path: "/editarusuario",
-        name: "Editar",
-        to: "/admin/usuarios/editarusuario"
-      }
-    ]
+    // path: "/admin/usuarios",
+    // name: "Usuarios",
+    // to: "/admin/usuarios",
+    // children: [
+    //   {
+    //     path: "/nuevousuario",
+    //     name: "Nuevo",
+    //     to: "/admin/usuarios/nuevousuario"
+    //   },
+    //   {
+    //     path: "/editarusuario",
+    //     name: "Editar",
+    //     to: "/admin/usuarios/editarusuario"
+    //   }
+    // ]
   }
 
 ]
