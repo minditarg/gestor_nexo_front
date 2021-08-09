@@ -17,7 +17,7 @@ import Button from "components/CustomButtons/Button.js";
 import { Route, Switch} from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 
-import logo from 'assets/img/logo-unr.png';
+import logo from 'assets/img/logonexo2.png';
 
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
 
@@ -43,7 +43,7 @@ export default function Header(props) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
 
-        <img style={{ marginLeft:'1em',height:65}} src={logo} />
+        <img style={{ marginLeft:'1em',height:90}} src={logo} />
         </div>
         <Hidden smDown implementation="css">
           {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks user={props.user} handleCloseSession={props.handleCloseSession} handleChangePass={props.handleChangePass} />}

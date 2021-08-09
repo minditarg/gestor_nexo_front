@@ -21,8 +21,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://fveter.unr.edu.ar/">
-        UNR
+      <Link color="inherit" href="http://wwwfundacionnexo.com.ar/">
+        Fundación NEXO
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

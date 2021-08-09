@@ -23,7 +23,7 @@ import { breadcrumRoutes } from "routes.js";
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 import bgImage from "assets/img/side_bar.jpg";
-import logoside from "assets/img/unr_side.png";
+import logoside from "assets/img/logot.png";
 
 import ModalchangePass from './ModalChangePass';
 
@@ -168,7 +168,7 @@ export default function Admin({ ...rest }) {
         path="/admin"
         exact
         render={() => {
-          return (<div><h2>Bienvenid@ a UNR GESTOR</h2><h4>Seleccione un Item del menú lateral para continuar</h4></div>)
+          return (<div><h2>Bienvenid@ a Nexo - GESTOR</h2><h4>Seleccione un Item del menú lateral para continuar</h4></div>)
 
         }}
 
@@ -280,7 +280,7 @@ export default function Admin({ ...rest }) {
         handleCloseSession={()=>handleCloseSession()}
         user={user}
         routes={routes}
-        logoText={"GESTOR UNR"}
+        logoText={"GESTOR NEXO"}
         logo={logoside}
         image={image}
         handleDrawerToggle={handleDrawerToggle}
