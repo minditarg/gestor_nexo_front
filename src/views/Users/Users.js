@@ -270,7 +270,7 @@ class Users extends Component {
                 },
                 {
                   icon: 'delete',
-                  tooltip: 'Borrar Ususario',
+                  tooltip: 'Borrar Usuario',
                   onClick: (event, rowData) => this.handleDeleteButton(rowData)
 
                 }]}

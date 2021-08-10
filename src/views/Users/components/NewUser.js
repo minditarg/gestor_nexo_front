@@ -55,7 +55,7 @@ class NewUser extends Component {
   handleSubmitNewUser = (event) => {
     event.preventDefault();
 
-    Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value, id_empleado: this.state.newUserForm.id_empleado.value },this)
+  Database.post(`/signup-json`, { username: this.state.newUserForm.username.value, password: this.state.newUserForm.password.value, nombre: this.state.newUserForm.nombre.value, id_users_type: this.state.newUserForm.tipoUser.value/*, id_empleado: this.state.newUserForm.id_empleado.value*/ },this)
       .then(res => {
 
           toast.success("El usuario se ha creado con exito!");
@@ -142,7 +142,7 @@ class NewUser extends Component {
       },err => {
         toast.error(err.message);
       })
-
+/*
       Database.get('/list-empleado-user', this)
       .then(res => {
 
@@ -168,7 +168,7 @@ class NewUser extends Component {
       }, err => {
         toast.error(err.message);
       })
-
+*/
   }
 
 
