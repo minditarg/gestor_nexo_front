@@ -355,8 +355,12 @@ class NewEditNoticia extends Component {
           })
 
           let categoria = null;
+          console.log(resultado.noticia[0]);
           if (resultado.noticia[0].id_tipo_categoria) {
             categoria = { id: resultado.noticia[0].id_tipo_categoria, descripcion: resultado.noticia[0].descripcion_tipo_categoria }
+            console.log(categoria);
+            console.log(categoria.id);
+            orderForm.categoria.value = categoria.id.toString();
           }
 
           let fechaInicio = null;
@@ -389,16 +393,27 @@ class NewEditNoticia extends Component {
   }
 
   getTiposCategorias = () => {
+    console.log("getTiposCategorias");
     Database.get('/list-types-categorias', this)
       .then(res => {
-
-        this.setState({
-          tiposCategorias: res.result
+        let resultadoCategorias = [...res.result];
+        let a = [];
+        resultadoCategorias.forEach(function (entry) {
+          a.push({
+            value: entry.id,
+            displayValue: entry.descripcion
+          });
         })
-
-
-
-
+        console.log(this.state);
+        let formulario = { ...this.state.orderForm };
+        console.log(formulario);
+        formulario.categoria.elementConfig.options = [...a];
+        this.setState({
+          orderForm: formulario
+        })
+        // this.setState({
+        //   tiposCategorias: res.result
+        // }
       })
   }
 
@@ -460,7 +475,7 @@ class NewEditNoticia extends Component {
           destacado: (this.state.orderForm.destacado && this.state.orderForm.destacado.value) || null ,
           principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
           idTipoNoticia: this.props.idTipoNoticia,
-          idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
+          idTipoCategoria: (this.state.orderForm.categoria && this.state.orderForm.categoria.value) || null,
           id_categoria_personal: (this.state.orderForm.id_categoria_personal && this.state.orderForm.id_categoria_personal.value) || null,
           id_categoria_transparente: (this.state.orderForm.id_categoria_transparente && this.state.orderForm.id_categoria_transparente.value) || null,
           tags: this.state.tags,
@@ -472,14 +487,16 @@ class NewEditNoticia extends Component {
 
       } else {
         url = '/insert-noticia';
+       // console.log(this.state.orderForm.categoria);
         objectoPost = {
           nombre:(this.state.orderForm.nombre && this.state.orderForm.nombre.value )|| null,
           descripcion: ( this.state.orderForm.descripcion && this.state.orderForm.descripcion.value )|| null,
           estado: this.state.orderForm.estado.value,
+          idTipoCategoria: (this.state.orderForm.categoria && this.state.orderForm.categoria.value) || null,
           destacado: (this.state.orderForm.destacado && this.state.orderForm.destacado.value) || null ,
           principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
           idTipoNoticia: this.props.idTipoNoticia,
-          idTipoCategoria: (this.state.idCategoria && this.state.idCategoria.id) || null,
+          
           id_categoria_personal: (this.state.orderForm.id_categoria_personal && this.state.orderForm.id_categoria_personal.value) || null,
           id_categoria_transparente: (this.state.orderForm.id_categoria_transparente && this.state.orderForm.id_categoria_transparente.value) || null,
           tags: this.state.tags,
@@ -648,11 +665,12 @@ class NewEditNoticia extends Component {
 
   componentDidMount() {
     let thumbs = [];
+    this.getTiposCategorias();
     if (this.props.match.params.idnoticia) {
       this.getNoticiaEdit(this.props.match.params.idnoticia);
       this.setState({ vistaPrevia: true })
     }
-    this.getTiposCategorias();
+    
 
 
 
