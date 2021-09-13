@@ -650,6 +650,7 @@ export const ColumnsListado = [
   { title: "Nombre", field: "nombre" },
   { title: "Descripcion", field: "descripcion" },
   { title: "Categoria", field: "categoria" },
+  { title: "Creador", field: "creador" },
   { title: "Estado", field: "estado" },
   { title: "Usuario", field: "nombre_user" },
 
