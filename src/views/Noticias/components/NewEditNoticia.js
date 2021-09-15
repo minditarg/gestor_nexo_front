@@ -471,6 +471,7 @@ class NewEditNoticia extends Component {
           id: parseInt(this.props.match.params.idnoticia),
           nombre:(this.state.orderForm.nombre && this.state.orderForm.nombre.value )|| null,
           descripcion: ( this.state.orderForm.descripcion && this.state.orderForm.descripcion.value )|| null,
+          creador:(this.state.orderForm.creador && this.state.orderForm.creador.value )|| null,
           estado: this.state.orderForm.estado.value,
           destacado: (this.state.orderForm.destacado && this.state.orderForm.destacado.value) || null ,
           principal: ( this.state.orderForm.principal && this.state.orderForm.principal.value ) || null,
@@ -491,6 +492,7 @@ class NewEditNoticia extends Component {
         objectoPost = {
           nombre:(this.state.orderForm.nombre && this.state.orderForm.nombre.value )|| null,
           descripcion: ( this.state.orderForm.descripcion && this.state.orderForm.descripcion.value )|| null,
+          creador:(this.state.orderForm.creador && this.state.orderForm.creador.value )|| null,
           estado: this.state.orderForm.estado.value,
           idTipoCategoria: (this.state.orderForm.categoria && this.state.orderForm.categoria.value) || null,
           destacado: (this.state.orderForm.destacado && this.state.orderForm.destacado.value) || null ,

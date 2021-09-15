@@ -81,6 +81,21 @@ export const StateNewEditNoticia = {
       touched: false
     },
 
+    creador: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'text',
+        label: 'Creador',
+        fullWidth: true,
+      },
+      value: '',
+      validation: {
+        required: true
+      },
+      valid: false,
+      touched: false
+    },
+
     estado: {
       elementType: 'select',
       elementConfig: {
